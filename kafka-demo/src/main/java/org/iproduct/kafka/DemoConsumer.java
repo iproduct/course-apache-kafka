@@ -44,7 +44,7 @@ public class DemoConsumer {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, String> record : records)
                 {
-                    log.debug("topic = %s, partition = %s, offset = %d, customer = %s, country = %s\n",
+                    log.debug("topic = {}, partition = {}, offset = {}, customer = {}, country = {}\n",
                     record.topic(), record.partition(), record.offset(),
                             record.key(), record.value());
                     int updatedCount = 1;
