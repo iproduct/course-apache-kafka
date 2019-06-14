@@ -27,7 +27,7 @@ public class SimplePartitioner implements Partitioner {
         String stringKey = (String) key;
         int offset = stringKey.lastIndexOf('.');
         if (offset > 0) {
-            partition = Integer.parseInt( stringKey.substring(offset+1)) % 5;
+            partition = Integer.parseInt( stringKey.substring(offset+1)) % cluster.partitionCountForTopic(topic);
         }
         return partition;
     }
