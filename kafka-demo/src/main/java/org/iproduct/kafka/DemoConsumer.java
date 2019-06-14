@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class DemoConsumer {
     private Properties props = new Properties();
-    KafkaConsumer<String, String> consumer;
+    KafkaConsumer<String, Map<String, String>> consumer;
     Map<String, Integer> eventMap = new ConcurrentHashMap<String, Integer>();
 
     private class DemoProducerCallback implements Callback {
@@ -32,8 +32,10 @@ public class DemoConsumer {
         props.put("group.id", "EventCounter");
         props.put("key.deserializer",
                 "org.apache.kafka.common.serialization.StringDeserializer");
+//        props.put("value.deserializer",
+//                "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer",
-                "org.apache.kafka.common.serialization.StringDeserializer");
+                "org.iproduct.kafka.serialization.JsonSimpleDeserializer");
         consumer = new KafkaConsumer<>(props);
     }
 
@@ -41,17 +43,20 @@ public class DemoConsumer {
         consumer.subscribe(Collections.singletonList("events"));
         try {
             while (true) {
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-                for (ConsumerRecord<String, String> record : records)
-                {
-                    log.debug("topic = {}, partition = {}, offset = {}, customer = {}, country = {}\n",
-                    record.topic(), record.partition(), record.offset(),
-                            record.key(), record.value());
-                    int updatedCount = 1;
-                    if (eventMap.containsKey(record.value())) {
-                        updatedCount = eventMap.get(record.value()) + 1;
+                ConsumerRecords<String, Map<String, String>> records = consumer.poll(Duration.ofMillis(100));
+                if (records.count() > 0) {
+                    for (ConsumerRecord<String, Map<String, String>> record : records) {
+                        log.debug("topic = {}, partition = {}, offset = {}, customer = {}, country = {}\n",
+                                record.topic(), record.partition(), record.offset(),
+                                record.key(), record.value());
+                        int updatedCount = 1;
+                        String title = record.value().get("title");
+                        if (eventMap.containsKey(title)) {
+                            updatedCount = eventMap.get(title) + 1;
+                        }
+                        log.info(">>> Record receved: {}", record.value());
+                        eventMap.put(title, updatedCount);
                     }
-                    eventMap.put(record.value(), updatedCount);
                     JSONObject json = new JSONObject(eventMap);
                     System.out.println(">>>>>>>>>" + json.toString());
                 }
