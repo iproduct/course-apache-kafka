@@ -46,7 +46,7 @@ public class DemoProducer {
                 int[] bulstat = new int[9];
                 Arrays.fill(bulstat, i);
                 customerData.put("eik", Arrays.asList(bulstat).stream().map(n -> "" + n)
-                    .collect(Collectors.joining("")));
+                    .collect(Collectors.joining(""))).toString();
 
                 ProducerRecord<String, Map<String,String>> record =
                         new ProducerRecord<>("events-replicated","" + i, customerData);
