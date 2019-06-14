@@ -22,7 +22,7 @@ public class DemoProducer {
 
     public void run() {
         for(int i = 0; i < 10; i++) {
-            ProducerRecord<String,String> record = new ProducerRecord<>("events",
+            ProducerRecord<String,String> record = new ProducerRecord<>("events", "test-event",
                     "test-event-async" + i);
             Future<RecordMetadata> futureResult = producer.send(record,
                 (metadata, exception) -> {

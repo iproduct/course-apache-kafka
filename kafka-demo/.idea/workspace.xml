@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df86c9e9-33f3-4e84-81f2-30e6c8352a38" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/resources/logback.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoProducer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -253,6 +255,13 @@
               <item name="kafka" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="kafka-demo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="kafka-demo" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -262,7 +271,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560502616746" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560506083110" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -388,12 +397,12 @@
       <workItem from="1560357008006" duration="405000" />
       <workItem from="1560357430156" duration="10841000" />
       <workItem from="1560452712516" duration="7884000" />
-      <workItem from="1560462867623" duration="4930000" />
+      <workItem from="1560462867623" duration="5419000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28662000" />
+    <option name="totallyTimeSpent" value="29151000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1721" height="935" extended-state="6" />
