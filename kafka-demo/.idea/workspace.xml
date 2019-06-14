@@ -2,39 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df86c9e9-33f3-4e84-81f2-30e6c8352a38" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoProducer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/author-stats-view.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/insert-authors.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/javaweb-2019-06-03-mssql.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/javaweb-2019-06-03.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/javaweb_author.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/javaweb_book.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/javaweb_book_author.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/javaweb_sequence_gen.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/javaweb_todo.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/joining-all-tables.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/pesons.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/select-authors-book-average-price.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/SimplePartitioner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/dao/PersonDBController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/exception/EntityExistsException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/exception/InvalidRequestException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/exception/NonexistingEntityException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/model/Book.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/model/Person.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/serialization/JsonDeserializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/serialization/JsonSerializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/serialization/JsonSimpleDeserializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/serialization/JsonSimpleSerializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/DemoConsumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/DemoConsumer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/DemoProducer$DemoProducerCallback.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/DemoProducer$DemoProducerCallback.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/DemoProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/DemoProducer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/DemoConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/DemoConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/DemoProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/iproduct/kafka/DemoProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoProducer.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -292,7 +262,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560500772097" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560502616746" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
