@@ -6,14 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.json.simple.JSONObject;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static course.kafka.StockPriceConstants.PRICES_TOPIC;
@@ -23,6 +21,8 @@ public class StockPriceConsumer {
     private Properties props = new Properties();
     private KafkaConsumer<String, StockPrice> consumer;
     private Map<String, Integer> eventMap = new ConcurrentHashMap<>();
+    private Map<TopicPartition, OffsetAndMetadata> currentOffsets =
+            new HashMap<>();
 
     public StockPriceConsumer() {
         props.put("bootstrap.servers", "localhost:9092");
@@ -37,27 +37,43 @@ public class StockPriceConsumer {
     public void run() {
         consumer.subscribe(Collections.singletonList(PRICES_TOPIC),
                 new StockPriceRebalanceListener(consumer));
-        while(true) {
-            ConsumerRecords<String, StockPrice> records = consumer.poll(Duration.ofMillis(100));
-            if(records.count() > 0) {
-                log.info("Fetched {} records:", records.count());
-                for (ConsumerRecord<String, StockPrice> rec : records) {
-                    log.debug("Record - topic: {}, partition: {}, offset: {}, timestamp: {}, value: {}.",
-                            rec.topic(), rec.partition(), rec.offset(), rec.timestamp(), rec.value());
-                    log.info("{} -> {}, {}, {}, {}", rec.key(),
-                            rec.value().getId(),
-                            rec.value().getSymbol(),
-                            rec.value().getName(),
-                            rec.value().getPrice());
-                    int updatedCount = 1;
-                    if(eventMap.containsKey(rec.key())) {
-                        updatedCount = eventMap.get(rec.key()) + 1;
+        try {
+            while (true) {
+                ConsumerRecords<String, StockPrice> records = consumer.poll(Duration.ofMillis(100));
+                if (records.count() > 0) {
+                    log.info("Fetched {} records:", records.count());
+                    for (ConsumerRecord<String, StockPrice> rec : records) {
+                        log.debug("Record - topic: {}, partition: {}, offset: {}, timestamp: {}, value: {}.",
+                                rec.topic(), rec.partition(), rec.offset(), rec.timestamp(), rec.value());
+                        log.info("{} -> {}, {}, {}, {}", rec.key(),
+                                rec.value().getId(),
+                                rec.value().getSymbol(),
+                                rec.value().getName(),
+                                rec.value().getPrice());
+                        int updatedCount = 1;
+                        if (eventMap.containsKey(rec.key())) {
+                            updatedCount = eventMap.get(rec.key()) + 1;
+                        }
+                        eventMap.put(rec.key(), updatedCount);
                     }
-                    eventMap.put(rec.key(), updatedCount);
+                    consumer.commitAsync((offsets, exception) -> {
+                        if (exception != null) {
+                            log.error("Error commiting offsets: {}, exception: {}", offsets, exception);
+                            return;
+                        }
+                        log.debug("Offsets commited: {}", offsets);
+                    });
+                    JSONObject json = new JSONObject(eventMap);
+                    log.info(json.toJSONString());
                 }
-
-                JSONObject json = new JSONObject(eventMap);
-                log.info(json.toJSONString());
+            }
+        } catch (Exception e) {
+            log.error("Error polling data.");
+        } finally {
+            try {
+                consumer.commitSync();
+            } finally {
+                consumer.close();
             }
         }
     }
