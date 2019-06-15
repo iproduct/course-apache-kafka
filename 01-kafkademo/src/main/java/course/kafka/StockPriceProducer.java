@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
 public class StockPriceProducer {
     private Properties kafkaProps = new Properties();
     private Producer producer;
-    List<StockPrice> quotes = Arrays.asList(
+    List<StockPrice> stocks = Arrays.asList(
             new StockPrice("VMW", "VMWare", 215.35),
             new StockPrice("GOOG", "Google", 309.17),
             new StockPrice("CTXS", "Citrix Systems, Inc.", 112.11),
@@ -42,21 +42,20 @@ public class StockPriceProducer {
     }
 
     public void run() {
-        for (int i = 0; i < 10; i++) {
-            
-            ProducerRecord<String, Customer> record =
-                    new ProducerRecord<>("prices", "" + i, cust);
+        stocks.stream().forEach(stock -> {
+            ProducerRecord<String, StockPrice> record =
+                new ProducerRecord<>("prices", stock.getSymbol(), stock);
             Future<RecordMetadata> futureResult = producer.send(record,
-                    (metadata, exception) -> {
-                        if (exception != null) {
-                            log.error("Error publishing record: ", exception);
-                            producer.abortTransaction();
-                            return;
-                        }
-                        log.info("topic: {}, partition {}, offset {}, timestamp: {}",
-                                metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
-                    });
-        }
+                (metadata, exception) -> {
+                    if (exception != null) {
+                        log.error("Error publishing record: ", exception);
+                        return;
+                    }
+                    log.info("topic: {}, partition {}, offset {}, timestamp: {}",
+                        metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+                });
+        });
+
         producer.close();
     }
 
