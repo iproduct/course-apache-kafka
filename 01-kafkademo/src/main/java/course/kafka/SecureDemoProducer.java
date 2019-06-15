@@ -57,10 +57,10 @@ public class SecureDemoProducer {
 //                    .collect(Collectors.joining("")).toString());
                 Customer cust = new Customer(i, "ABC " + i + " Ltd. ", "12345678" + i, "Sofia 100" + i);
 //                if (i == 9) {
-//                    cust = new Customer(i, "ABC " + i + " Ltd. ", "12345678" + i, "Sofiafsdfsfsdfsdfsdfdsfsdfdsfdsfdsfdsfdsdsfdsfsdfdsfdsfdsfdsfdsfdsfdsdsdsds 100" + i);
-//                }
+////                    cust = new Customer(i, "ABC " + i + " Ltd. ", "12345678" + i, "Sofiafsdfsfsdfsdfsdfdsfsdfdsfdsfdsfdsfdsdsfdsfsdfdsfdsfdsfdsfdsfdsfdsdsdsds 100" + i);
+////                }
                 ProducerRecord<String, Customer> record =
-                        new ProducerRecord<>("test", "" + i, cust);
+                        new ProducerRecord<>("test2", "" + i, cust);
                 Future<RecordMetadata> futureResult = producer.send(record,
                         (metadata, exception) -> {
                             if (exception != null) {

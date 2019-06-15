@@ -30,7 +30,7 @@ public class DemoProducer {
         kafkaProps.put("acks", "all");
         kafkaProps.put("enable.idempotence", "true");
         kafkaProps.put("max.request.size", "160");
-        kafkaProps.put("transactional.id", "event-producer-1");
+        kafkaProps.put("transactional.id", "event-producer-2");
         kafkaProps.put("partitioner.class", "course.kafka.partitioner.SimplePartitioner");
         producer = new KafkaProducer<String, Customer>(kafkaProps);
     }
@@ -54,7 +54,7 @@ public class DemoProducer {
 //                    cust = new Customer(i, "ABC " + i + " Ltd. ", "12345678" + i, "Sofiafsdfsfsdfsdfsdfdsfsdfdsfdsfdsfdsfdsdsfdsfsdfdsfdsfdsfdsfdsfdsfdsdsdsds 100" + i);
 //                }
                 ProducerRecord<String, Customer> record =
-                        new ProducerRecord<>("events-replicated", "" + i, cust);
+                        new ProducerRecord<>("events-replicated2", "" + i, cust);
                 Future<RecordMetadata> futureResult = producer.send(record,
                         (metadata, exception) -> {
                             if (exception != null) {

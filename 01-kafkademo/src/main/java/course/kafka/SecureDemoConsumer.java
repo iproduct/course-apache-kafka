@@ -1,10 +1,12 @@
 package course.kafka;
 
 import course.kafka.model.Customer;
+import course.kafka.serialization.JsonDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.json.simple.JSONObject;
 
 import java.time.Duration;
@@ -36,7 +38,7 @@ public class SecureDemoConsumer {
     }
 
     public void run() {
-        consumer.subscribe(Collections.singletonList("test"));
+        consumer.subscribe(Collections.singletonList("test2"));
         while(true) {
             ConsumerRecords<String, Customer> records = consumer.poll(Duration.ofMillis(100));
             if(records.count() > 0) {

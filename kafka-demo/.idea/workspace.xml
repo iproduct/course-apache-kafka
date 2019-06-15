@@ -2,7 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df86c9e9-33f3-4e84-81f2-30e6c8352a38" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/StockPriceProducer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/model/StockPrice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoConsumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoConsumer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/DemoProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/SecureDemoConsumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/SecureDemoConsumer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/SecureDemoProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/SecureDemoProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/DemoProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/SecureDemoConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/SecureDemoConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/SecureDemoProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/SecureDemoProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/SimplePartitioner.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/org/iproduct/kafka/SimplePartitioner.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -26,7 +39,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
+            <state relative-caret-position="638">
               <caret line="29" selection-start-line="25" selection-end-line="29" />
             </state>
           </provider>
@@ -35,7 +48,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/DemoConsumer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
+            <state relative-caret-position="616">
               <caret line="37" column="60" selection-start-line="37" selection-start-column="60" selection-end-line="37" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -47,13 +60,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/dao/PersonDBController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1098">
-              <caret line="51" column="20" lean-forward="true" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="20" />
-              <folding>
-                <element signature="e#535#543#0" expanded="true" />
-                <element signature="e#1256#1257#0" expanded="true" />
-                <element signature="e#1286#1287#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="968">
+              <caret line="51" column="20" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -61,8 +69,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/SimplePartitioner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="754">
-              <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+            <state relative-caret-position="616">
+              <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -72,9 +80,7 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sql/javaweb_book.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-401" />
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -167,10 +173,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="147" />
-    <option name="y" value="27" />
+    <option name="x" value="-15" />
+    <option name="y" value="-15" />
     <option name="width" value="1626" />
-    <option name="height" value="1227" />
+    <option name="height" value="1185" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -178,8 +184,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -262,13 +266,15 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560575193873" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560592141523" />
+    <property name="last_opened_file_path" value="D:/CourseSpring/git/course-spring5/12-streaming-demos-lab4" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Global Libraries" />
@@ -394,11 +400,12 @@
       <workItem from="1560357430156" duration="10841000" />
       <workItem from="1560452712516" duration="7884000" />
       <workItem from="1560462867623" duration="8748000" />
+      <workItem from="1560592183867" duration="918000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32480000" />
+    <option name="totallyTimeSpent" value="33398000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1721" height="935" extended-state="6" />
@@ -542,18 +549,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/exception/EntityExistsException.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sql/javaweb_book.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-401" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sql/javaweb-2019-06-03.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1254" />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/dao/BookDBController.java" />
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="638">
+          <caret line="29" selection-start-line="25" selection-end-line="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/DemoConsumer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="37" column="60" selection-start-line="37" selection-start-column="60" selection-end-line="37" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/dao/PersonDBController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="968">
+          <caret line="51" column="20" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/SimplePartitioner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/javaweb_book.sql">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/sql/javaweb-2019-06-03-mssql.sql">
       <provider selected="true" editor-type-id="text-editor">
@@ -569,59 +606,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/dao/BookDBController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" column="26" selection-start-line="2" selection-start-column="26" selection-end-line="2" selection-end-column="26" />
-          <folding>
-            <element signature="e#547#553#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/DemoConsumer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="37" column="60" selection-start-line="37" selection-start-column="60" selection-end-line="37" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/SimplePartitioner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="754">
-          <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
-          <caret line="29" selection-start-line="25" selection-end-line="29" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/exception/EntityExistsException.java">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/model/Book.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/iproduct/kafka/dao/PersonDBController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1098">
-          <caret line="51" column="20" lean-forward="true" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="20" />
-          <folding>
-            <element signature="e#535#543#0" expanded="true" />
-            <element signature="e#1256#1257#0" expanded="true" />
-            <element signature="e#1286#1287#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
