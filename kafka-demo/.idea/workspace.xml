@@ -4,9 +4,7 @@
     <list default="true" id="df86c9e9-33f3-4e84-81f2-30e6c8352a38" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/StockPriceConsumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/StockPriceConsumer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/StockPriceRebalanceListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/out/production/classes/course/kafka/StockPriceRebalanceListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/StockPriceConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/src/main/java/course/kafka/StockPriceConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />

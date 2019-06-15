@@ -23,6 +23,7 @@ public class StockPriceConsumer {
     private Map<String, Integer> eventMap = new ConcurrentHashMap<>();
     private Map<TopicPartition, OffsetAndMetadata> currentOffsets =
             new HashMap<>();
+    private int count = 0;
 
     public StockPriceConsumer() {
         props.put("bootstrap.servers", "localhost:9092");
@@ -55,14 +56,16 @@ public class StockPriceConsumer {
                             updatedCount = eventMap.get(rec.key()) + 1;
                         }
                         eventMap.put(rec.key(), updatedCount);
-                    }
-                    consumer.commitAsync((offsets, exception) -> {
-                        if (exception != null) {
-                            log.error("Error commiting offsets: {}, exception: {}", offsets, exception);
-                            return;
+
+                        //update currentOffsets
+                        currentOffsets.put(new TopicPartition( rec.topic(), rec.partition()),
+                                new OffsetAndMetadata(rec.offset() + 1));
+
+                        if(++count % 3 == 0) {
+                            commitOffsets();
                         }
-                        log.debug("Offsets commited: {}", offsets);
-                    });
+                    }
+                    commitOffsets();
                     JSONObject json = new JSONObject(eventMap);
                     log.info(json.toJSONString());
                 }
@@ -76,6 +79,16 @@ public class StockPriceConsumer {
                 consumer.close();
             }
         }
+    }
+
+    private void commitOffsets() {
+        consumer.commitAsync(currentOffsets, (offsets, exception) -> {
+            if (exception != null) {
+                log.error("Error commiting offsets: {}, exception: {}", offsets, exception);
+                return;
+            }
+            log.debug("Offsets commited: {}", offsets);
+        });
     }
 
     public static void main(String[] args) {
