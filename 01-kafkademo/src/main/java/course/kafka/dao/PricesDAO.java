@@ -4,6 +4,7 @@ import course.kafka.model.StockPrice;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -58,7 +59,7 @@ public class PricesDAO {
 
     public void reload() throws SQLException {
         try {
-            ResultSet rs = selectAllStatement.executeQuery("SELECT * FROM Prices");
+            ResultSet rs = selectAllStatement.executeQuery();
             while(rs.next()) {
                 prices.add(new StockPrice(
                         rs.getInt("id"),
@@ -84,7 +85,7 @@ public class PricesDAO {
     public void printData(){
         prices.forEach(price -> {
             System.out.printf(
-                "| %10d | %5.5s | %20.20s | %10.2f | %td.%<tm.%<ty %<tH:%<tM:%<tS |",
+                "| %10d | %5.5s | %20.20s | %10.2f | %td.%<tm.%<ty %<tH:%<tM:%<tS |\n",
                 price.getId(), price.getSymbol(), price.getName(), price.getPrice(),
                     price.getTimestamp());
         });
@@ -92,8 +93,20 @@ public class PricesDAO {
 
     public static void main(String[] args) {
         PricesDAO dao = new PricesDAO();
+        List<StockPrice> stocks = Arrays.asList(
+                new StockPrice("VMW", "VMWare", 215.35),
+                new StockPrice("GOOG", "Google", 309.17),
+                new StockPrice("CTXS", "Citrix Systems, Inc.", 112.11),
+                new StockPrice("DELL", "Dell Inc.", 92.93),
+                new StockPrice("MSFT", "Microsoft", 255.19),
+                new StockPrice("ORCL", "Oracle", 115.72),
+                new StockPrice("RHT", "Red Hat", 111.27)
+        );
         try {
             dao.init();
+            for(StockPrice sp : stocks) {
+                dao.insertPrice(sp);
+            }
             dao.reload();
             dao.printData();
         } catch (SQLException e){
