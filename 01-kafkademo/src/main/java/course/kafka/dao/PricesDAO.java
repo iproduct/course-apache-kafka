@@ -2,10 +2,13 @@ package course.kafka.dao;
 
 import course.kafka.model.StockPrice;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
 
 import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
@@ -19,9 +22,24 @@ public class PricesDAO {
             "SELECT * FROM Prices";
     public static final String INSERT_INTO_PRICES_SQL =
             "INSERT INTO Prices (symbol, name, price) VALUES (?, ?, ?)";
+    public static final String SELECT_ALL_OFFSETS_SQL =
+            "SELECT * FROM Offsets";
+    public static final String SELECT_OFFSETS_BY_CONSUMER_SQL =
+            "SELECT * FROM Offsets WHERE [consumer]=?";
+    public static final String SELECT_OFFSETS_COUNT_BY_CONSUMER_TOPIC_PARTITION_SQL =
+            "SELECT COUNT(*) FROM Offsets WHERE [consumer]=? AND [topic]=? AND [partition]=?";
+    public static final String INSERT_OFFSET_SQL =
+            "INSERT INTO Offsets ([consumer], [topic], [partition], [offset]) VALUES (?, ?, ?, ?)";
+    public static final String UPDATE_OFFSET_SQL =
+            "UPDATE Offsets SET [offset]=? WHERE [consumer]=? AND [topic]=? AND [partition]=?";
     private Connection con;
     private PreparedStatement selectAllStatement;
     private PreparedStatement insertIntoStatement;
+    private PreparedStatement selectAllOffsetsStatement;
+    private PreparedStatement selectOffsetsByConsumerStatement;
+    private PreparedStatement selectOffsetsCountByConsumerTopicPartititonStatement;
+    private PreparedStatement insertOffsetStatement;
+    private PreparedStatement updateOffsetStatement;
 
     List<StockPrice> prices = new CopyOnWriteArrayList<>();
 
@@ -35,6 +53,11 @@ public class PricesDAO {
             con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             selectAllStatement = con.prepareStatement(SELECT_ALL_PRICES_SQL);
             insertIntoStatement = con.prepareStatement(INSERT_INTO_PRICES_SQL);
+            selectAllOffsetsStatement = con.prepareStatement(SELECT_ALL_OFFSETS_SQL);
+            selectOffsetsByConsumerStatement = con.prepareStatement(SELECT_OFFSETS_BY_CONSUMER_SQL);
+            selectOffsetsCountByConsumerTopicPartititonStatement = con.prepareStatement(SELECT_OFFSETS_COUNT_BY_CONSUMER_TOPIC_PARTITION_SQL);
+            insertOffsetStatement = con.prepareStatement(INSERT_OFFSET_SQL);
+            updateOffsetStatement = con.prepareStatement(UPDATE_OFFSET_SQL);
         } catch (SQLException e) {
             log.error("Connection to MS SQLServer URL:{} can not be established.\n{}", DB_URL, e);
             throw e;
@@ -79,6 +102,20 @@ public class PricesDAO {
         insertIntoStatement.setString(1, price.getSymbol());
         insertIntoStatement.setString(2, price.getName());
         insertIntoStatement.setDouble(3,price.getPrice());
+        return insertIntoStatement.executeUpdate();
+    }
+
+    public int updateOffset(String consumerGroupId,
+                            Map<TopicPartition, OffsetAndMetadata> currentOffsets) throws SQLException {
+        for(TopicPartition tp: currentOffsets.keySet()) {
+            selectOffsetsCountByConsumerTopicPartititonStatement.setString(1, consumerGroupId);
+            selectOffsetsCountByConsumerTopicPartititonStatement.setString(2, tp.topic());
+            selectOffsetsCountByConsumerTopicPartititonStatement.setInt(3, tp.partition());
+            ResultSet rs = selectOffsetsCountByConsumerTopicPartititonStatement.executeQuery();
+            if(rs.next() && rs.getInt(0) > 0) {
+                in
+            }
+        }
         return insertIntoStatement.executeUpdate();
     }
 
