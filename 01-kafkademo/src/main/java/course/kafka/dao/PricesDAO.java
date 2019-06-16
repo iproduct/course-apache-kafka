@@ -113,7 +113,10 @@ public class PricesDAO {
             selectOffsetsCountByConsumerTopicPartititonStatement.setInt(3, tp.partition());
             ResultSet rs = selectOffsetsCountByConsumerTopicPartititonStatement.executeQuery();
             if(rs.next() && rs.getInt(0) > 0) {
-                in
+                updateOffsetStatement.setLong(1, currentOffsets.get(tp).offset());
+                updateOffsetStatement.setString(2, consumerGroupId);
+                updateOffsetStatement.setString(3, tp.topic());
+                updateOffsetStatement.setInt(4, tp.partition());
             }
         }
         return insertIntoStatement.executeUpdate();
