@@ -20,19 +20,19 @@ public class PricesDAO {
     public static final String DB_USER = "sa";
     public static final String DB_PASSWORD = "sa12X+";
     public static final String SELECT_ALL_PRICES_SQL =
-            "SELECT * FROM Prices";
+            "SELECT * FROM [Prices]";
     public static final String INSERT_INTO_PRICES_SQL =
-            "INSERT INTO Prices (symbol, name, price) VALUES (?, ?, ?)";
+            "INSERT INTO [Prices] ([symbol], [name], [price]) VALUES (?, ?, ?)";
     public static final String SELECT_ALL_OFFSETS_SQL =
-            "SELECT * FROM Offsets";
+            "SELECT * FROM [Offsets]";
     public static final String SELECT_OFFSETS_BY_CONSUMER_SQL =
-            "SELECT * FROM Offsets WHERE [consumer]=?";
+            "SELECT * FROM [Offsets] WHERE [consumer]=?";
     public static final String SELECT_OFFSETS_COUNT_BY_CONSUMER_TOPIC_PARTITION_SQL =
-            "SELECT COUNT(*) FROM Offsets WHERE [consumer]=? AND [topic]=? AND [partition]=?";
+            "SELECT * FROM [Offsets] WHERE [consumer]=? AND [topic]=? AND [partition]=?";
     public static final String INSERT_OFFSET_SQL =
-            "INSERT INTO Offsets ([consumer], [topic], [partition], [offset]) VALUES (?, ?, ?, ?)";
+            "INSERT INTO [Offsets] ([consumer], [topic], [partition], [offset]) VALUES (?, ?, ?, ?)";
     public static final String UPDATE_OFFSET_SQL =
-            "UPDATE Offsets SET [offset]=? WHERE [consumer]=? AND [topic]=? AND [partition]=?";
+            "UPDATE [Offsets] SET [offset]=? WHERE [consumer]=? AND [topic]=? AND [partition]=?";
     private Connection con;
     private PreparedStatement selectAllStatement;
     private PreparedStatement insertIntoStatement;
@@ -52,6 +52,7 @@ public class PricesDAO {
         }
         try {
             con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            con.setAutoCommit(false);
             selectAllStatement = con.prepareStatement(SELECT_ALL_PRICES_SQL);
             insertIntoStatement = con.prepareStatement(INSERT_INTO_PRICES_SQL);
             selectAllOffsetsStatement = con.prepareStatement(SELECT_ALL_OFFSETS_SQL);
@@ -59,10 +60,19 @@ public class PricesDAO {
             selectOffsetsCountByConsumerTopicPartititonStatement = con.prepareStatement(SELECT_OFFSETS_COUNT_BY_CONSUMER_TOPIC_PARTITION_SQL);
             insertOffsetStatement = con.prepareStatement(INSERT_OFFSET_SQL);
             updateOffsetStatement = con.prepareStatement(UPDATE_OFFSET_SQL);
+            log.info("SQL Server connection initialized successfully");
         } catch (SQLException e) {
             log.error("Connection to MS SQLServer URL:{} can not be established.\n{}", DB_URL, e);
             throw e;
         }
+    }
+
+    public void commitTransaction() throws SQLException {
+        con.commit();
+    }
+
+    public void rollbackTransaction() throws SQLException {
+        con.rollback();
     }
 
     public void close(){
@@ -103,10 +113,13 @@ public class PricesDAO {
         insertIntoStatement.setString(1, price.getSymbol());
         insertIntoStatement.setString(2, price.getName());
         insertIntoStatement.setDouble(3,price.getPrice());
-        return insertIntoStatement.executeUpdate();
+        int result = insertIntoStatement.executeUpdate();
+        log.debug("Successfully inserted StockPrice:{} - {} inserts", price, result);
+        return result;
+
     }
 
-    public int updateOffset(String consumerGroupId,
+    public int updateOffsets(String consumerGroupId,
                             Map<TopicPartition, OffsetAndMetadata> currentOffsets) throws SQLException {
         int counter = 0;
         for(TopicPartition tp: currentOffsets.keySet()) {
@@ -114,18 +127,22 @@ public class PricesDAO {
             selectOffsetsCountByConsumerTopicPartititonStatement.setString(2, tp.topic());
             selectOffsetsCountByConsumerTopicPartititonStatement.setInt(3, tp.partition());
             ResultSet rs = selectOffsetsCountByConsumerTopicPartititonStatement.executeQuery();
-            if (rs.next() && rs.getInt(0) > 0) {
+            if (rs.next() ) {
                 updateOffsetStatement.setLong(1, currentOffsets.get(tp).offset());
                 updateOffsetStatement.setString(2, consumerGroupId);
                 updateOffsetStatement.setString(3, tp.topic());
                 updateOffsetStatement.setInt(4, tp.partition());
                 counter += updateOffsetStatement.executeUpdate();
+                log.debug("Successfully updated offset:{} for {}",
+                        currentOffsets.get(tp).offset(), tp);
             } else {
                 insertOffsetStatement.setString(1, consumerGroupId);
                 insertOffsetStatement.setString(2, tp.topic());
                 insertOffsetStatement.setInt(3, tp.partition());
                 insertOffsetStatement.setLong(4, currentOffsets.get(tp).offset());
                 counter += insertOffsetStatement.executeUpdate();
+                log.debug("Successfully inserted offset:{} for {}",
+                        currentOffsets.get(tp).offset(), tp);
             }
         }
         return counter;

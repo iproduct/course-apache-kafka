@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="20bd9b06-c192-45b3-a33b-9c17a62dd8bc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -24,31 +28,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="572">
-              <caret line="26" column="66" lean-forward="true" selection-start-line="26" selection-start-column="66" selection-end-line="26" selection-end-column="66" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceProducer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="28" column="11" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="32" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/DemoConsumer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="27" column="46" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="459">
+              <caret line="32" column="6" lean-forward="true" selection-start-line="32" selection-start-column="6" selection-end-line="32" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -56,8 +39,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="24" column="28" lean-forward="true" selection-start-line="23" selection-start-column="4" selection-end-line="24" selection-end-column="28" />
+            <state relative-caret-position="303">
+              <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -66,12 +49,47 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
-              <caret line="144" column="27" lean-forward="true" selection-start-line="144" selection-start-column="27" selection-end-line="144" selection-end-column="27" />
+            <state relative-caret-position="259">
+              <caret line="15" column="81" selection-start-line="15" selection-start-column="81" selection-end-line="15" selection-end-column="81" />
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3305">
+              <caret line="124" selection-start-line="124" selection-end-line="124" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/7.2.1.jre8/816fac59df7f89a24d90bbba12586c1a098cebfa/mssql-jdbc-7.2.1.jre8-sources.jar!/com/microsoft/sqlserver/jdbc/SQLServerPreparedStatement.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="445" selection-start-line="445" selection-end-line="445" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/7.2.1.jre8/816fac59df7f89a24d90bbba12586c1a098cebfa/mssql-jdbc-7.2.1.jre8-sources.jar!/com/microsoft/sqlserver/jdbc/SQLServerStatement.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="143">
+              <caret line="474" selection-start-line="474" selection-end-line="474" />
+              <folding>
+                <element signature="e#5192#5193#0" expanded="true" />
+                <element signature="e#5231#5232#0" expanded="true" />
+                <element signature="e#17084#17085#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -96,24 +114,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="580">
-              <caret line="26" column="47" selection-start-line="26" selection-start-column="47" selection-end-line="26" selection-end-column="47" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#403#404#0" expanded="true" />
-                <element signature="e#442#443#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConstants.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="87">
-              <caret line="3" column="43" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="43" />
+              <caret line="3" column="31" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -168,13 +172,13 @@
         <option value="$PROJECT_DIR$/src/main/java/course/kafka/DemoConsumer.java" />
         <option value="$PROJECT_DIR$/src/main/java/course/kafka/serialization/StockPriceProducer.java" />
         <option value="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceProducer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConstants.java" />
-        <option value="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java" />
         <option value="$PROJECT_DIR$/sql/dbo.Price.sql" />
         <option value="$PROJECT_DIR$/src/main/java/course/kafka/model/StockPrice.java" />
         <option value="$PROJECT_DIR$/sql/dbo.Offset.sql" />
+        <option value="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java" />
       </list>
     </option>
   </component>
@@ -248,7 +252,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560683369620" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560688681927" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../workspace/streams.examples" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -285,7 +289,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.PricesDAO">
+  <component name="RunManager" selected="Application.StockPriceConsumer">
     <configuration name="DemoConsumer" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="course.kafka.DemoConsumer" />
       <module name="course.kafka.demos.01-kafkademo.main" />
@@ -385,9 +389,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.PricesDAO" />
         <item itemvalue="Application.StockPriceProducer" />
         <item itemvalue="Application.StockPriceConsumer" />
+        <item itemvalue="Application.PricesDAO" />
         <item itemvalue="Application.DemoConsumer" />
         <item itemvalue="Application.DemoProducer" />
       </list>
@@ -404,12 +408,12 @@
       <option name="presentableId" value="Default" />
       <updated>1560494932816</updated>
       <workItem from="1560494936380" duration="35948000" />
-      <workItem from="1560592200017" duration="29083000" />
+      <workItem from="1560592200017" duration="34983000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65031000" />
+    <option name="totallyTimeSpent" value="70931000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1721" height="935" extended-state="6" />
@@ -420,7 +424,7 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Designer" order="4" />
-      <window_info content_ui="combo" id="Project" order="5" weight="0.21131848" />
+      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.22937989" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Extract Method" order="0" weight="0.32876712" />
       <window_info anchor="bottom" id="Terminal" order="1" weight="0.32876712" />
@@ -531,11 +535,17 @@
     <watches-manager>
       <configuration name="Application">
         <watch expression="cust" language="JAVA" />
+        <watch expression="rec" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>rec</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>cust</expression-string>
         <language-id>JAVA</language-id>
@@ -625,16 +635,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/SecureDemoConsumer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="24" column="50" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonSimpleDeserializer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
@@ -692,35 +692,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="87">
-          <caret line="3" column="43" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="580">
-          <caret line="26" column="47" selection-start-line="26" selection-start-column="47" selection-end-line="26" selection-end-column="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#403#404#0" expanded="true" />
-            <element signature="e#442#443#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/DemoConsumer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="27" column="46" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="572">
@@ -749,27 +720,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceProducer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="28" column="11" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="32" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sql/dbo.Price.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="264">
           <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="24" column="28" lean-forward="true" selection-start-line="23" selection-start-column="4" selection-end-line="24" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -780,10 +734,83 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/DemoConsumer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="27" column="46" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="3" column="31" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/SecureDemoConsumer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-246">
+          <caret line="24" column="50" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/7.2.1.jre8/816fac59df7f89a24d90bbba12586c1a098cebfa/mssql-jdbc-7.2.1.jre8-sources.jar!/com/microsoft/sqlserver/jdbc/SQLServerStatement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="474" selection-start-line="474" selection-end-line="474" />
+          <folding>
+            <element signature="e#5192#5193#0" expanded="true" />
+            <element signature="e#5231#5232#0" expanded="true" />
+            <element signature="e#17084#17085#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/7.2.1.jre8/816fac59df7f89a24d90bbba12586c1a098cebfa/mssql-jdbc-7.2.1.jre8-sources.jar!/com/microsoft/sqlserver/jdbc/SQLServerPreparedStatement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="445" selection-start-line="445" selection-end-line="445" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="144" column="27" lean-forward="true" selection-start-line="144" selection-start-column="27" selection-end-line="144" selection-end-column="27" />
+        <state relative-caret-position="3305">
+          <caret line="124" selection-start-line="124" selection-end-line="124" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceProducer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="32" column="6" lean-forward="true" selection-start-line="32" selection-start-column="6" selection-end-line="32" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/StockPriceRebalanceListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="15" column="81" selection-start-line="15" selection-start-column="81" selection-end-line="15" selection-end-column="81" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

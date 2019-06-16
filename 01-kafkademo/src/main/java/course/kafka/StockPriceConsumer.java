@@ -1,5 +1,6 @@
 package course.kafka;
 
+import course.kafka.dao.PricesDAO;
 import course.kafka.model.Customer;
 import course.kafka.model.StockPrice;
 import lombok.extern.slf4j.Slf4j;
@@ -10,29 +11,35 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.json.simple.JSONObject;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static course.kafka.StockPriceConstants.GROUP_ID_PROP;
 import static course.kafka.StockPriceConstants.PRICES_TOPIC;
 
 @Slf4j
 public class StockPriceConsumer {
+    public static final String GROUP_ID =  "stock-price-consumer";
     private Properties props = new Properties();
     private KafkaConsumer<String, StockPrice> consumer;
     private Map<String, Integer> eventMap = new ConcurrentHashMap<>();
     private Map<TopicPartition, OffsetAndMetadata> currentOffsets =
             new HashMap<>();
     private int count = 0;
+    private PricesDAO dao;
 
-    public StockPriceConsumer() {
+    public StockPriceConsumer() throws SQLException {
         props.put("bootstrap.servers", "localhost:9092");
-        props.put("group.id", "stock-price-consumer");
+        props.put(GROUP_ID_PROP, GROUP_ID);
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "course.kafka.serialization.JsonDeserializer");
         props.put("value.deserializer.class", "course.kafka.model.StockPrice");
         props.put("enable.auto.commit", "false");
         consumer = new KafkaConsumer<>(props);
+        dao = new PricesDAO();
+        dao.init();
     }
 
     public void run() {
@@ -40,12 +47,16 @@ public class StockPriceConsumer {
                 new StockPriceRebalanceListener(consumer));
         try {
             while (true) {
-                ConsumerRecords<String, StockPrice> records = consumer.poll(Duration.ofMillis(100));
+                ConsumerRecords<String, StockPrice> records = consumer.poll(Duration.ofMillis(1000));
                 if (records.count() > 0) {
                     log.info("Fetched {} records:", records.count());
                     for (ConsumerRecord<String, StockPrice> rec : records) {
                         log.debug("Record - topic: {}, partition: {}, offset: {}, timestamp: {}, value: {}.",
-                                rec.topic(), rec.partition(), rec.offset(), rec.timestamp(), rec.value());
+                                rec.topic(),
+                                rec.partition(),
+                                rec.offset(),
+                                rec.timestamp(),
+                                rec.value());
                         log.info("{} -> {}, {}, {}, {}", rec.key(),
                                 rec.value().getId(),
                                 rec.value().getSymbol(),
@@ -61,14 +72,26 @@ public class StockPriceConsumer {
                         currentOffsets.put(new TopicPartition( rec.topic(), rec.partition()),
                                 new OffsetAndMetadata(rec.offset() + 1));
 
-                        if(++count % 3 == 0) {
-                            commitOffsets();
-                        }
+                        //persist data to DB
+                        dao.insertPrice(rec.value());
+
+//                        if(++count % 3 == 0) {
+//                            commitOffsets();
+//                        }
                     }
-                    commitOffsets();
+                    // commit batch + offsets in single transaction = exactly once semantics
+                    dao.updateOffsets(GROUP_ID, currentOffsets);
+                    try {
+                        dao.commitTransaction();
+                    } catch (SQLException e) {
+                        log.error("Error commiting transaction.", e);
+                        dao.rollbackTransaction();
+                    }
+
                     JSONObject json = new JSONObject(eventMap);
                     log.info(json.toJSONString());
                 }
+
             }
         } catch (Exception e) {
             log.error("Error polling data.");
@@ -91,7 +114,7 @@ public class StockPriceConsumer {
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         StockPriceConsumer demoConsumer = new StockPriceConsumer();
         demoConsumer.run();
     }

@@ -25,5 +25,6 @@ public class StockPriceRebalanceListener  implements ConsumerRebalanceListener {
     @Override
     public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
 //        consumer.seekToBeginning(partitions);
+
     }
 }
