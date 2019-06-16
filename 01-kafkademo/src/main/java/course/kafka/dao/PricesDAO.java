@@ -7,6 +7,7 @@ import org.apache.kafka.common.TopicPartition;
 
 import java.sql.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -107,19 +108,45 @@ public class PricesDAO {
 
     public int updateOffset(String consumerGroupId,
                             Map<TopicPartition, OffsetAndMetadata> currentOffsets) throws SQLException {
+        int counter = 0;
         for(TopicPartition tp: currentOffsets.keySet()) {
             selectOffsetsCountByConsumerTopicPartititonStatement.setString(1, consumerGroupId);
             selectOffsetsCountByConsumerTopicPartititonStatement.setString(2, tp.topic());
             selectOffsetsCountByConsumerTopicPartititonStatement.setInt(3, tp.partition());
             ResultSet rs = selectOffsetsCountByConsumerTopicPartititonStatement.executeQuery();
-            if(rs.next() && rs.getInt(0) > 0) {
+            if (rs.next() && rs.getInt(0) > 0) {
                 updateOffsetStatement.setLong(1, currentOffsets.get(tp).offset());
                 updateOffsetStatement.setString(2, consumerGroupId);
                 updateOffsetStatement.setString(3, tp.topic());
                 updateOffsetStatement.setInt(4, tp.partition());
+                counter += updateOffsetStatement.executeUpdate();
+            } else {
+                insertOffsetStatement.setString(1, consumerGroupId);
+                insertOffsetStatement.setString(2, tp.topic());
+                insertOffsetStatement.setInt(3, tp.partition());
+                insertOffsetStatement.setLong(4, currentOffsets.get(tp).offset());
+                counter += insertOffsetStatement.executeUpdate();
             }
         }
-        return insertIntoStatement.executeUpdate();
+        return counter;
+    }
+
+    public Map<TopicPartition, OffsetAndMetadata> getOffsetsByConsumerGroupId(String consumerGroupId) throws SQLException {
+        Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
+        try {
+            selectOffsetsByConsumerStatement.setString(1, consumerGroupId);
+            ResultSet rs = selectOffsetsByConsumerStatement.executeQuery();
+            while(rs.next()) {
+                offsets.put(
+                    new TopicPartition(rs.getString("topic"), rs.getInt("partition")),
+                    new OffsetAndMetadata(rs.getLong("offset"))
+                );
+            }
+            return offsets;
+        } catch (SQLException e) {
+            log.error("Error executing SQL statement.", e);
+            throw e;
+        }
     }
 
     public void printData(){
