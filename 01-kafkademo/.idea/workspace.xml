@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="20bd9b06-c192-45b3-a33b-9c17a62dd8bc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -69,8 +68,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="597">
-              <caret line="36" column="34" lean-forward="true" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
+            <state relative-caret-position="349">
+              <caret line="80" column="15" selection-start-line="80" selection-start-column="15" selection-end-line="80" selection-end-column="15" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -239,7 +238,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560675184296" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560676233896" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../workspace/streams.examples" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -394,12 +393,12 @@
       <option name="presentableId" value="Default" />
       <updated>1560494932816</updated>
       <workItem from="1560494936380" duration="35948000" />
-      <workItem from="1560592200017" duration="23925000" />
+      <workItem from="1560592200017" duration="24648000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="59873000" />
+    <option name="totallyTimeSpent" value="60596000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1721" height="935" extended-state="6" />
@@ -765,8 +764,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/course/kafka/dao/PricesDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="597">
-          <caret line="36" column="34" lean-forward="true" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
+        <state relative-caret-position="349">
+          <caret line="80" column="15" selection-start-line="80" selection-start-column="15" selection-end-line="80" selection-end-column="15" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

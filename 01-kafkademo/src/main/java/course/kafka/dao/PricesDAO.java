@@ -24,7 +24,7 @@ public class PricesDAO {
 
     List<StockPrice> prices = new CopyOnWriteArrayList<>();
 
-    public void init() {
+    public void init() throws SQLException {
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException ex) {
@@ -36,12 +36,29 @@ public class PricesDAO {
             insertIntoStatement = con.prepareStatement(INSERT_INTO_PRICES_SQL);
         } catch (SQLException e) {
             log.error("Connection to MS SQLServer URL:{} can not be established.\n{}", DB_URL, e);
+            throw e;
         }
     }
 
-    public void reload() {
+    public void close(){
         try {
-            ResultSet rs = statement.executeQuery("SELECT * FROM Prices");
+            if (!insertIntoStatement.isClosed()) {
+                insertIntoStatement.close();;
+            }
+            if (!selectAllStatement.isClosed()) {
+                selectAllStatement.close();;
+            }
+            if (!con.isClosed()) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            log.error("Error closing connection to SQL Server URL:{}.\n{}", DB_URL, e);
+        }
+    }
+
+    public void reload() throws SQLException {
+        try {
+            ResultSet rs = selectAllStatement.executeQuery("SELECT * FROM Prices");
             while(rs.next()) {
                 prices.add(new StockPrice(
                         rs.getInt("id"),
@@ -53,14 +70,15 @@ public class PricesDAO {
             }
         } catch (SQLException e) {
             log.error("Error executing SQL statement.", e);
+            throw e;
         }
     }
 
-    public int insertPrice(StockPrice price) {
-        String myStatement = ;
-        PreparedStatement statement= con.prepareStatement   (myStatement );
-        statement.setString(1,userString);
-        statement.executeUpdate();
+    public int insertPrice(StockPrice price) throws SQLException {
+        insertIntoStatement.setString(1, price.getSymbol());
+        insertIntoStatement.setString(2, price.getName());
+        insertIntoStatement.setDouble(3,price.getPrice());
+        return insertIntoStatement.executeUpdate();
     }
 
     public void printData(){
@@ -74,7 +92,14 @@ public class PricesDAO {
 
     public static void main(String[] args) {
         PricesDAO dao = new PricesDAO();
-        dao.reload();
-        dao.printData();
+        try {
+            dao.init();
+            dao.reload();
+            dao.printData();
+        } catch (SQLException e){
+            log.error("DB Error:", e);
+        } finally {
+            dao.close();
+        }
     }
 }
