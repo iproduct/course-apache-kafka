@@ -42,19 +42,19 @@ public class StockPriceProducer {
     }
 
     public void run() {
-        stocks.stream().forEach(stock -> {
-            ProducerRecord<String, StockPrice> record =
-                new ProducerRecord<>("prices", stock.getSymbol(), stock);
-            Future<RecordMetadata> futureResult = producer.send(record,
-                (metadata, exception) -> {
-                    if (exception != null) {
-                        log.error("Error publishing record: ", exception);
-                        return;
-                    }
-                    log.info("topic: {}, partition {}, offset {}, timestamp: {}",
-                        metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
-                });
-        });
+            stocks.stream().forEach(stock -> {
+                ProducerRecord<String, StockPrice> record =
+                    new ProducerRecord<>("prices", stock.getSymbol(), stock);
+                Future<RecordMetadata> futureResult = producer.send(record,
+                    (metadata, exception) -> {
+                        if (exception != null) {
+                            log.error("Error publishing record: ", exception);
+                            return;
+                        }
+                        log.info("topic: {}, partition {}, offset {}, timestamp: {}",
+                            metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+                    });
+            });
 
         producer.close();
     }

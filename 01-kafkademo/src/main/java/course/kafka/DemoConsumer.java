@@ -29,7 +29,7 @@ public class DemoConsumer {
     }
 
     public void run() {
-        consumer.subscribe(Collections.singletonList("events-replicated2"));
+        consumer.subscribe(Collections.singletonList("events"));
         while(true) {
             ConsumerRecords<String, Customer> records = consumer.poll(Duration.ofMillis(100));
             if(records.count() > 0) {

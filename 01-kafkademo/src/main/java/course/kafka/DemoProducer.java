@@ -36,9 +36,9 @@ public class DemoProducer {
     }
 
     public void run() {
-        producer.initTransactions();
+//        producer.initTransactions();
         try {
-            producer.beginTransaction();
+//            producer.beginTransaction();
             for (int i = 0; i < 10; i++) {
 
 //                Map<String,String> customerData = new HashMap<>();
@@ -54,7 +54,7 @@ public class DemoProducer {
 //                    cust = new Customer(i, "ABC " + i + " Ltd. ", "12345678" + i, "Sofiafsdfsfsdfsdfsdfdsfsdfdsfdsfdsfdsfdsdsfdsfsdfdsfdsfdsfdsfdsfdsfdsdsdsds 100" + i);
 //                }
                 ProducerRecord<String, Customer> record =
-                        new ProducerRecord<>("events-replicated2", "" + i, cust);
+                        new ProducerRecord<>("events", "" + i, cust);
                 Future<RecordMetadata> futureResult = producer.send(record,
                         (metadata, exception) -> {
                             if (exception != null) {
@@ -66,7 +66,7 @@ public class DemoProducer {
                                     metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                         });
             }
-            producer.commitTransaction();
+//            producer.commitTransaction();
         } catch (ProducerFencedException | OutOfOrderSequenceException |
                 AuthorizationException ex) {
             producer.close();

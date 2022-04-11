@@ -31,7 +31,7 @@ public class StockPriceConsumer implements Runnable{
     private Map<TopicPartition, OffsetAndMetadata> currentOffsets =
             new HashMap<>();
     private int count = 0;
-    private PricesDAO dao;
+//    private PricesDAO dao;
 
     public StockPriceConsumer(int consumerId) throws SQLException {
         log.info("Creating consumer with ID:{}" + GROUP_ID + "-" + consumerId);
@@ -43,8 +43,8 @@ public class StockPriceConsumer implements Runnable{
         props.put("value.deserializer.class", "course.kafka.model.StockPrice");
         props.put("enable.auto.commit", "false");
         consumer = new KafkaConsumer<>(props);
-        dao = new PricesDAO();
-        dao.init();
+//        dao = new PricesDAO();
+//        dao.init();
 
         // add shutdown hook
         Thread mainThread = Thread.currentThread();
@@ -63,8 +63,8 @@ public class StockPriceConsumer implements Runnable{
     }
 
     public void run() {
-        consumer.subscribe(Collections.singletonList(PRICES_TOPIC),
-                new StockPriceRebalanceListener(consumer, dao, GROUP_ID));
+        consumer.subscribe(Collections.singletonList(PRICES_TOPIC));
+//                new StockPriceRebalanceListener(consumer, dao, GROUP_ID));
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 ConsumerRecords<String, StockPrice> records = consumer.poll(Duration.ofMillis(1000));
@@ -93,20 +93,20 @@ public class StockPriceConsumer implements Runnable{
                                 new OffsetAndMetadata(rec.offset() + 1));
 
                         //persist data to DB
-                        dao.insertPrice(rec.value());
+//                        dao.insertPrice(rec.value());
 
-//                        if(++count % 3 == 0) {
-//                            commitOffsets();
+//                        if(++count % 7 == 0) {
+                            commitOffsets();
 //                        }
                     }
                     // commit batch + offsets in single transaction = exactly once semantics
-                    dao.updateOffsets(GROUP_ID, currentOffsets);
-                    try {
-                        dao.commitTransaction();
-                    } catch (SQLException e) {
-                        log.error("Error commiting transaction.", e);
-                        dao.rollbackTransaction();
-                    }
+//                    dao.updateOffsets(GROUP_ID, currentOffsets);
+//                    try {
+//                        dao.commitTransaction();
+//                    } catch (SQLException e) {
+//                        log.error("Error commiting transaction.", e);
+//                        dao.rollbackTransaction();
+//                    }
 
                     JSONObject json = new JSONObject(eventMap);
                     log.info(json.toJSONString());
