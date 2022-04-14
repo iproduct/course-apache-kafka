@@ -5,26 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20bd9b06-c192-45b3-a33b-9c17a62dd8bc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/DemoConsumer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/DemoProducer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SecureDemoConsumer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SecureDemoProducer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/StockPriceConstants.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/StockPriceConsumer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/StockPriceLogicalConsumer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/StockPriceProducer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/StockPriceRebalanceListener.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/dao/PricesDAO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/Customer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/StockPrice.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/partitioner/SimplePartitioner.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/CustomerDeserializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonDeserializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonSerializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonSimpleDeserializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonSimpleSerializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/settings.gradle" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/codeStyles/Project.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/jarRepositories.xml" afterDir="false" />
@@ -50,34 +39,7 @@
       <change afterPath="$PROJECT_DIR$/../kafka-demo/build/resources/main/connect-file-source.properties" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka-demo/build/resources/main/connect-standalone.properties" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka-demo/build/resources/main/logback.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/META-INF/course.kafka.demos.01-kafkademo.main.kotlin_module" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/DemoConsumer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/DemoProducer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/SecureDemoConsumer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/SecureDemoProducer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/StockPriceConstants.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/StockPriceConsumer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/StockPriceLogicalConsumer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/StockPriceProducer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/StockPriceRebalanceListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/dao/PricesDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/model/Customer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/model/StockPrice.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/partitioner/SimplePartitioner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/serialization/CustomerDeserializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/serialization/JsonDeserializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/serialization/JsonSerializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/serialization/JsonSimpleDeserializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/course/kafka/serialization/JsonSimpleSerializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/resources/logback.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/DemoConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/DemoConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/DemoProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/DemoProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/StockPriceProducer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/misc.xml" afterDir="false" />
@@ -372,8 +334,17 @@
       <workItem from="1576070014880" duration="651000" />
       <workItem from="1603461441117" duration="3629000" />
       <workItem from="1635869433026" duration="1303000" />
-      <workItem from="1649674161362" duration="4392000" />
+      <workItem from="1649674161362" duration="7575000" />
+      <workItem from="1649931897004" duration="1560000" />
     </task>
+    <task id="LOCAL-00001" summary="StockPriceProducer and StockPriceConsumer using async offsets commit">
+      <created>1649680953474</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1649680953475</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -392,7 +363,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="StockPriceProducer and StockPriceConsumer using async offsets commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="StockPriceProducer and StockPriceConsumer using async offsets commit" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>

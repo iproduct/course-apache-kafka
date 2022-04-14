@@ -1,19 +1,22 @@
 package org.iproduct.kafka;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+@Slf4j
 public class DemoProducer {
     private Properties kafkaProps = new Properties();
     private Producer producer;
 
     private class DemoProducerCallback implements Callback {
         @Override
-        public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-            System.out.println(">>>" + recordMetadata);
+        public void onCompletion(RecordMetadata metadata, Exception e) {
+            log.info("topic: {}, partition {}, offset {}, timestamp: {}",
+                    metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
             if (e != null) {
                 e.printStackTrace();
             }
@@ -36,7 +39,7 @@ public class DemoProducer {
             ProducerRecord<String, Map<String,String>> record =
                     new ProducerRecord<>("events", "Precision Products",data);
             try {
-                producer.send(record, new DemoProducerCallback());
+                producer.send(record, new DemoProducerCallback());//.get() for synchronous
             } catch (Exception e) {
                 e.printStackTrace();
             }

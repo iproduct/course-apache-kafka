@@ -19,8 +19,9 @@ public class DemoConsumer {
 
     private class DemoProducerCallback implements Callback {
         @Override
-        public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-            System.out.println(">>>" + recordMetadata);
+        public void onCompletion(RecordMetadata metadata, Exception e) {
+            log.info("topic: {}, partition {}, offset {}, timestamp: {}",
+                    metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
             if (e != null) {
                 e.printStackTrace();
             }
@@ -46,7 +47,7 @@ public class DemoConsumer {
                 ConsumerRecords<String, Map<String, String>> records = consumer.poll(Duration.ofMillis(100));
                 if (records.count() > 0) {
                     for (ConsumerRecord<String, Map<String, String>> record : records) {
-                        log.debug("topic = {}, partition = {}, offset = {}, customer = {}, country = {}\n",
+                        log.debug("topic = {}, partition = {}, offset = {}, key = {}, value = {}\n",
                                 record.topic(), record.partition(), record.offset(),
                                 record.key(), record.value());
                         int updatedCount = 1;

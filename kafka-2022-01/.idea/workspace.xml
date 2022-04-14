@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8a0a9a2a-9fdb-400c-b6aa-8b3f73d55b99" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/DemoConsumer$DemoProducerCallback.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/DemoConsumer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/DemoProducer$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/DemoProducer$DemoProducerCallback.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/DemoProducer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/SimplePartitioner.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/dao/PersonDBController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/exception/EntityExistsException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/exception/InvalidRequestException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/exception/NonexistingEntityException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/model/Book$BookBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/model/Book.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/model/Person$PersonBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/model/Person.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/serialization/JsonDeserializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/serialization/JsonSerializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/serialization/JsonSimpleDeserializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/classes/java/main/org/iproduct/kafka/serialization/JsonSimpleSerializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/resources/main/connect-file-sink.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/resources/main/connect-file-source.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/resources/main/connect-standalone.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/build/resources/main/logback.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/src/main/java/org/iproduct/kafka/DemoConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/src/main/java/org/iproduct/kafka/DemoConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/src/main/java/org/iproduct/kafka/DemoProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/src/main/java/org/iproduct/kafka/DemoProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/src/main/java/org/iproduct/kafka/dao/PersonDBController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/src/main/java/org/iproduct/kafka/dao/PersonDBController.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="27mzBVd5Ftk2db5Z3n8fxL075PN" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.format.on.save.advertiser.fired" value="true" />
+    <property name="go.formatter.settings.were.checked" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.23772103" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8a0a9a2a-9fdb-400c-b6aa-8b3f73d55b99" name="Changes" comment="" />
+      <created>1649939916460</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1649939916460</updated>
+      <workItem from="1649939919455" duration="541000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>

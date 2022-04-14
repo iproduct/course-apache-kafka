@@ -24,8 +24,8 @@ public class PersonDBController {
 				Statement statement = connection.createStatement()) {
 			ResultSet rs = statement.executeQuery("SELECT * FROM persons ORDER BY lname");
 			while (rs.next()) {
-				availablePersons.add(new Person(rs.getInt(1), rs.getString(2), rs.getString(3),
-						rs.getInt(4)));
+//				availablePersons.add(new Person(rs.getInt(1), rs.getString(2), rs.getString(3),
+//						rs.getInt(4)));
 			}
 			System.out.println(availablePersons);
 		} catch (SQLException e) {
@@ -43,8 +43,8 @@ public class PersonDBController {
 				Statement statement = connection.createStatement()) {
 			ResultSet rs = statement.executeQuery("SELECT * FROM books WHERE id=" + id);
 			if (rs.next()) {
-				return new Person(rs.getInt(1), rs.getString(2), rs.getString(3),
-						rs.getInt(4));
+//				return new Person(rs.getInt(1), rs.getString(2), rs.getString(3),
+//						rs.getInt(4));
 			}
 		} catch (SQLException ex) {
 			throw new NonexistingEntityException("Person with ID=" + id +" not found.", ex);
