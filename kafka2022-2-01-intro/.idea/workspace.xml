@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="362faf2e-8628-4721-8042-dc9ebcf78119" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +136,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650020029567</updated>
-      <workItem from="1650020031140" duration="4619000" />
+      <workItem from="1650020031140" duration="5035000" />
     </task>
     <task id="LOCAL-00001" summary="kafka2022-2-01-intro initial commit">
       <created>1650020145408</created>
@@ -186,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650023315493</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="SimpleTemperatureReadingsProducer added">
+      <created>1650024830117</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1650024830117</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,6 +212,7 @@
     <MESSAGE value="kafka2022-2-01-intro build.gradle updated with Kafka deps" />
     <MESSAGE value="logback configuration added" />
     <MESSAGE value="configuration update" />
-    <option name="LAST_COMMIT_MESSAGE" value="configuration update" />
+    <MESSAGE value="SimpleTemperatureReadingsProducer added" />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleTemperatureReadingsProducer added" />
   </component>
 </project>

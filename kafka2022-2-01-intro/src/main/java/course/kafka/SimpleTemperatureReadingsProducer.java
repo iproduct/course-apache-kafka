@@ -39,7 +39,13 @@ public class SimpleTemperatureReadingsProducer implements Runnable{
                 .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading.toString()))
                 .forEach(record -> {
                     try {
-                        producer.send(record).get();
+                        producer.send(record, ((metadata, exception) -> {
+                            if(exception != null) {
+                                log.error("Error sending data:" + metadata.toString(), exception);
+                            }
+                            log.info("Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+                                    metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+                        })).get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
@@ -53,5 +59,6 @@ public class SimpleTemperatureReadingsProducer implements Runnable{
         var executor = Executors.newFixedThreadPool(1);
         var producerFuture = executor.submit(producer);
         producerFuture.get();
+        executor.shutdown();
     }
 }
