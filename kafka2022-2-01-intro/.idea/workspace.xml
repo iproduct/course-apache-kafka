@@ -9,20 +9,11 @@
       <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/docs/kafka-commands.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/kafka-commands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/kafka-commands.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,11 +38,14 @@
     <option name="version" value="2" />
   </component>
   <component name="ProjectId" id="27pbZ62dGNl5OrtcmMhQMAX0o36" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -65,6 +59,11 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.23772103" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\CourseKafka\git\course-apache-kafka\kafka2022-2-01-intro" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="Application" factoryName="Application">
@@ -117,11 +116,40 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650020029567</updated>
-      <workItem from="1650020031140" duration="86000" />
+      <workItem from="1650020031140" duration="2338000" />
     </task>
+    <task id="LOCAL-00001" summary="kafka2022-2-01-intro initial commit">
+      <created>1650020145408</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1650020145408</updated>
+    </task>
+    <task id="LOCAL-00002" summary="kafka2022-2-01-intro commands updated">
+      <created>1650020393675</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1650020393675</updated>
+    </task>
+    <task id="LOCAL-00003" summary="kafka2022-2-01-intro commands.txt updated">
+      <created>1650020424514</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1650020424514</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="kafka2022-2-01-intro initial commit" />
+    <MESSAGE value="kafka2022-2-01-intro commands updated" />
+    <MESSAGE value="kafka2022-2-01-intro commands.txt updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="kafka2022-2-01-intro commands.txt updated" />
   </component>
 </project>

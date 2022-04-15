@@ -32,4 +32,9 @@ taskkill /F /PID pid_number
 connect-standalone config\connect-standalone.properties config\connect-file-source.properties config\connect-file-sink.properties
 connect-standalone .\src\main\resources\connect-standalone.properties .\src\main\resources\connect-file-source.properties .\src\main \resources\connect-file-sink.properties
 
+bin\windows\kafka-storage.bat format --config .\config\kraft\server.properties --cluster-id 1-wTPNMYQkinQ7KUbCZi9g
+bin\windows\kafka-server-start.bat config\kraft\server.properties
 
+on Linux/Mac:
+./bin/kafka-storage format --config ./etc/kafka/kraft/server.properties --cluster-id $(./bin/kafka-storage random-uuid)
+./bin/kafka-server-start ./etc/kafka/kraft/server.properties
