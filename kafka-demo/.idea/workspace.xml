@@ -15,6 +15,7 @@
       <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/gradlew" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/gradlew.bat" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureConsumer.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/resources/logback.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
