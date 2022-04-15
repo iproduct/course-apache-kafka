@@ -5,9 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="362faf2e-8628-4721-8042-dc9ebcf78119" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureConsumer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/exception/JsonSerializationException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serializer/JsonDeserializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serializer/JsonSerializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/resources/main/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/exception/JsonSerializationException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serializer/JsonDeserializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serializer/JsonSerializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureConsumer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,8 +82,25 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\CourseKafka\git\course-apache-kafka\kafka2022-2-01-intro" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="course.kafka.serializer" />
+    </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.SimpleTemperatureReadingsProducer">
+    <configuration name="SimpleTemperatureConsumer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="course.kafka.SimpleTemperatureConsumer" />
+      <module name="kafka2022-2-01-intro.main" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="course.kafka.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SimpleTemperatureReadingsProducer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="course.kafka.SimpleTemperatureReadingsProducer" />
       <module name="kafka2022-2-01-intro.main" />
@@ -124,6 +158,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SimpleTemperatureConsumer" />
         <item itemvalue="Application.SimpleTemperatureReadingsProducer" />
       </list>
     </recent_temporary>
@@ -136,7 +171,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650020029567</updated>
-      <workItem from="1650020031140" duration="5035000" />
+      <workItem from="1650020031140" duration="10620000" />
+      <workItem from="1650045159199" duration="2954000" />
     </task>
     <task id="LOCAL-00001" summary="kafka2022-2-01-intro initial commit">
       <created>1650020145408</created>
@@ -194,7 +230,21 @@
       <option name="project" value="LOCAL" />
       <updated>1650024830117</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="SimpleTemperatureReadingsProducer async submit result messages added">
+      <created>1650025337910</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1650025337910</updated>
+    </task>
+    <task id="LOCAL-00010" summary="SimpleTemperatureConsumer added">
+      <created>1650026907080</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1650026907080</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -213,6 +263,15 @@
     <MESSAGE value="logback configuration added" />
     <MESSAGE value="configuration update" />
     <MESSAGE value="SimpleTemperatureReadingsProducer added" />
-    <option name="LAST_COMMIT_MESSAGE" value="SimpleTemperatureReadingsProducer added" />
+    <MESSAGE value="SimpleTemperatureReadingsProducer async submit result messages added" />
+    <MESSAGE value="SimpleTemperatureConsumer added" />
+    <option name="LAST_COMMIT_MESSAGE" value="SimpleTemperatureConsumer added" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="GradleRunConfiguration">
+        <watch expression="((ParameterizedType) getClass().getGenericInterfaces()[0]).getActualTypeArguments()" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

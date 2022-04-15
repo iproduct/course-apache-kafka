@@ -1,5 +1,7 @@
 package course.kafka;
 
+import course.kafka.model.TemperatureReading;
+import course.kafka.serializer.JsonDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -16,8 +18,11 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class SimpleTemperatureConsumer implements Runnable {
     public static final String TOPIC = "events";
-    public static final String CONSUMER_GROUP = "EventsConsumer01";
+    public static final String CONSUMER_GROUP = "EventsConsumer";
     public static final String BOOTSTRAP_SERVER = "localhost:9092";
+    public static final String KEY_CLASS = "key.class";
+    public static final String VALUE_CLASS = "value.class";
+
 
     private volatile boolean canceled;
 
@@ -25,13 +30,16 @@ public class SimpleTemperatureConsumer implements Runnable {
         canceled = true;
     }
 
-    private static Consumer<String, String> createConsumer() {
+    private static Consumer<String, TemperatureReading> createConsumer() {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        return new KafkaConsumer<String, String>(props);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
+        props.put(KEY_CLASS, String.class.getName());
+        props.put(VALUE_CLASS, TemperatureReading.class.getName());
+
+        return new KafkaConsumer<String, TemperatureReading>(props);
     }
 
     @Override
@@ -41,7 +49,7 @@ public class SimpleTemperatureConsumer implements Runnable {
         while (!canceled) {
             var records = consumer.poll(Duration.ofMillis(100));
             for (var record : records) {
-                log.info("Topic: {}, Partition: {}, Offset: {}, Timestamp: {} => Key: {} -> Value: {}",
+                log.info("Topic: {}, Partition: {}, Offset: {}, Timestamp: {} =>\nKey: {} -> Value: {}",
                         record.topic(), record.partition(), record.offset(), record.timestamp(),
                         record.key(), record.value());
             }
