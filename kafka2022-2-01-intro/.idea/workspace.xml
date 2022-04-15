@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="362faf2e-8628-4721-8042-dc9ebcf78119" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +113,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650020029567</updated>
-      <workItem from="1650020031140" duration="2910000" />
+      <workItem from="1650020031140" duration="3220000" />
     </task>
     <task id="LOCAL-00001" summary="kafka2022-2-01-intro initial commit">
       <created>1650020145408</created>
@@ -148,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650022788851</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="logback configuration added">
+      <created>1650022990773</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1650022990773</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,6 +169,7 @@
     <MESSAGE value="kafka2022-2-01-intro commands updated" />
     <MESSAGE value="kafka2022-2-01-intro commands.txt updated" />
     <MESSAGE value="kafka2022-2-01-intro build.gradle updated with Kafka deps" />
-    <option name="LAST_COMMIT_MESSAGE" value="kafka2022-2-01-intro build.gradle updated with Kafka deps" />
+    <MESSAGE value="logback configuration added" />
+    <option name="LAST_COMMIT_MESSAGE" value="logback configuration added" />
   </component>
 </project>

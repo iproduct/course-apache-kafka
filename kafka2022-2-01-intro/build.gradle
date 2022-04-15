@@ -1,5 +1,5 @@
 plugins {
-    id 'java',
+    id 'java'
     id 'idea'
 }
 
@@ -32,11 +32,13 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'mysql:mysql-connector-java:8.0.28'
     compileOnly 'org.projectlombok:lombok:1.18.22'
-    runtimeOnly 'mysql:mysql-connector-java'
-    testRuntimeOnly 'com.h2database:h2'
-    annotationProcessor 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
+    testRuntimeOnly 'com.h2database:h2-mvstore:2.1.210'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 test {
