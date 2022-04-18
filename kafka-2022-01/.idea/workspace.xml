@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a0a9a2a-9fdb-400c-b6aa-8b3f73d55b99" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +100,7 @@
       <workItem from="1649939919455" duration="2665000" />
       <workItem from="1650022685261" duration="11000" />
       <workItem from="1650022877258" duration="9000" />
+      <workItem from="1650278853311" duration="884000" />
     </task>
     <task id="LOCAL-00001" summary="kafka-2022-01 initial commit">
       <created>1649940522458</created>
