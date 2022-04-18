@@ -30,6 +30,8 @@ public class JsonDeserializer<T> implements Deserializer<T> {
         try {
             cls = (Class<T>) Class.forName(clsName);
         } catch (ClassNotFoundException e) {
+            log.error("Failed to configure JsonDeserializer. " +
+                    "Did you forget to specify the '{}' property?", configKey);
             throw new JsonSerializationException("Entity class not found: " + clsName, e);
         }
         Deserializer.super.configure(configs, isKey);
@@ -41,8 +43,9 @@ public class JsonDeserializer<T> implements Deserializer<T> {
             return objectMapper.readValue(data, cls);
         } catch (IOException e) {
             try {
-                throw new JsonSerializationException("Error deserializing entity: " +
-                        new String(data, "utf-8"), e);
+                var message = new String(data, "utf-8");
+                log.error("Error serializing entity: " + message, e);
+                throw new JsonSerializationException("Error deserializing entity: " + message, e);
             } catch (UnsupportedEncodingException ex) {
                 throw new JsonSerializationException("Error decoding data using UTF-8", ex);
             }

@@ -9,13 +9,19 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class TemperatureReading {
-    private final String id;
-    private final String sensorId;
-    private final double value;
+    private String id;
+    private String sensorId;
+    private double value;
     private LocalDateTime timestamp = LocalDateTime.now();
+
+    public TemperatureReading(String id, String sensorId, double value) {
+        this.id = id;
+        this.sensorId = sensorId;
+        this.value = value;
+    }
 }
 
 

@@ -1,5 +1,7 @@
 package course.kafka.consumer;
 
+import course.kafka.model.TemperatureReading;
+import course.kafka.serialization.JsonDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -24,17 +26,17 @@ public class TemperatureReadingConsumer implements Runnable {
 
     private volatile boolean canceled;
 
-    private static Consumer<String, String> createConsumer() {
+    private static Consumer<String, TemperatureReading> createConsumer() {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
         props.put(KEY_CLASS, String.class.getName());
-        props.put(VALUE_CLASS, String.class.getName());
+        props.put(VALUE_CLASS, TemperatureReading.class.getName());
 
-        return new KafkaConsumer<String, String>(props);
+        return new KafkaConsumer<>(props);
     }
 
     public void cancel() {
@@ -49,7 +51,7 @@ public class TemperatureReadingConsumer implements Runnable {
                 var records = consumer.poll(
                         Duration.ofMillis(POLLING_DURATION_MS));
                 for (var r : records) {
-                    log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: Key: {} --> Value: {}",
+                    log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: {} --> {}",
                             r.topic(), r.partition(), r.offset(), r.timestamp(), r.leaderEpoch(), r.key(), r.value());
                 }
             }

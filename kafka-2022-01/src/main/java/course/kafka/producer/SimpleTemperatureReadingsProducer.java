@@ -1,6 +1,7 @@
 package course.kafka.producer;
 
 import course.kafka.model.TemperatureReading;
+import course.kafka.serialization.JsonSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -21,14 +22,14 @@ public class SimpleTemperatureReadingsProducer implements Runnable {
     public static final String CLIENT_ID = "EventsClient";
     public static final String BOOTSTRAP_SERVERS = "localhost:9092";
 
-    private static Producer<String, String> createProducer() {
+    private static Producer<String, TemperatureReading> createProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, CLIENT_ID);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
         props.put(ProducerConfig.ACKS_CONFIG, "all");
-        return new KafkaProducer<String, String>(props);
+        return new KafkaProducer<>(props);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class SimpleTemperatureReadingsProducer implements Runnable {
             long time = System.currentTimeMillis();
             var recordFutures = new Random().doubles(10).map(t -> t * 40)
                     .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), "temperatureSensor01", t))
-                    .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading.toString()))
+                    .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading))
                     .map(record -> {
                         return producer.send(record, ((metadata, exception) -> {
                             if (exception != null) {

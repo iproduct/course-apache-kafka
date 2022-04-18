@@ -5,16 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a0a9a2a-9fdb-400c-b6aa-8b3f73d55b99" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/exception/JsonSerializationException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonDeserializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonSerializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/consumer/TemperatureReadingConsumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/consumer/TemperatureReadingConsumer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonDeserializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonDeserializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +150,7 @@
       <workItem from="1649939919455" duration="2665000" />
       <workItem from="1650022685261" duration="11000" />
       <workItem from="1650022877258" duration="9000" />
-      <workItem from="1650278853311" duration="6806000" />
+      <workItem from="1650278853311" duration="8481000" />
     </task>
     <task id="LOCAL-00001" summary="kafka-2022-01 initial commit">
       <created>1649940522458</created>
@@ -170,7 +173,21 @@
       <option name="project" value="LOCAL" />
       <updated>1650284028012</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Json serializer and deserializer added">
+      <created>1650285932287</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1650285932287</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Json serializer and deserializer added">
+      <created>1650285968110</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1650285968110</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,6 +198,7 @@
     <MESSAGE value="kafka-2022-01 initial commit" />
     <MESSAGE value="kafka-commands.txt added, producer added" />
     <MESSAGE value="consumer added" />
-    <option name="LAST_COMMIT_MESSAGE" value="consumer added" />
+    <MESSAGE value="Json serializer and deserializer added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Json serializer and deserializer added" />
   </component>
 </project>
