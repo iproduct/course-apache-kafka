@@ -5,26 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="362faf2e-8628-4721-8042-dc9ebcf78119" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureConsumer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/exception/JsonSerializationException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serializer/JsonDeserializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serializer/JsonSerializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/logback.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/exception/JsonSerializationException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serializer/JsonDeserializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serializer/JsonSerializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/resources/main/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/resources/logback.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureConsumer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +167,8 @@
       <option name="presentableId" value="Default" />
       <updated>1650020029567</updated>
       <workItem from="1650020031140" duration="10620000" />
-      <workItem from="1650045159199" duration="2954000" />
+      <workItem from="1650045159199" duration="7390000" />
+      <workItem from="1650277943142" duration="2165000" />
     </task>
     <task id="LOCAL-00001" summary="kafka2022-2-01-intro initial commit">
       <created>1650020145408</created>
@@ -244,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650026907080</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="JsonDeserializer demo complete and working">
+      <created>1650048192206</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1650048192206</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -265,7 +268,8 @@
     <MESSAGE value="SimpleTemperatureReadingsProducer added" />
     <MESSAGE value="SimpleTemperatureReadingsProducer async submit result messages added" />
     <MESSAGE value="SimpleTemperatureConsumer added" />
-    <option name="LAST_COMMIT_MESSAGE" value="SimpleTemperatureConsumer added" />
+    <MESSAGE value="JsonDeserializer demo complete and working" />
+    <option name="LAST_COMMIT_MESSAGE" value="JsonDeserializer demo complete and working" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

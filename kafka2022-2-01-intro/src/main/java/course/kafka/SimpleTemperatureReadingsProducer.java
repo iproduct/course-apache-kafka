@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.function.BiFunction;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Runnable{

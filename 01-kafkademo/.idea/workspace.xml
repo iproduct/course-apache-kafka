@@ -5,27 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20bd9b06-c192-45b3-a33b-9c17a62dd8bc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/model/TemperatureReading.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureConsumer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/resources/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/resources/main/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/resources/logback.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/docs/kafka-commands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/docs/kafka-commands.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -315,6 +308,7 @@
       <workItem from="1635869433026" duration="1303000" />
       <workItem from="1649674161362" duration="7575000" />
       <workItem from="1649931897004" duration="3799000" />
+      <workItem from="1650045552238" duration="3925000" />
     </task>
     <task id="LOCAL-00001" summary="StockPriceProducer and StockPriceConsumer using async offsets commit">
       <created>1649680953474</created>
