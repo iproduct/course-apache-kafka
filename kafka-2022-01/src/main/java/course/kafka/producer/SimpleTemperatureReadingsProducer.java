@@ -2,7 +2,6 @@ package course.kafka.producer;
 
 import course.kafka.model.TemperatureReading;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -14,10 +13,11 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Runnable {
-    public static final String TOPIC = "events";
+    public static final String TOPIC = "temperature";
     public static final String CLIENT_ID = "EventsClient";
     public static final String BOOTSTRAP_SERVERS = "localhost:9092";
 
@@ -33,18 +33,28 @@ public class SimpleTemperatureReadingsProducer implements Runnable {
 
     @Override
     public void run() {
-        final var producer = createProducer();
-        long time = System.currentTimeMillis();
-        new Random().doubles(10).map(t -> t * 40)
-                .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), "temperatureSensor01", t))
-                .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading))
-                .forEach(record -> {
-                    try {
-                        producer.send(record).get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        log.error("Error sending temperature reading", e);
-                    }
-                });
+        try (var producer = createProducer()) {
+            long time = System.currentTimeMillis();
+            var recordFutures = new Random().doubles(10).map(t -> t * 40)
+                    .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), "temperatureSensor01", t))
+                    .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading.toString()))
+                    .map(record -> {
+                        return producer.send(record, ((metadata, exception) -> {
+                            if (exception != null) {
+                                log.error("Error sending temperature readings", exception);
+                            }
+                            log.info("Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+                                    metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+                        }));
+                    }).collect(Collectors.toList());
+            recordFutures.forEach(f -> {
+                try {
+                    f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    log.error("Error sending temperature readings", e);
+                }
+            });
+        }
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
