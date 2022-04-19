@@ -5,21 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="362faf2e-8628-4721-8042-dc9ebcf78119" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/resources/main/logback.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/resources/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/01-kafkademo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/kafka-2022-01.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/kafka-demo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kafka2022-2-01-intro.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/consumer/TemperatureReadingConsumer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonDeserializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonSerializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/course/kafka/partitioner/TemperatureReadingsPartioner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/IPT_Kafka_01.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/consumer/TemperatureReadingConsumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/consumer/TemperatureReadingConsumer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/docs/kafka-commands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/docs/kafka-commands.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-2022-01/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureConsumer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/SimpleTemperatureReadingsProducer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serializer/JsonDeserializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serializer/JsonSerializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/kafka-commands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/kafka-commands.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/exception/JsonSerializationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/exception/JsonSerializationException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/serializer/JsonDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/serializer/JsonSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonSerializer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +61,7 @@
       </list>
     </option>
   </component>
+  <component name="GOROOT" url="file://C:/Program Files/Go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -57,23 +75,21 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="go.format.on.save.advertiser.fired" value="true" />
-    <property name="go.formatter.settings.were.checked" value="true" />
-    <property name="go.import.settings.migrated" value="true" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Global Libraries" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.23772103" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "D:/CourseKafka/git/course-apache-kafka/kafka2022-2-01-intro/src/main/java/course/kafka"
+  }
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\CourseKafka\git\course-apache-kafka\kafka2022-2-01-intro\src\main\java\course\kafka" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\CourseKafka\git\course-apache-kafka\kafka2022-2-01-intro" />
     </key>
@@ -81,7 +97,7 @@
       <recent name="course.kafka.serializer" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SimpleTemperatureReadingsProducer">
+  <component name="RunManager" selected="Application.course.kafka.producer.SimpleTemperatureReadingsProducer">
     <configuration name="SimpleTemperatureConsumer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="course.kafka.SimpleTemperatureConsumer" />
       <module name="kafka2022-2-01-intro.main" />
@@ -110,8 +126,36 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TemperatureReadingConsumer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="course.kafka.consumer.TemperatureReadingConsumer" />
+      <module name="kafka2022-2-01-intro.main" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="course.kafka.consumer.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="course.kafka.producer.SimpleTemperatureReadingsProducer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="course.kafka.producer.SimpleTemperatureReadingsProducer" />
+      <module name="kafka2022-2-01-intro.main" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="course.kafka.producer.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -153,6 +197,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.course.kafka.producer.SimpleTemperatureReadingsProducer" />
+        <item itemvalue="Application.TemperatureReadingConsumer" />
         <item itemvalue="Application.SimpleTemperatureConsumer" />
         <item itemvalue="Application.SimpleTemperatureReadingsProducer" />
       </list>
@@ -168,7 +214,8 @@
       <updated>1650020029567</updated>
       <workItem from="1650020031140" duration="10620000" />
       <workItem from="1650045159199" duration="7390000" />
-      <workItem from="1650277943142" duration="2165000" />
+      <workItem from="1650277943142" duration="2810000" />
+      <workItem from="1650347679916" duration="14132000" />
     </task>
     <task id="LOCAL-00001" summary="kafka2022-2-01-intro initial commit">
       <created>1650020145408</created>
@@ -271,10 +318,17 @@
     <MESSAGE value="JsonDeserializer demo complete and working" />
     <option name="LAST_COMMIT_MESSAGE" value="JsonDeserializer demo complete and working" />
   </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
   <component name="XDebuggerManager">
     <watches-manager>
       <configuration name="GradleRunConfiguration">
         <watch expression="((ParameterizedType) getClass().getGenericInterfaces()[0]).getActualTypeArguments()" language="JAVA" />
+        <watch expression="Utils.murmur2(keyBytes) % NUMBER_OF_PARTITIONS_PER_HF_SENSOR + hfReadingIndex * NUMBER_OF_PARTITIONS_PER_HF_SENSOR" language="JAVA" />
+        <watch expression="Utils.murmur2(sensorId.getBytes())" language="JAVA" />
+        <watch expression="(Utils.murmur2(sensorId.getBytes()) &amp; -1 &gt;&gt;&gt; 1)" language="JAVA" />
+        <watch expression="Utils.murmur2(sensorId.getBytes()) &gt;&gt;&gt; 1" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

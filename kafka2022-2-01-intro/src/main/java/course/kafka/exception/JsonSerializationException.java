@@ -1,6 +1,6 @@
 package course.kafka.exception;
 
-public class JsonSerializationException extends RuntimeException{
+public class JsonSerializationException extends RuntimeException {
     public JsonSerializationException() {
     }
 

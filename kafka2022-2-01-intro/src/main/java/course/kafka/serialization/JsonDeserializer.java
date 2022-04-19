@@ -1,25 +1,22 @@
-package course.kafka.serializer;
+package course.kafka.serialization;
 
-import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import course.kafka.exception.JsonSerializationException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.ParameterizedType;
-import java.nio.ByteBuffer;
 import java.util.Map;
 
 @Slf4j
 public class JsonDeserializer<T> implements Deserializer<T> {
     public static final String KEY_CLASS = "key.class";
-    public static final String VALUE_CLASS = "value.class";
+    public static final String VALUE_CLASS = "values.class";
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
     static {
         objectMapper.registerModule(new JavaTimeModule());
     }
@@ -35,6 +32,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
         } catch (ClassNotFoundException e) {
             log.error("Failed to configure JsonDeserializer. " +
                     "Did you forget to specify the '{}' property?", configKey);
+            throw new JsonSerializationException("Entity class not found: " + clsName, e);
         }
         Deserializer.super.configure(configs, isKey);
     }
@@ -43,25 +41,14 @@ public class JsonDeserializer<T> implements Deserializer<T> {
     public T deserialize(String topic, byte[] data) {
         try {
             return objectMapper.readValue(data, cls);
-        } catch (IOException ex) {
-            String message = "";
+        } catch (IOException e) {
             try {
-                message = new String(data, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                log.error("Error decoding text to UTF-8", e);
+                var message = new String(data, "utf-8");
+                log.error("Error serializing entity: " + message, e);
+                throw new JsonSerializationException("Error deserializing entity: " + message, e);
+            } catch (UnsupportedEncodingException ex) {
+                throw new JsonSerializationException("Error decoding data using UTF-8", ex);
             }
-            log.error("Error serializing entity: " + message, ex);
-            throw new JsonSerializationException("Error deserializing data: " + message, ex);
         }
-    }
-
-    @Override
-    public T deserialize(String topic, Headers headers, byte[] data) {
-        return Deserializer.super.deserialize(topic, headers, data);
-    }
-
-    @Override
-    public void close() {
-        Deserializer.super.close();
     }
 }

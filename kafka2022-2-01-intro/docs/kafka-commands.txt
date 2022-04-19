@@ -1,8 +1,9 @@
 bin\windows\zookeeper-server-start.bat config\zookeeper.properties
-bin\zookeeper-server-start.sh config\zookeeper.properties
 bin\windows\kafka-server-start.bat config\server.properties
+
+bin\zookeeper-server-start.sh config\zookeeper.properties
 bin\kafka-server-start.sh config\server.properties
-kafka-topics.bat --list --zookeeper localhost:1281
+
 kafka-topics.bat --list --bootstrap-server localhost:9092
 kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic my-new-topic
 kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic events
@@ -38,3 +39,7 @@ bin\windows\kafka-server-start.bat config\kraft\server.properties
 on Linux/Mac:
 ./bin/kafka-storage format --config ./etc/kafka/kraft/server.properties --cluster-id $(./bin/kafka-storage random-uuid)
 ./bin/kafka-server-start ./etc/kafka/kraft/server.properties
+
+# Docker compose
+wsl --distribution docker-desktop-data
+docker-compose -f examples\docker-compose.yml run kafka
