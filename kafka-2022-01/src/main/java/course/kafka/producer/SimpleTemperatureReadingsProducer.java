@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class SimpleTemperatureReadingsProducer implements Runnable {
     public static final String TOPIC = "temperature";
     public static final String CLIENT_ID = "EventsClient";
-    public static final String BOOTSTRAP_SERVERS = "localhost:9092";
+    public static final String BOOTSTRAP_SERVERS = "localhost:9093";
 
     private static Producer<String, TemperatureReading> createProducer() {
         Properties props = new Properties();
@@ -63,6 +63,6 @@ public class SimpleTemperatureReadingsProducer implements Runnable {
         var executor = Executors.newCachedThreadPool();
         var producerFuture = executor.submit(producer);
         producerFuture.get();
-        executor.shutdown();
+        executor.shutdownNow();
     }
 }

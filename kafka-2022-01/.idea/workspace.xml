@@ -5,17 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a0a9a2a-9fdb-400c-b6aa-8b3f73d55b99" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/01-kafkademo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kafka-2022-01.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-demo/.idea/kafka-demo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/build/classes/java/main/course/kafka/partitioner/TemperatureReadingsPartioner.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../01-kafkademo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/consumer/TemperatureReadingConsumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/consumer/TemperatureReadingConsumer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/model/TemperatureReading.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/producer/SimpleTemperatureReadingsProducer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/course/kafka/serialization/JsonDeserializer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/kafka-commands.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/kafka-commands.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/consumer/TemperatureReadingConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/model/TemperatureReading.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/producer/SimpleTemperatureReadingsProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/course/kafka/serialization/JsonDeserializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-demo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka2022-2-01-intro/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -42,6 +43,7 @@
       </list>
     </option>
   </component>
+  <component name="GOROOT" url="file://C:/Program Files/Go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -55,23 +57,17 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="go.format.on.save.advertiser.fired" value="true" />
-    <property name="go.formatter.settings.were.checked" value="true" />
-    <property name="go.import.settings.migrated" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.23772103" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\CourseKafka\git\course-apache-kafka\kafka-2022-01\src\main\resources" />
@@ -150,7 +146,9 @@
       <workItem from="1649939919455" duration="2665000" />
       <workItem from="1650022685261" duration="11000" />
       <workItem from="1650022877258" duration="9000" />
-      <workItem from="1650278853311" duration="8481000" />
+      <workItem from="1650278853311" duration="9163000" />
+      <workItem from="1650345134392" duration="2222000" />
+      <workItem from="1650538236823" duration="1383000" />
     </task>
     <task id="LOCAL-00001" summary="kafka-2022-01 initial commit">
       <created>1649940522458</created>
@@ -187,7 +185,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650285968110</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Default constructor added to TemperatureReading + logging of exceptions in ser/de classes">
+      <created>1650288452801</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1650288452801</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,6 +204,10 @@
     <MESSAGE value="kafka-commands.txt added, producer added" />
     <MESSAGE value="consumer added" />
     <MESSAGE value="Json serializer and deserializer added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Json serializer and deserializer added" />
+    <MESSAGE value="Default constructor added to TemperatureReading + logging of exceptions in ser/de classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Default constructor added to TemperatureReading + logging of exceptions in ser/de classes" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
   </component>
 </project>

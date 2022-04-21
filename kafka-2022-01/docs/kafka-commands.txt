@@ -12,6 +12,7 @@ kafka-topics.bat --describe --bootstrap-server localhost:9092 --topic events
 kafka-console-producer.bat --broker-list localhost:9092 --topic events
 kafka-console-producer.bat --broker-list localhost:9092 --topic events –sync
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic events --from-beginning
+kafka-topics.bat --describe --bootstrap-server localhost:9093 --topic temperature
 
 copy config\server.properties config\server-1.properties
 copy config\server.properties config\server-2.properties
@@ -39,3 +40,7 @@ bin\windows\kafka-server-start.bat config\kraft\server.properties
 on Linux/Mac:
 ./bin/kafka-storage format --config ./etc/kafka/kraft/server.properties --cluster-id $(./bin/kafka-storage random-uuid)
 ./bin/kafka-server-start ./etc/kafka/kraft/server.properties
+
+# Docker compose
+wsl --distribution docker-desktop-data
+docker-compose -f examples\docker-compose.yml run kafka
