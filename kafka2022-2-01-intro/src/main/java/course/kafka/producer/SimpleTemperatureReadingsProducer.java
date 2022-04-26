@@ -3,7 +3,6 @@ package course.kafka.producer;
 import course.kafka.model.TemperatureReading;
 import course.kafka.partitioner.TemperatureReadingsPartioner;
 import course.kafka.serialization.JsonSerializer;
-import jdk.jfr.Frequency;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -13,6 +12,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static course.kafka.model.TemperatureReading.HF_SENSOR_IDS;
@@ -20,7 +20,7 @@ import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
-    public static final String TOPIC = "temperature12";
+    public static final String TOPIC = "temperature";
     public static final String CLIENT_ID = "EventsClient";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";
     public static final int NUM_READINGS = 10;
@@ -57,8 +57,9 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
 
     @Override
     public String call() {
-        var latch = new CountDownLatch(NUM_READINGS);
+        var latch = new CountDownLatch(numReadings);
         try (var producer = createProducer()) {
+            var i = new AtomicInteger();
             var recordFutures = new Random().doubles(numReadings).map(t -> t * 40)
                     .peek(t -> {
                         try {
@@ -66,6 +67,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
+                        i.incrementAndGet();
                     })
                     .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), sensorId, t))
                     .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading))
@@ -74,12 +76,14 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                             if (exception != null) {
                                 log.error("Error sending temperature readings", exception);
                             }
-                            log.info("Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+                            log.info("SENSOR_ID: {}, MESSAGE: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+                                    sensorId, i.get(),
                                     metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                             latch.countDown();
                         });
                     }).collect(Collectors.toList());
-           latch.await(5, TimeUnit.SECONDS);
+           latch.await(15, TimeUnit.SECONDS);
+           log.info("!!! Closing producer for '{}'", sensorId);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -101,7 +105,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
             ecs.submit(producer);
         }
         for(int i = 0; i < producers.size(); i ++){
-            System.out.printf("Producer for sensor '%s' competed.%n", ecs.poll().get());
+            System.out.printf("!!!!!!!!!!!! Producer for sensor '%s' COMPLETED.%n", ecs.take().get());
         }
         executor.shutdownNow();
     }
