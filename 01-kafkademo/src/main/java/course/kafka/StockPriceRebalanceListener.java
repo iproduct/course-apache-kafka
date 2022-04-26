@@ -37,7 +37,7 @@ public class StockPriceRebalanceListener  implements ConsumerRebalanceListener {
 
     @Override
     public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
-//        consumer.seekToBeginning(partitions);
+        consumer.seekToBeginning(partitions);
         try {
             Map<TopicPartition, OffsetAndMetadata> savedOffsets = dao.getOffsetsByConsumerGroupId(consumerGroupId);
             for(TopicPartition tp: partitions) {

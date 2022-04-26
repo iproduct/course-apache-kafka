@@ -28,7 +28,17 @@ public class SimpleTemperatureReadingsProducer implements Runnable {
         props.put(ProducerConfig.CLIENT_ID_CONFIG, CLIENT_ID);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
-        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.ACKS_CONFIG, "all"); // best combined with  min.insync.replicas > 1
+        props.put(ProducerConfig.LINGER_MS_CONFIG, 5);
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
+        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
+        props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
+//        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+
+
         return new KafkaProducer<>(props);
     }
 

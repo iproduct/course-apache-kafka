@@ -51,7 +51,7 @@ public class TemperatureReadingConsumer implements Runnable {
                 var records = consumer.poll(
                         Duration.ofMillis(POLLING_DURATION_MS));
                 for (var r : records) {
-                    log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: {} --> {}",
+                    log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: {} -->\n    {}",
                             r.topic(), r.partition(), r.offset(), r.timestamp(), r.leaderEpoch(), r.key(), r.value());
                 }
             }
