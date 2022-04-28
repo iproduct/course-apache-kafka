@@ -1,6 +1,7 @@
 package course.kafka.producer;
 
 import course.kafka.model.TemperatureReading;
+import course.kafka.partitioner.TemperatureReadingsPartitioner;
 import course.kafka.serialization.JsonSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -21,10 +22,10 @@ import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
     public static final String TOPIC = "temperature";
-    public static final String CLIENT_ID = "EventsClient";
+    public static final String CLIENT_ID = "EventsClient_Group1";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";
     public static final String HIGH_FREQUENCY_SENSORS = "sensors.highfrequency";
-    public static final int PRODUCER_TIMEOUT_MS = 20000;
+    public static final int PRODUCER_TIMEOUT_SEC = 20;
     private String sensorId;
     private long maxDelayMs = 10000;
     private int numReadings = 10;
@@ -41,62 +42,87 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.CLIENT_ID_CONFIG, CLIENT_ID);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
-        props.put(ProducerConfig.ACKS_CONFIG, "all"); // best combined with  min.insync.replicas > 1
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.LINGER_MS_CONFIG, 5);
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
-//        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
-        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
+//        Properties props = new Properties();
+//        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+//        props.put(ProducerConfig.CLIENT_ID_CONFIG, CLIENT_ID);
+//        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+//        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
+//        props.put(ProducerConfig.ACKS_CONFIG, "all"); // best combined with  min.insync.replicas > 1
+//        props.put(ProducerConfig.LINGER_MS_CONFIG, 5);
+//        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
+//        props.put(ProducerConfig.RETRIES_CONFIG, 3);
+//        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
+//        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000);
+//        props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
+////        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+////        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
+//        props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
 
         return new KafkaProducer<>(props);
     }
 
     @Override
-    public String call() throws InterruptedException {
+    public String call() {
         var latch = new CountDownLatch(numReadings);
         try (var producer = createProducer()) {
-            var count = new AtomicInteger();
-            new Random().doubles(numReadings).map(t -> t * 40)
+            var i = new AtomicInteger();
+            var recordFutures = new Random().doubles(numReadings).map(t -> t * 40)
                     .peek(t -> {
                         try {
-                            Thread.sleep((int) Math.random() * maxDelayMs);
+                            Thread.sleep((int)(Math.random() * maxDelayMs));
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
+                        i.incrementAndGet();
                     })
                     .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), sensorId, t))
                     .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading))
                     .map(record -> {
-                        return producer.send(record, ((metadata, exception) -> {
+                        return producer.send(record, (metadata, exception) -> {
                             if (exception != null) {
                                 log.error("Error sending temperature readings", exception);
                             }
-                            log.info("SensorID: {}, Number: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
-                                    sensorId, count.incrementAndGet(),
+                            log.info("SENSOR_ID: {}, MESSAGE: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+                                    sensorId, i.get(),
                                     metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                             latch.countDown();
-                        }));
-                    }).forEach(future ->{});
+                        });
+                    }).collect(Collectors.toList());
+            latch.await(15, TimeUnit.SECONDS);
+            log.info("!!! Closing producer for '{}'", sensorId);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        latch.await(PRODUCER_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         return sensorId;
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         final List<SimpleTemperatureReadingsProducer> producers = new ArrayList<>();
-        HF_SENSOR_IDS.forEach(hfs -> producers.add(new SimpleTemperatureReadingsProducer(hfs, 500, 20)));
-        NORMAL_SENSOR_IDS.forEach(ns -> producers.add(new SimpleTemperatureReadingsProducer(ns, 5000, 2)));
         var executor = Executors.newCachedThreadPool();
-        var ecs = new ExecutorCompletionService<String>(executor);
-        producers.stream().forEach(producer -> ecs.submit(producer));
-        for(int i = 0; i > producers.size(); i++){
-            System.out.printf("!!! Sensor '%s' completed.", ecs.take().get());
+        ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
+        for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
+            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 500, 30);
+            producers.add(producer);
+            ecs.submit(producer);
         }
-
+        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
+            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 5000, 3);
+            producers.add(producer);
+            ecs.submit(producer);
+        }
+        for (int i = 0; i < producers.size(); i++) {
+            System.out.printf("!!!!!!!!!!!! Producer for sensor '%s' COMPLETED.%n", ecs.take().get());
+        }
         executor.shutdownNow();
     }
 }
