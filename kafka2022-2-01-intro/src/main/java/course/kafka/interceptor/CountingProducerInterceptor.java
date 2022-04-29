@@ -1,5 +1,6 @@
 package course.kafka.interceptor;
 
+import lombok.Value;
 import lombok.experimental.Helper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerInterceptor;
@@ -15,37 +16,63 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Value
+class MetricsTuple {
+    public AtomicLong sent = new AtomicLong();
+    public AtomicLong acknowledged = new AtomicLong();
+    public AtomicLong errors = new AtomicLong();
+
+    public long getSentValue() {
+        return sent.get();
+    }
+
+    public long getAcknowledgedValue() {
+        return acknowledged.get();
+    }
+
+    public long getErrorsValue() {
+        return errors.get();
+    }
+
+    public boolean isNotZero() {
+        return sent.get() != 0 || acknowledged.get() != 0 || errors.get() != 0;
+    }
+    public void setZero() {
+        sent.set(0);
+        acknowledged.set(0);
+        errors.set(0);
+    }
+}
+
 @Slf4j
 public class CountingProducerInterceptor<K, V> implements ProducerInterceptor<K, V>, Runnable {
     public static final String REPORTING_WINDOW_SIZE_MS = "interceptor.reporting.window.size.ms";
     public static final long DEFAULT_REPORTING_WINDOW_SIZE_MS = 5000;
     private static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private static Map<Set<Integer>, AtomicLong> sentMap = new ConcurrentHashMap<>();
-    private static Map<Set<Integer>, AtomicLong> ackMap = new ConcurrentHashMap<>();
-    private static Map<Set<Integer>, AtomicLong> errorMap = new ConcurrentHashMap<>();
+    private static Map<Set<Integer>, MetricsTuple> metricsMap = new ConcurrentHashMap<>();
     private Set<Integer> partitions = new ConcurrentSkipListSet<>();
-    private AtomicLong numSent = new AtomicLong();
-    private AtomicLong numAcked = new AtomicLong();
-    private AtomicLong numErrors = new AtomicLong();
 
     private boolean scheduled;
 
     @Override
     public ProducerRecord<K, V> onSend(ProducerRecord<K, V> record) {
-        var counter = sentMap.getOrDefault(partitions, new AtomicLong());
-        counter.incrementAndGet();
-        sentMap.putIfAbsent(partitions, counter);
+        var tuple = metricsMap.getOrDefault(partitions, new MetricsTuple());
+        tuple.getSent().incrementAndGet();
+        metricsMap.putIfAbsent(partitions, tuple);
         return record;
     }
 
     @Override
     public void onAcknowledgement(RecordMetadata metadata, Exception exception) {
         partitions.add(metadata.partition());
-
-        if (exception != null) {
-            ackMap.getOrDefault(partitions, new AtomicLong()).incrementAndGet();
+        if (exception == null) {
+            var tuple = metricsMap.getOrDefault(partitions, new MetricsTuple());
+            tuple.getAcknowledged().incrementAndGet();
+            metricsMap.putIfAbsent(partitions, tuple);
         } else {
-            errorMap.getOrDefault(partitions, new AtomicLong()).incrementAndGet();
+            var tuple = metricsMap.getOrDefault(partitions, new MetricsTuple());
+            tuple.getErrors().incrementAndGet();
+            metricsMap.putIfAbsent(partitions, tuple);
         }
     }
 
@@ -73,18 +100,13 @@ public class CountingProducerInterceptor<K, V> implements ProducerInterceptor<K,
 
     @Override
     public void run() {
-        if(sentMap.get(partitions) != null && sentMap.get(partitions).get() != 0) {
-            log.info(String.format("\t| Number Records Sent   | %15.15s | %10d |",
-                    partitions, sentMap.get(partitions).get()));
+        if(metricsMap.get(partitions) != null && metricsMap.get(partitions).isNotZero()) {
+            var tuple = metricsMap.get(partitions);
+            var message = String.format("\t| Number Records/Acks/Errors | %15.15s | %10d | %10d | %10d |",
+                    partitions, tuple.getSentValue(), tuple.getAcknowledgedValue(), tuple.getErrorsValue() );
+            log.info(message);
+            tuple.setZero();
         }
-        sentMap.get(partitions).set(0);
 
-//        log.info(String.format("\t| Number Records Acked  | %15.15s | %10d |",
-//                partitions, numAcked.get()));
-//        log.info(String.format("\t| Number Records Errors | %15.15s | %10d |",
-//                partitions, numErrors.get()));
-//        numSent.set(0);
-//        numAcked.set(0);
-//        numErrors.set(0);
     }
 }

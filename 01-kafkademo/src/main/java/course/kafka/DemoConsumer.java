@@ -20,7 +20,7 @@ public class DemoConsumer {
     private Map<String, Integer> eventMap = new ConcurrentHashMap<>();
 
     public DemoConsumer() {
-        props.put("bootstrap.servers", "localhost:9092");
+        props.put("bootstrap.servers", "localhost:9093");
         props.put("group.id", "event-consumer");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "course.kafka.serialization.JsonDeserializer");
@@ -29,7 +29,7 @@ public class DemoConsumer {
     }
 
     public void run() {
-        consumer.subscribe(Collections.singletonList("events"));
+        consumer.subscribe(Collections.singletonList("prices"));
         while(true) {
             ConsumerRecords<String, Customer> records = consumer.poll(Duration.ofMillis(100));
             if(records.count() > 0) {
