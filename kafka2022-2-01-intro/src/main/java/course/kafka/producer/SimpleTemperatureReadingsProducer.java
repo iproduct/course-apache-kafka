@@ -1,6 +1,7 @@
 package course.kafka.producer;
 
 import course.kafka.interceptor.CountingProducerInterceptor;
+import course.kafka.metrics.ProducerMetricsReporter;
 import course.kafka.model.TemperatureReading;
 import course.kafka.partitioner.TemperatureReadingsPartioner;
 import course.kafka.serialization.JsonSerializer;
@@ -31,11 +32,13 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     private String sensorId;
     private long delay_ms = 10000;
     private int numReadings = 10;
+    private ExecutorService executor;
 
-    public SimpleTemperatureReadingsProducer(String sensorId, long delay_ms, int numReadings) {
+    public SimpleTemperatureReadingsProducer(String sensorId, long delay_ms, int numReadings, ExecutorService executor) {
         this.sensorId = sensorId;
         this.delay_ms = delay_ms;
         this.numReadings = numReadings;
+        this.executor = executor;
     }
 
     private static Producer<String, TemperatureReading> createProducer() {
@@ -52,7 +55,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
         props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartioner.class.getName());
-        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
+//        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
         props.put(REPORTING_WINDOW_SIZE_MS, 5000);
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
 
@@ -63,6 +66,9 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     public String call() {
         var latch = new CountDownLatch(numReadings);
         try (var producer = createProducer()) {
+            // Create metrics reporter for producer in separate thread
+            var reporterFuture = executor.submit(new ProducerMetricsReporter(producer));
+
             var i = new AtomicInteger();
             var recordFutures = new Random().doubles(numReadings).map(t -> t * 40)
                     .peek(t -> {
@@ -86,8 +92,11 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                             latch.countDown();
                         });
                     }).collect(Collectors.toList());
-           latch.await(15, TimeUnit.SECONDS);
-           log.info("!!! Closing producer for '{}'", sensorId);
+            latch.await(15, TimeUnit.SECONDS);
+            // Cancel metrics reporter thread
+            log.info("Canceled the metrics reporter for [{}]: {}", producer, reporterFuture.cancel(true));
+
+            log.info("!!! Closing producer for '{}'", sensorId);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -98,17 +107,18 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         final List<SimpleTemperatureReadingsProducer> producers = new ArrayList<>();
         var executor = Executors.newCachedThreadPool();
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
-        for(int i = 0; i < HF_SENSOR_IDS.size(); i++){
-            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 250, 120);
+//        for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
+//            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 250, 120, executor);
+//            producers.add(producer);
+//            ecs.submit(producer);
+//        }
+//        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
+        for (int i = 0; i < 1; i++) {
+            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 500, 30, executor);
             producers.add(producer);
             ecs.submit(producer);
         }
-        for(int i = 0; i < NORMAL_SENSOR_IDS.size(); i++){
-            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 500,30);
-            producers.add(producer);
-            ecs.submit(producer);
-        }
-        for(int i = 0; i < producers.size(); i ++){
+        for (int i = 0; i < producers.size(); i++) {
             System.out.printf("!!!!!!!!!!!! Producer for sensor '%s' COMPLETED.%n", ecs.take().get());
         }
         executor.shutdownNow();
