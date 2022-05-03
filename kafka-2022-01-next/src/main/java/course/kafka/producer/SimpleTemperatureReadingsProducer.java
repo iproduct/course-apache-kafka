@@ -1,5 +1,6 @@
 package course.kafka.producer;
 
+import course.kafka.metrics.ProducerMetricsReporter;
 import course.kafka.model.TemperatureReading;
 import course.kafka.partitioner.TemperatureReadingsPartitioner;
 import course.kafka.serialization.JsonSerializer;
@@ -17,11 +18,9 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static course.kafka.model.TemperatureReading.HF_SENSOR_IDS;
-import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
@@ -33,11 +32,13 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     private String sensorId;
     private long maxDelayMs = 10000;
     private int numReadings = 10;
+    private ExecutorService executor;
 
-    public SimpleTemperatureReadingsProducer(String sensorId, long maxDelayMs, int numReadings) {
+    public SimpleTemperatureReadingsProducer(String sensorId, long maxDelayMs, int numReadings, ExecutorService executor) {
         this.sensorId = sensorId;
         this.maxDelayMs = maxDelayMs;
         this.numReadings = numReadings;
+        this.executor = executor;
     }
 
     private static Producer<String, TemperatureReading> createProducer() {
@@ -79,7 +80,10 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     @Override
     public String call() {
         var latch = new CountDownLatch(numReadings);
+
         try (var producer = createProducer()) {
+            //Run Metrics Producer Reporter which is runnable passing it the producer.
+//            var reporterFuture = executor.submit(new ProducerMetricsReporter(producer));
             producer.initTransactions();
             try {
                 producer.beginTransaction();
@@ -115,6 +119,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                 producer.abortTransaction();
             }
             latch.await(15, TimeUnit.SECONDS);
+//            reporterFuture.cancel(true);
             log.info("!!! Closing producer for '{}'", sensorId);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -127,10 +132,11 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         var executor = Executors.newCachedThreadPool();
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
         for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
-            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 500, 20);
+            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 500, 20, executor);
             producers.add(producer);
             ecs.submit(producer);
         }
+
 //        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
 //            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 5000, 3);
 //            producers.add(producer);
