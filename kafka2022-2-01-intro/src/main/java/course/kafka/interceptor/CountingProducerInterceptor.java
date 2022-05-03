@@ -102,7 +102,7 @@ public class CountingProducerInterceptor<K, V> implements ProducerInterceptor<K,
     public void run() {
         if(metricsMap.get(partitions) != null && metricsMap.get(partitions).isNotZero()) {
             var tuple = metricsMap.get(partitions);
-            var message = String.format("\t| Number Records/Acks/Errors | %15.15s | %10d | %10d | %10d |",
+            var message = String.format("\t| Number Records/Acks/Errors | %15.15s | %6d | %6d | %6d |",
                     partitions, tuple.getSentValue(), tuple.getAcknowledgedValue(), tuple.getErrorsValue() );
             log.info(message);
             tuple.setZero();

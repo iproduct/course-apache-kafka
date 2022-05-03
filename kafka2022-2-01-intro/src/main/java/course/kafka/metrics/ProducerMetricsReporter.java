@@ -24,7 +24,8 @@ public class ProducerMetricsReporter implements Callable<String> {
     private final Set<String> metricNames = Set.of(
             "record-queue-time-avg", "record-send-rate", "records-per-request-avg",
             "request-size-max", "network-io-rate",
-            "incoming-byte-rate", "batch-size-avg", "response-rate", "requests-in-flight");
+            "incoming-byte-rate", "batch-size-avg", "response-rate", "requests-in-flight," +
+                    "network-io-total");
 
 
     @Override

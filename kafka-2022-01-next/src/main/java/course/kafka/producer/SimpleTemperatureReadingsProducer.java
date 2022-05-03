@@ -21,9 +21,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static course.kafka.model.TemperatureReading.HF_SENSOR_IDS;
+import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
+//    public static final String TOPIC = "temperature3";
     public static final String TOPIC = "temperature";
     public static final String CLIENT_ID = "EventsClient_Group1";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";
@@ -54,25 +56,9 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
-        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
+//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "temperature-producer-1");
-//        Properties props = new Properties();
-//        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
-//        props.put(ProducerConfig.CLIENT_ID_CONFIG, CLIENT_ID);
-//        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-//        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
-//        props.put(ProducerConfig.ACKS_CONFIG, "all"); // best combined with  min.insync.replicas > 1
-//        props.put(ProducerConfig.LINGER_MS_CONFIG, 5);
-//        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
-//        props.put(ProducerConfig.RETRIES_CONFIG, 3);
-//        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
-//        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000);
-//        props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
-////        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
-////        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
-//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
-//        props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
 
         return new KafkaProducer<>(props);
     }
@@ -110,7 +96,9 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                                 latch.countDown();
                             });
                         }).collect(Collectors.toList());
+
                 producer.commitTransaction();
+                log.error("Transaction COMMITED SUCCESSFULLY for SensorID: {}", sensorId);
             } catch (ProducerFencedException | OutOfOrderSequenceException |
                      AuthorizationException ex) {
                 producer.close();
@@ -131,17 +119,18 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         final List<SimpleTemperatureReadingsProducer> producers = new ArrayList<>();
         var executor = Executors.newCachedThreadPool();
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
-        for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
-            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 500, 20, executor);
-            producers.add(producer);
-            ecs.submit(producer);
-        }
-
-//        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
-//            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 5000, 3);
+//        for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
+//            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 500, 20, executor);
 //            producers.add(producer);
 //            ecs.submit(producer);
 //        }
+
+//        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
+        for (int i = 0; i < 1; i++) {
+            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 5000, 10,executor);
+            producers.add(producer);
+            ecs.submit(producer);
+        }
         for (int i = 0; i < producers.size(); i++) {
             System.out.printf("!!!!!!!!!!!! Producer for sensor '%s' COMPLETED.%n", ecs.take().get());
         }

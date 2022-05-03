@@ -23,9 +23,9 @@ import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
-    public static final String TOPIC = "temperature";
+    public static final String TOPIC = "temperature3";
     public static final String CLIENT_ID = "EventsClient";
-    public static final String BOOTSTRAP_SERVERS = "localhost:9093";
+    public static final String BOOTSTRAP_SERVERS = "localhost:9092,localhost:9093,localhost:9094";
     public static final int NUM_READINGS = 10;
     public static final String HIGH_FREQUENCY_SENSORS = "sensors.important";
 
@@ -52,10 +52,10 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
-        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 100);
+        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
-        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartioner.class.getName());
-//        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
+//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartioner.class.getName());
+        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
         props.put(REPORTING_WINDOW_SIZE_MS, 5000);
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
 

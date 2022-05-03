@@ -17,9 +17,9 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public class TemperatureReadingConsumer implements Runnable {
-    public static final String TOPIC = "temperature";
+    public static final String TOPIC = "temperature3";
     public static final String CONSUMER_GROUP = "TemperatureEventsConsumer";
-    public static final String BOOTSTRAP_SERVERS = "localhost:9093";
+    public static final String BOOTSTRAP_SERVERS = "localhost:9092,localhost:9093,localhost:9094";
     public static final String KEY_CLASS = "key.class";
     public static final String VALUE_CLASS = "values.class";
     public static final long POLLING_DURATION_MS = 100;
