@@ -75,14 +75,14 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                 producer.beginTransaction();
                 var i = new AtomicInteger();
                 var recordFutures = new Random().doubles(numReadings).map(t -> t * 40)
-//                    .peek(t -> {
-//                        try {
-//                            Thread.sleep((int)(Math.random() * maxDelayMs));
-//                        } catch (InterruptedException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                        i.incrementAndGet();
-//                    })
+                        .peek(t -> {
+                            try {
+                                Thread.sleep((int) (Math.random() * maxDelayMs));
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            i.incrementAndGet();
+                        })
                         .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), sensorId, t))
                         .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading))
                         .map(record -> {
