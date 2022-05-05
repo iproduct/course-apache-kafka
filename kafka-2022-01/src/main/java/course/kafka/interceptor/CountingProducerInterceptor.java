@@ -8,31 +8,38 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Slf4j
 public class CountingProducerInterceptor<K,V> implements ProducerInterceptor<K,V>, Runnable {
     public static final String REPORTING_WINDOW_SIZE_MS = "interceptor.reporting.window.size.ms";
     public static final long DEFAULT_REPORTING_WINDOW_SIZE_MS = 5000;
     private static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private static Map<Set<Integer>, MetricsTuple> metricsMap = new ConcurrentHashMap<>();
     private Set<Integer> partitions = new ConcurrentSkipListSet<>();
 
     @Override
     public ProducerRecord<K, V> onSend(ProducerRecord<K, V> record) {
-        return null;
+        var tuple = metricsMap.getOrDefault(partitions, new MetricsTuple());
+        tuple.getSent().incrementAndGet();
+        metricsMap.putIfAbsent(partitions, tuple);
+        return record;
     }
 
     @Override
     public void onAcknowledgement(RecordMetadata metadata, Exception exception) {
-
+        partitions.add(metadata.partition());
+        var tuple = metricsMap.getOrDefault(partitions, new MetricsTuple());
+        if(exception == null){
+            tuple.getAcknowledged().incrementAndGet();
+        } else {
+            tuple.getErrors().incrementAndGet();
+        }
     }
 
     @Override
     public void close() {
-
+        executor.shutdownNow();
     }
 
     @Override
