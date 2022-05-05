@@ -104,7 +104,8 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
             producers.add(producer);
             ecs.submit(producer);
         }
-        for (int i = 0; i < producers.size(); i++) {
+//        for (int i = 0; i < producers.size(); i++) {
+        for(int i = 0; i < producers.size(); i++) {
             System.out.printf("!!!!!!!!!!!! Producer for sensor '%s' COMPLETED.%n", ecs.take().get());
         }
         executor.shutdownNow();
