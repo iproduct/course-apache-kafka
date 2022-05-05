@@ -35,6 +35,7 @@ public class CountingProducerInterceptor<K,V> implements ProducerInterceptor<K,V
         } else {
             tuple.getErrors().incrementAndGet();
         }
+        metricsMap.putIfAbsent(partitions, tuple);
     }
 
     @Override
