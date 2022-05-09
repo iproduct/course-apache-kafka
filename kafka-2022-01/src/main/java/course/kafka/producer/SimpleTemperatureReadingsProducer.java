@@ -24,7 +24,7 @@ import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
     public static final String TOPIC = "temperature";
-    public static final String CLIENT_ID = "EventsClient_Group1";
+    public static final String CLIENT_ID = "TemperatureReadingsProducer";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";
     public static final String HIGH_FREQUENCY_SENSORS = "sensors.highfrequency";
     public static final int PRODUCER_TIMEOUT_SEC = 20;
