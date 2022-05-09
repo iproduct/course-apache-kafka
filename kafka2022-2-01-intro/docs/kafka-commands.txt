@@ -44,3 +44,6 @@ on Linux/Mac:
 # Docker compose
 wsl --distribution docker-desktop-data
 docker-compose -f examples\docker-compose.yml run kafka
+
+course-apache-kafka>kafka-topics.bat --list --bootstrap-server localhost:9093,localhost:9094,localhost:9095
+kafka-topics.bat --describe --bootstrap-server localhost:9093,localhost:9094,localhost:9095 --topic temperature
