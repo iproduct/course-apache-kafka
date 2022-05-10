@@ -24,8 +24,8 @@ public class ProducerMetricsReporter implements Callable<String> {
     private final Set<String> metricNames = Set.of(
             "record-queue-time-avg", "record-send-rate", "records-per-request-avg",
             "request-size-max", "network-io-rate",
-            "incoming-byte-rate", "batch-size-avg", "response-rate", "requests-in-flight," +
-                    "network-io-total");
+            "incoming-byte-rate", "batch-size-avg", "requests-in-flight," +
+                    "network-io-total", "request-rate", "response-rate", "request-latency-avg", "request-latency-max");
 
 
     @Override
@@ -66,7 +66,7 @@ public class ProducerMetricsReporter implements Callable<String> {
                     pair.getMetricName().name(),
                     (double) pair.getMetric().metricValue(),
                     pair.getMetricName().description()
-                    ));
+            ));
         });
         log.info(sj.toString());
     }

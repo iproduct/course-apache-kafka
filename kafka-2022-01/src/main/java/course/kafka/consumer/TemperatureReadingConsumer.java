@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.IsolationLevel;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
@@ -18,7 +19,7 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class TemperatureReadingConsumer implements Runnable {
     public static final String TOPIC = "temperature";
-    public static final String CONSUMER_GROUP = "TemperatureEventsConsumer";
+    public static final String CONSUMER_GROUP = "TemperatureEventsConsumer4";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";//,localhost:9094,localhost:9095";
     public static final String KEY_CLASS = "key.class";
     public static final String VALUE_CLASS = "values.class";
@@ -33,6 +34,8 @@ public class TemperatureReadingConsumer implements Runnable {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+//        props.put(ConsumerConfig.DEFAULT_ISOLATION_LEVEL, IsolationLevel.READ_COMMITTED);
+        props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.toString().toLowerCase());
         props.put(KEY_CLASS, String.class.getName());
         props.put(VALUE_CLASS, TemperatureReading.class.getName());
 
@@ -66,6 +69,7 @@ public class TemperatureReadingConsumer implements Runnable {
         new Scanner(System.in).nextLine();
         System.out.println("Closing the consumer ...");
         consumer.cancel();
+        producerFuture.cancel(true);
         executor.shutdown();
     }
 }

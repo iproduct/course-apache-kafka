@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.common.Metric;
 import org.apache.kafka.common.MetricName;
+import org.apache.kafka.common.metrics.Sensor;
 
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static course.kafka.producer.SimpleTemperatureReadingsProducer.MY_MESSAGE_SIZE_SENSOR;
 
 @Slf4j
 public class ProducerMetricReporter implements Callable<String> {
@@ -34,7 +37,8 @@ public class ProducerMetricReporter implements Callable<String> {
             "record-queue-time-avg", "record-send-rate", "records-per-request-avg",
             "request-size-max", "network-io-rate", "network-io-total",
             "incoming-byte-rate", "batch-size-avg", "requests-in-flight",
-            "request-rate", "response-rate", "request-latency-avg", "request-latency-max");
+            "request-rate", "response-rate", "request-latency-avg", "request-latency-max",
+            MY_MESSAGE_SIZE_SENSOR+"-avg", MY_MESSAGE_SIZE_SENSOR+"-min", MY_MESSAGE_SIZE_SENSOR+"-max");
 
 
     @Override
@@ -58,12 +62,13 @@ public class ProducerMetricReporter implements Callable<String> {
         final Map<String, MetricPair> metricsDisplay =
                 metrics.entrySet().stream()
                         .filter(entry -> metricNames.contains(entry.getKey().name()))
-                        .filter(entry -> {
-                            var val = entry.getValue().metricValue();
-                            if (!(val instanceof Double)) return false;
-                            var doubleVal = (double) val;
-                            return Double.isFinite(doubleVal) && !Double.isNaN(doubleVal) && doubleVal > 0;
-                        }).map(entry -> new MetricPair(entry.getKey(), entry.getValue()))
+//                        .filter(entry -> {
+//                            var val = entry.getValue().metricValue();
+//                            if (!(val instanceof Double)) return false;
+//                            var doubleVal = (double) val;
+//                            return Double.isFinite(doubleVal) && !Double.isNaN(doubleVal) && doubleVal > 0;
+//                        })
+                        .map(entry -> new MetricPair(entry.getKey(), entry.getValue()))
                         .collect(Collectors.toMap(MetricPair::toString, Function.identity(), (a, b) -> b, TreeMap::new));
         var sj = new StringJoiner("\n",
                 "\n-------------------------------------------------------------------------------------------------------\n",
