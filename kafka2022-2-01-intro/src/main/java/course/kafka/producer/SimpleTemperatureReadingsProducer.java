@@ -37,7 +37,6 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     public static final String TOPIC = "temperature";
     public static final String CLIENT_ID = "EventsClient";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093"; //,localhost:9093,localhost:9094";
-    public static final int NUM_READINGS = 10;
     public static final String HIGH_FREQUENCY_SENSORS = "sensors.important";
 
     private String sensorId;
@@ -66,7 +65,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
-//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartioner.class.getName());
+        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartioner.class.getName());
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
         props.put(REPORTING_WINDOW_SIZE_MS, 5000);
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
@@ -84,6 +83,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
             producer.initTransactions();
             var i = new AtomicInteger();
             try {
+                producer.beginTransaction();
                 var recordFutures = new Random().doubles(numReadings).map(t -> t * 40)
                         .peek(t -> {
                             try {
@@ -91,7 +91,10 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
-                            i.incrementAndGet();
+                            var ival = i.incrementAndGet();
+//                            if(ival == 3) {
+//                                throw new KafkaException("Invalid temperature reading encountered!!!");
+//                            }
                         })
                         .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), sensorId, t))
                         .map(reading -> new ProducerRecord(TOPIC, reading.getId(), reading))
