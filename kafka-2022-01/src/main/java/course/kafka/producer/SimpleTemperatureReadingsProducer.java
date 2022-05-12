@@ -36,6 +36,7 @@ import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
+    private static final String BASE_TRANSACTION_ID = "temperature-sensor-transaction-";
     public static final String TOPIC = "temperature";
     public static final String CLIENT_ID = "TemperatureReadingsProducer";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";
@@ -46,13 +47,15 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     private long maxDelayMs = 10000;
     private int numReadings = 10;
     private ExecutorService executor;
-    private String transactionId = "sensors-transaction-01"; //UUID.randomUUID().toString();
+    private String transactionId;
 
-    public SimpleTemperatureReadingsProducer(String sensorId, long maxDelayMs, int numReadings, ExecutorService executor) {
+
+    public SimpleTemperatureReadingsProducer(String transactionId, String sensorId, long maxDelayMs, int numReadings, ExecutorService executor) {
         this.sensorId = sensorId;
         this.maxDelayMs = maxDelayMs;
         this.numReadings = numReadings;
         this.executor = executor;
+        this.transactionId = transactionId;
     }
 
     private static Producer<String, TemperatureReading> createProducer(String transactionId) {
@@ -168,13 +171,15 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         var executor = Executors.newCachedThreadPool();
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
 //        for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
-//            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 250, 240, executor);
+//            var producer = new SimpleTemperatureReadingsProducer(
+//                    BASE_TRANSACTION_ID + "LF-" + i, HF_SENSOR_IDS.get(i), 250, 240, executor);
 //            producers.add(producer);
 //            ecs.submit(producer);
 //        }
 //        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
         for (int i = 0; i < 1; i++) {
-            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 1000, 3, executor);
+            var producer = new SimpleTemperatureReadingsProducer(
+                    BASE_TRANSACTION_ID + "LF-" + i, NORMAL_SENSOR_IDS.get(i), 1000, 3, executor);
             producers.add(producer);
             ecs.submit(producer);
         }
