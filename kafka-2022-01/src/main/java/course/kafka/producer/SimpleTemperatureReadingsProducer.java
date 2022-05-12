@@ -68,7 +68,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
-//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
+        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
         props.put(REPORTING_WINDOW_SIZE_MS, 3000);
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
@@ -182,26 +182,5 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
             System.out.printf("!!!!!!!!!!!! Producer for sensor '%s' COMPLETED.%n", ecs.take().get());
         }
         executor.shutdownNow();
-
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("transactional.id", "my-transactional-id");
-        Producer<String, String> producer = new KafkaProducer<>(props, new StringSerializer(), new StringSerializer());
-
-        producer.initTransactions();
-
-        try {
-            producer.beginTransaction();
-            for (int i = 0; i < 100; i++)
-                producer.send(new ProducerRecord<>("my-topic", Integer.toString(i), Integer.toString(i)));
-            producer.commitTransaction();
-        } catch (ProducerFencedException | OutOfOrderSequenceException | AuthorizationException e) {
-            // We can't recover from these exceptions, so our only option is to close the producer and exit.
-            producer.close();
-        } catch (KafkaException e) {
-            // For all other exceptions, just abort the transaction and try again.
-            producer.abortTransaction();
-        }
-        producer.close();
     }
 }
