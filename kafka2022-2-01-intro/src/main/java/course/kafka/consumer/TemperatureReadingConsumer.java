@@ -54,17 +54,20 @@ public class TemperatureReadingConsumer implements Runnable {
                 while (!canceled) {
                     var records = consumer.poll(
                             Duration.ofMillis(POLLING_DURATION_MS));
+                    if (records.count() == 0) continue;
                     for (var r : records) {
                         log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: {} --> {}",
                                 r.topic(), r.partition(), r.offset(), r.timestamp(), r.leaderEpoch(), r.key(), r.value());
-                        consumer.commitAsync((offsets, exception) -> {
-                            if (exception != null) {
-                                log.error("Consumer [" + consumer.groupMetadata().groupId() + "] FAILED to commit offsets: " + offsets, exception);
-                            } else {
-                                log.info("Consumer [{}]] SUCCESSFULLY commited offsets: ", consumer.groupMetadata().groupId(), offsets);
-                            }
-                        });
                     }
+                    consumer.commitAsync((offsets, exception) -> {
+                        if (exception != null) {
+                            log.error("Consumer [" + consumer.groupMetadata().groupId() + "] FAILED to commit offsets: " + offsets, exception);
+                        } else {
+                            offsets.forEach((tp, offs) -> {
+                                log.info("Consumer [{}] SUCCESSFULLY commited offsets: {} : {}", consumer.groupMetadata().groupId(), tp.toString(), offs.offset());
+                            });
+                        }
+                    });
                 }
             } catch (Exception ex) {
                 log.error("Consumer [" + consumer.groupMetadata().groupId() + "] FAILED to commit offsets.", ex);

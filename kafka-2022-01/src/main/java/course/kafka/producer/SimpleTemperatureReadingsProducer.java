@@ -172,7 +172,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
 //        for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
 //            var producer = new SimpleTemperatureReadingsProducer(
-//                    BASE_TRANSACTION_ID + "LF-" + i, HF_SENSOR_IDS.get(i), 250, 240, executor);
+//                    BASE_TRANSACTION_ID + "HF-" + i, HF_SENSOR_IDS.get(i), 250, 240, executor);
 //            producers.add(producer);
 //            ecs.submit(producer);
 //        }
