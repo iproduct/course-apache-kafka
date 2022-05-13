@@ -1,7 +1,6 @@
 package course.kafka.producer;
 
 import course.kafka.interceptor.CountingProducerInterceptor;
-import course.kafka.metrics.ProducerMetricsReporter;
 import course.kafka.model.TemperatureReading;
 import course.kafka.partitioner.TemperatureReadingsPartioner;
 import course.kafka.serialization.JsonSerializer;
@@ -34,22 +33,26 @@ import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
+    private static final String BASE_TRANSACTION_ID = "temperature-sensor-transaction-";
     public static final String TOPIC = "temperature";
-    public static final String CLIENT_ID = "EventsClient";
-    public static final String BOOTSTRAP_SERVERS = "localhost:9093"; //,localhost:9093,localhost:9094";
-    public static final String HIGH_FREQUENCY_SENSORS = "sensors.important";
-
+    public static final String CLIENT_ID = "TemperatureReadingsProducer";
+    public static final String BOOTSTRAP_SERVERS = "localhost:9093";
+    public static final String HIGH_FREQUENCY_SENSORS = "sensors.highfrequency";
+    public static final int PRODUCER_TIMEOUT_SEC = 20;
+    public static String MY_MESSAGE_SIZE_SENSOR = "my-message-size";
     private String sensorId;
-    private long delay_ms = 10000;
+    private long maxDelayMs = 10000;
     private int numReadings = 10;
     private ExecutorService executor;
-    private String transactionId = UUID.randomUUID().toString();
+    private String transactionId;
 
-    public SimpleTemperatureReadingsProducer(String sensorId, long delay_ms, int numReadings, ExecutorService executor) {
+
+    public SimpleTemperatureReadingsProducer(String transactionId, String sensorId, long maxDelayMs, int numReadings, ExecutorService executor) {
         this.sensorId = sensorId;
-        this.delay_ms = delay_ms;
+        this.maxDelayMs = maxDelayMs;
         this.numReadings = numReadings;
         this.executor = executor;
+        this.transactionId = transactionId;
     }
 
     private static Producer<String, TemperatureReading> createProducer(String transactionId) {
@@ -67,7 +70,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
         props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartioner.class.getName());
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
-        props.put(REPORTING_WINDOW_SIZE_MS, 5000);
+        props.put(REPORTING_WINDOW_SIZE_MS, 3000);
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
 
@@ -76,10 +79,18 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
 
     @Override
     public String call() {
+        // get metrics
+//        Map<String, String> metricTags = new LinkedHashMap<String, String>();
+//        metricTags.put("client-id", CLIENT_ID);
+//        metricTags.put("topic", TOPIC);
+//        MetricConfig metricConfig = new MetricConfig().tags(metricTags);
+//        Metrics metrics = new Metrics(metricConfig);
+//        Sensor sensor = metrics.sensor(MY_MESSAGE_SIZE_SENSOR);
+
         var latch = new CountDownLatch(numReadings);
+        Future<String> reporterFuture = null;
         try (var producer = createProducer(transactionId)) {
-            // Create metrics reporter for producer in separate thread
-//            var reporterFuture = executor.submit(new ProducerMetricsReporter(producer));
+//            reporterFuture = executor.submit(new ProducerMetricReporter(producer));
             producer.initTransactions();
             var i = new AtomicInteger();
             try {
@@ -87,13 +98,13 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                 var recordFutures = new Random().doubles(numReadings).map(t -> t * 40)
                         .peek(t -> {
                             try {
-                                Thread.sleep(delay_ms);
+                                Thread.sleep((int) (Math.random() * maxDelayMs));
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
                             var ival = i.incrementAndGet();
-//                            if(ival == 3) {
-//                                throw new KafkaException("Invalid temperature reading encountered!!!");
+//                            if(ival == 3){
+//                                throw new KafkaException("Invalid temperature reading");
 //                            }
                         })
                         .mapToObj(t -> new TemperatureReading(UUID.randomUUID().toString(), sensorId, t))
@@ -103,47 +114,69 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                                 if (exception != null) {
                                     log.error("Error sending temperature readings", exception);
                                 }
+                                // as messages are sent we record the sizes
+//                                sensor.record(metadata.serializedValueSize());
                                 log.info("SENSOR_ID: {}, MESSAGE: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
                                         sensorId, i.get(),
                                         metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                                 latch.countDown();
                             });
                         }).collect(Collectors.toList());
+
                 latch.await(15, TimeUnit.SECONDS);
+                log.info("Transaction [{}] commited successfully", transactionId);
                 producer.commitTransaction();
-                log.info("Transaction commited successfully [ID: {}]", transactionId);
             } catch (KafkaException kex) {
-                log.error("Transaction [ID: " + transactionId + "] was ABORTED.", kex);
+                log.error("Transaction [" + transactionId + "] was unsuccessful: ", kex);
                 producer.abortTransaction();
             }
-//            finally {
-//                // Cancel metrics reporter thread
-//                log.info("Canceled the metrics reporter for [{}]: {}", producer, reporterFuture.cancel(true));
-//            }
-
             log.info("!!! Closing producer for '{}'", sensorId);
-        } catch (ProducerFencedException | OutOfOrderSequenceException | AuthorizationException ex) {
-            log.error("Producer was unable to continue: ", ex);
-        } catch (InterruptedException ie) {
-            log.warn("Producer was interuped before completion: ", ie);
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(ie);
+        } catch (InterruptedException | ProducerFencedException | OutOfOrderSequenceException |
+                 AuthorizationException e) {
+            throw new RuntimeException(e);
         }
+//        finally { // Cancel metrics reporter thread
+//            if (reporterFuture != null) {
+//                log.info("Canceled the metrics reporter for [{}]: {}", sensorId, reporterFuture.cancel(true));
+//            }
+//        }
         return sensorId;
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        // add new metrics:
+        Map<String, String> metricTags = new LinkedHashMap<String, String>();
+        metricTags.put("client-id", CLIENT_ID);
+        metricTags.put("topic", TOPIC);
+
+        MetricConfig metricConfig = new MetricConfig().tags(metricTags);
+        Metrics metrics = new Metrics(metricConfig); // this is the global repository of metrics and sensors
+
+        Sensor sensor = metrics.sensor(MY_MESSAGE_SIZE_SENSOR);
+
+        MetricName metricName = metrics.metricName(MY_MESSAGE_SIZE_SENSOR + "-avg", "producer-metrics", "my message average size");
+        sensor.add(metricName, new Avg());
+
+        metricName = metrics.metricName(MY_MESSAGE_SIZE_SENSOR + "-max", "producer-metrics", "my message max size");
+        sensor.add(metricName, new Max());
+
+        metricName = metrics.metricName(MY_MESSAGE_SIZE_SENSOR + "-min", "producer-metrics", "my message max size", "client-id", CLIENT_ID, "topic", TOPIC);
+        sensor.add(metricName, new Min());
+
+        // start temperature producers
         final List<SimpleTemperatureReadingsProducer> producers = new ArrayList<>();
         var executor = Executors.newCachedThreadPool();
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
 //        for (int i = 0; i < HF_SENSOR_IDS.size(); i++) {
-//            var producer = new SimpleTemperatureReadingsProducer(HF_SENSOR_IDS.get(i), 250, 120, executor);
+//            var producer = new SimpleTemperatureReadingsProducer(
+//                    BASE_TRANSACTION_ID + "HF-" + i, HF_SENSOR_IDS.get(i), 250, 240, executor);
 //            producers.add(producer);
 //            ecs.submit(producer);
 //        }
 //        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
         for (int i = 0; i < 1; i++) {
-            var producer = new SimpleTemperatureReadingsProducer(NORMAL_SENSOR_IDS.get(i), 1000, 3, executor);
+            var producer = new SimpleTemperatureReadingsProducer(
+                    BASE_TRANSACTION_ID + "LF-" + i, NORMAL_SENSOR_IDS.get(i), 0, 3, executor);
             producers.add(producer);
             ecs.submit(producer);
         }

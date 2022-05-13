@@ -24,6 +24,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -101,38 +102,53 @@ public class TemperatureReadingTransformer implements Runnable {
              var producer = createProducer(transactionId)) {
             consumer.subscribe(List.of(IN_TOPIC));
             var consumerGroupMetadata = consumer.groupMetadata();
-            producer.initTransactions();
+            Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>();
 
+            producer.initTransactions();
             while (!canceled) {
                 var records = consumer.poll(
                         Duration.ofMillis(POLLING_DURATION_MS));
+                if (records.count() == 0) continue;
+                var latch = new CountDownLatch(records.count());
+                producer.beginTransaction();
                 for (var r : records) {
                     log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: {} -->\n    {}",
                             r.topic(), r.partition(), r.offset(), r.timestamp(), r.leaderEpoch(), r.key(), r.value());
                     ProducerRecord<String, TemperatureReading> record =
                             new ProducerRecord<>(OUT_TOPIC, r.value().getId(), r.value());
-                    Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>();
-                    currentOffsets.put(
-                            new TopicPartition(r.topic(), r.partition()),
-                            new OffsetAndMetadata(r.offset())
-                    );
                     try {
-                        producer.beginTransaction();
-                        var metadata = producer.send(record).get();
-                        producer.sendOffsetsToTransaction(currentOffsets, consumerGroupMetadata);
-                        producer.commitTransaction();
-                        log.info("Transaction COMMITTED successfully [ID: {}]", transactionId);
-                        log.info("SENSOR_ID: {}, MESSAGE: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
-                                r.value().getSensorId(), i.get(),
-                                metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+                        producer.send(record, (metadata, exception) -> {
+                            if (exception != null) {
+                                log.error("Error sending temperature readings", exception);
+                            }
+                            // as messages are sent we record the sizes
+//                                sensor.record(metadata.serializedValueSize());
+                            log.info("SENSOR_ID: {}, MESSAGE: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+                                    r.value().getSensorId(), i.get(),
+                                    metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+                            currentOffsets.compute(new TopicPartition(r.topic(), r.partition()), (key, oldV) ->
+                                    oldV == null || r.offset() > oldV.offset() ?
+                                            new OffsetAndMetadata(r.offset(), "no metadata")
+                                            : oldV
+                            );
+                            latch.countDown();
+                        });
                     } catch (KafkaException kex) {
                         producer.abortTransaction();
                         log.error("Transaction [ID: " + transactionId + "] was ABORTED.", kex);
                     }
                 }
+                latch.await();
+
+                var topicPartitions = records.partitions();
+                currentOffsets.forEach((tp, offsets) -> {
+                    log.info("[ID: {}] COMMITTING OFFSETS {} : {} ", transactionId, tp.toString(), offsets.offset());
+                });
+                producer.sendOffsetsToTransaction(currentOffsets, consumerGroupMetadata);
+                producer.commitTransaction();
+                log.info("Transaction COMMITTED successfully [ID: {}]", transactionId);
             }
-        } catch (ProducerFencedException | OutOfOrderSequenceException | AuthorizationException |
-                 ExecutionException ex) {
+        } catch (ProducerFencedException | OutOfOrderSequenceException | AuthorizationException ex) {
             log.error("Producer was unable to continue: ", ex);
         } catch (InterruptedException ie) {
             log.warn("Producer was interuped before completion: ", ie);
