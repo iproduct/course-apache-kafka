@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public class TemperatureReadingConsumer implements Runnable {
-    public static final String TOPIC = "temperature";
+    public static final String TOPIC = "events";
     public static final String CONSUMER_GROUP = "TemperatureEventsConsumer";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093"; //,localhost:9093,localhost:9094";
     public static final String KEY_CLASS = "key.class";
@@ -33,7 +33,7 @@ public class TemperatureReadingConsumer implements Runnable {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.name().toLowerCase());
 
         props.put(KEY_CLASS, String.class.getName());
@@ -50,13 +50,26 @@ public class TemperatureReadingConsumer implements Runnable {
     public void run() {
         try (var consumer = createConsumer()) {
             consumer.subscribe(List.of(TOPIC));
-            while (!canceled) {
-                var records = consumer.poll(
-                        Duration.ofMillis(POLLING_DURATION_MS));
-                for (var r : records) {
-                    log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: {} --> {}",
-                            r.topic(), r.partition(), r.offset(), r.timestamp(), r.leaderEpoch(), r.key(), r.value());
+            try {
+                while (!canceled) {
+                    var records = consumer.poll(
+                            Duration.ofMillis(POLLING_DURATION_MS));
+                    for (var r : records) {
+                        log.info("[Topic: {}, Partition: {}, Offset: {}, Timestamp: {}, Leader Epoch: {}]: {} --> {}",
+                                r.topic(), r.partition(), r.offset(), r.timestamp(), r.leaderEpoch(), r.key(), r.value());
+                        consumer.commitAsync((offsets, exception) -> {
+                            if (exception != null) {
+                                log.error("Consumer [" + consumer.groupMetadata().groupId() + "] FAILED to commit offsets: " + offsets, exception);
+                            } else {
+                                log.info("Consumer [{}]] SUCCESSFULLY commited offsets: ", consumer.groupMetadata().groupId(), offsets);
+                            }
+                        });
+                    }
                 }
+            } catch (Exception ex) {
+                log.error("Consumer [" + consumer.groupMetadata().groupId() + "] FAILED to commit offsets.", ex);
+            } finally {
+                consumer.commitSync();
             }
         }
     }

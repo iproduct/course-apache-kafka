@@ -127,8 +127,8 @@ public class TemperatureReadingTransformer implements Runnable {
                                     r.value().getSensorId(), i.get(),
                                     metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                             currentOffsets.compute(new TopicPartition(r.topic(), r.partition()), (key, oldV) ->
-                                    oldV == null || r.offset() > oldV.offset() ?
-                                            new OffsetAndMetadata(r.offset(), "no metadata")
+                                    oldV == null || r.offset() + 1 > oldV.offset() ?
+                                            new OffsetAndMetadata(r.offset() + 1, "no metadata")
                                             : oldV
                             );
                             latch.countDown();
