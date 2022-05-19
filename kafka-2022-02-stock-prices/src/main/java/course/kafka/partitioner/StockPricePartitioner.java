@@ -1,22 +1,15 @@
 package course.kafka.partitioner;
 
-import course.kafka.model.StockPrice;
-import course.kafka.model.TemperatureReading;
 import org.apache.kafka.clients.producer.Partitioner;
 import org.apache.kafka.common.Cluster;
 import org.apache.kafka.common.PartitionInfo;
-import org.apache.kafka.common.utils.Utils;
 import reactor.core.publisher.Flux;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
-import static course.kafka.producer.SimpleTemperatureReadingsProducer.HIGH_FREQUENCY_SENSORS;
-import static course.kafka.service.QuotesGenerator.STOCKS;
+import static course.kafka.service.StockPricesGenerator.STOCKS;
 
 public class StockPricePartitioner implements Partitioner {
     public static final int NUMBER_OF_PARTITIONS_PER_HF_SENSOR = 3;

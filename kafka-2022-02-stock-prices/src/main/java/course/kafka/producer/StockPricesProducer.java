@@ -1,39 +1,26 @@
 package course.kafka.producer;
 
-import course.kafka.interceptor.CountingProducerInterceptor;
 import course.kafka.model.StockPrice;
-import course.kafka.model.TemperatureReading;
 import course.kafka.partitioner.StockPricePartitioner;
-import course.kafka.partitioner.TemperatureReadingsPartitioner;
 import course.kafka.serialization.JsonSerializer;
-import course.kafka.service.QuotesGenerator;
+import course.kafka.service.StockPricesGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaException;
-import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.OutOfOrderSequenceException;
 import org.apache.kafka.common.errors.ProducerFencedException;
 import org.apache.kafka.common.metrics.MetricConfig;
 import org.apache.kafka.common.metrics.Metrics;
-import org.apache.kafka.common.metrics.Sensor;
-import org.apache.kafka.common.metrics.stats.Avg;
-import org.apache.kafka.common.metrics.stats.Max;
-import org.apache.kafka.common.metrics.stats.Min;
 import org.apache.kafka.common.serialization.StringSerializer;
-import reactor.core.Fuseable;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
-import static course.kafka.interceptor.CountingProducerInterceptor.REPORTING_WINDOW_SIZE_MS;
-import static course.kafka.model.TemperatureReading.HF_SENSOR_IDS;
 import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
@@ -81,7 +68,7 @@ public class StockPricesProducer implements Callable<String> {
         var latch = new CountDownLatch(numReadings);
         try (var producer = createProducer(transactionId)) {
             try {
-                QuotesGenerator.getQuotesStream(numReadings, Duration.ofMillis(maxDelayMs))
+                StockPricesGenerator.getQuotesStream(numReadings, Duration.ofMillis(maxDelayMs))
                         .map(quote -> new ProducerRecord<>(TOPIC, quote.getSymbol(), quote))
                         .subscribe(record -> {
                                     producer.send(record, (metadata, exception) -> {

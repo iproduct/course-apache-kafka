@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class QuotesGenerator {
+public class StockPricesGenerator {
     private static Random rand = new Random();
 
     public static final List<StockPrice> STOCKS = Arrays.asList(
