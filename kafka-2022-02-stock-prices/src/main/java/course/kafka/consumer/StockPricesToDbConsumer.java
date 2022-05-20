@@ -11,6 +11,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.IsolationLevel;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.io.IOException;
@@ -82,7 +83,7 @@ public class StockPricesToDbConsumer implements Runnable {
                         }
                         dao.updateOffsets(CONSUMER_GROUP, currentOffsets);
                         dao.commitTransaction();
-                        consumer.commitAsync((offsets, exception) -> {
+                        consumer.commitAsync(currentOffsets, (offsets, exception) -> {
                             if (exception != null) {
                                 log.error("Consumer [" + consumer.groupMetadata().groupId() + "] FAILED to commit offsets: " + offsets, exception);
                             } else {
@@ -97,12 +98,15 @@ public class StockPricesToDbConsumer implements Runnable {
                             dao.rollbackTransaction();
                         } catch (SQLException e) {
                             log.error("Error rolbacking database transaction for consumer [" + consumer.groupMetadata().groupId() + "].", ex);
+                        } finally {
+                            throw new RuntimeException(ex);
                         }
+                    } catch (WakeupException wex){
+                        log.warn("Consumer [" + consumer.groupMetadata().groupId() + "] was INTERRUPTED.");
                     }
                 }
             } finally {
                 log.error("Consumer [" + consumer.groupMetadata().groupId() + "] was canceled.");
-                consumer.commitSync();
             }
         }
     }

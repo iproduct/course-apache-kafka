@@ -65,7 +65,7 @@ public class StockPricesProducer implements Callable<String> {
 
     @Override
     public String call() {
-        var latch = new CountDownLatch(numReadings);
+        var latch = new CountDownLatch(1);
         try (var producer = createProducer(transactionId)) {
             try {
                 StockPricesGenerator.getQuotesStream(numReadings, Duration.ofMillis(maxDelayMs))
@@ -78,10 +78,12 @@ public class StockPricesProducer implements Callable<String> {
                                         log.info("SYMBOL: {}, ID: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
                                                 record.key(), record.value().getId(),
                                                 metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
-                                        latch.countDown();
                                     });
                                 }, error -> log.error("Error processing stock prices stream:", error),
-                                () -> log.info("Stock prices stream completed successfully."));
+                                () -> {
+                                    log.info("Stock prices stream completed successfully.");
+                                    latch.countDown();
+                                });
 
                 latch.await(15, TimeUnit.SECONDS);
                 log.info("Transaction [{}] commited successfully", transactionId);
@@ -111,7 +113,7 @@ public class StockPricesProducer implements Callable<String> {
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
         for (int i = 0; i < 1; i++) {
             var producer = new StockPricesProducer(
-                    NORMAL_SENSOR_IDS.get(i), 1000, 14, executor);
+                    "Stock-Producer-" + 0, 40, 14, executor);
             producers.add(producer);
             ecs.submit(producer);
         }
