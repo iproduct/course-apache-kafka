@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.interrupted;
 
@@ -36,11 +37,13 @@ public class StockPricesToDbConsumer implements Runnable {
 
     private PricesDAO dao;
 
+    private KafkaConsumer<String,StockPrice> consumer;
+
     public StockPricesToDbConsumer(PricesDAO dao) {
         this.dao = dao;
     }
 
-    private static Consumer<String, StockPrice> createConsumer() {
+    private static KafkaConsumer<String, StockPrice> createConsumer() {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP);
@@ -59,11 +62,12 @@ public class StockPricesToDbConsumer implements Runnable {
         canceled = true;
     }
 
+
     @Override
     public void run() {
-
         Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>();
-        try (var consumer = createConsumer()) {
+        try {
+            consumer = createConsumer();
             consumer.subscribe(List.of(TOPIC), new StockPriceRebalanceListener(consumer, dao, CONSUMER_GROUP));
             try {
                 while (!canceled && !interrupted()) {
@@ -103,12 +107,22 @@ public class StockPricesToDbConsumer implements Runnable {
                         }
                     } catch (WakeupException wex){
                         log.warn("Consumer [" + consumer.groupMetadata().groupId() + "] was INTERRUPTED.");
+                        // Ignore exception if closing
+                        if (!canceled) throw wex;
                     }
                 }
             } finally {
-                log.error("Consumer [" + consumer.groupMetadata().groupId() + "] was canceled.");
+                log.warn("Consumer [" + consumer.groupMetadata().groupId() + "] was canceled.");
             }
+        } finally {
+            consumer.close();
         }
+    }
+
+    // Shutdown hook which can be called from a separate thread
+    public void shutdown() {
+        cancel();
+        consumer.wakeup();
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, SQLException, IOException, ClassNotFoundException {
