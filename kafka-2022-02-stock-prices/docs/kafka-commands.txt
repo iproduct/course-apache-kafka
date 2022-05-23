@@ -4,14 +4,14 @@ bin\windows\kafka-server-start.bat config\server.properties
 bin\zookeeper-server-start.sh config\zookeeper.properties
 bin\kafka-server-start.sh config\server.properties
 
-kafka-topics.bat --list --bootstrap-server localhost:9092
-kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic my-new-topic
-kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic events
-kafka-topics.bat --list --bootstrap-server localhost:9092
-kafka-topics.bat --describe --bootstrap-server localhost:9092 --topic events
-kafka-console-producer.bat --broker-list localhost:9092 --topic events
-kafka-console-producer.bat --broker-list localhost:9092 --topic events –sync
-kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic events --from-beginning
+kafka-topics.bat --list --bootstrap-server localhost:9093
+kafka-topics.bat --create --bootstrap-server localhost:9093 --replication-factor 1 --partitions 1 --topic my-new-topic
+kafka-topics.bat --create --bootstrap-server localhost:9093 --replication-factor 1 --partitions 1 --topic events
+kafka-topics.bat --list --bootstrap-server localhost:9093
+kafka-topics.bat --describe --bootstrap-server localhost:9093 --topic events
+kafka-console-producer.bat --broker-list localhost:9093 --topic events
+kafka-console-producer.bat --broker-list localhost:9093 --topic events –sync
+kafka-console-consumer.bat --bootstrap-server localhost:9093 --topic events --from-beginning
 kafka-topics.bat --describe --bootstrap-server localhost:9093 --topic temperature
 
 copy config\server.properties config\server-1.properties
@@ -46,8 +46,9 @@ wsl --distribution docker-desktop-data
 docker-compose -f examples\docker-compose.yml run kafka
 
 #topics compaction
-kafka-topics --create --zookeeper zookeeper:2181 --topic latest-product-price --replication-factor 1 --partitions 1 --config "cleanup.policy=compact" --config "delete.retention.ms=100"  --config "segment.ms=100" --config "min.cleanable.dirty.ratio=0.01"
-kafka-console-producer --broker-list localhost:9092 --topic latest-product-price --property parse.key=true --property key.separator=:
+kafka-topics --create --bootstrap-server localhost:9093 --topic latest-product-price --replication-factor 1 --partitions 1 --config "cleanup.policy=compact" --config "delete.retention.ms=100"  --config "segment.ms=100" --config "min.cleanable.dirty.ratio=0.01"
+kafka-topics.bat --describe --bootstrap-server localhost:9093 --topic latest-product-price
+kafka-console-producer --broker-list localhost:9093 --topic latest-product-price --property parse.key=true --property key.separator=:
 >p3:10$
 >p5:7$
 >p3:11$
@@ -56,8 +57,13 @@ kafka-console-producer --broker-list localhost:9092 --topic latest-product-price
 >p5:14$
 >p5:17$
 --config log.cleaner.min.compaction.lag.ms
-kafka-console-consumer --bootstrap-server localhost:9092 --topic latest-product-price --property  print.key=true --property key.separator=: --from-beginning
+kafka-console-consumer --bootstrap-server localhost:9093 --topic latest-product-price --property  print.key=true --property key.separator=: --from-beginning
 p3:11$
 p6:12$
 p5:14$
 p5:17$
+
+cd /tmp/kraft-combined-logs/latest-product-price-0
+cd /opt/kafka
+./bin/kafka-run-class.sh kafka.tools.DumpLogSegments --deep-iteration --print-data-log --files /tmp/kraft-combined-logs/latest-product-price-0/00000000000000000000.log
+

@@ -79,13 +79,16 @@ public class StockPricesProducer implements Callable<String> {
                                                 record.key(), record.value().getId(),
                                                 metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                                     });
-                                }, error -> log.error("Error processing stock prices stream:", error),
+                                }, error -> {
+                                    log.error("Error processing stock prices stream:", error);
+                                    latch.countDown();
+                                },
                                 () -> {
                                     log.info("Stock prices stream completed successfully.");
                                     latch.countDown();
                                 });
 
-                latch.await(15, TimeUnit.SECONDS);
+                latch.await(20, TimeUnit.SECONDS);
                 log.info("Transaction [{}] commited successfully", transactionId);
             } catch (KafkaException kex) {
                 log.error("Producer [" + transactionId + "] was unsuccessful: ", kex);
@@ -113,7 +116,7 @@ public class StockPricesProducer implements Callable<String> {
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
         for (int i = 0; i < 1; i++) {
             var producer = new StockPricesProducer(
-                    "Stock-Producer-" + 0, 40, 14, executor);
+                    "Stock-Producer-" + 0, 1000, 14, executor);
             producers.add(producer);
             ecs.submit(producer);
         }
