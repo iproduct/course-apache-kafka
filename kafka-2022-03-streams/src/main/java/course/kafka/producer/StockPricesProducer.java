@@ -116,7 +116,7 @@ public class StockPricesProducer implements Callable<String> {
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
         for (int i = 0; i < 1; i++) {
             var producer = new StockPricesProducer(
-                    "Stock-Producer-" + 0, 1000, 140, executor);
+                    "Stock-Producer-" + 0, 1000, 1400, executor);
             producers.add(producer);
             ecs.submit(producer);
         }
