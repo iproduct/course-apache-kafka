@@ -88,7 +88,7 @@ public class StockPricesProducer implements Callable<String> {
                                     latch.countDown();
                                 });
 
-                latch.await(20, TimeUnit.SECONDS);
+                latch.await(200, TimeUnit.SECONDS);
                 log.info("Transaction [{}] commited successfully", transactionId);
             } catch (KafkaException kex) {
                 log.error("Producer [" + transactionId + "] was unsuccessful: ", kex);
@@ -116,7 +116,7 @@ public class StockPricesProducer implements Callable<String> {
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
         for (int i = 0; i < 1; i++) {
             var producer = new StockPricesProducer(
-                    "Stock-Producer-" + 0, 1000, 14, executor);
+                    "Stock-Producer-" + 0, 1000, 1400, executor);
             producers.add(producer);
             ecs.submit(producer);
         }
