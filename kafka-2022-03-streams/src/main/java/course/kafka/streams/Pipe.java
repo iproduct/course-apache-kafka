@@ -27,26 +27,26 @@ public class Pipe {
         final Topology topology = builder.build(); // build DAG
         System.out.println(topology.describe());
 
-        // 4) Create streams instance
-        final KafkaStreams streams = new KafkaStreams(topology, props);
-        final CountDownLatch latch = new CountDownLatch(1);
-
-        // attach shutdown handler to catch Ctrl-c
-        Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
-            @Override
-            public void run() {
-                streams.close();
-                latch.countDown();
-            }
-        });
-
-        // 5) Start streams and await termination
-        try {
-            streams.start();
-            latch.await();
-        } catch (InterruptedException e) {
-            System.exit(1);
-        }
-        System.exit(0);
+//        // 4) Create streams instance
+//        final KafkaStreams streams = new KafkaStreams(topology, props);
+//        final CountDownLatch latch = new CountDownLatch(1);
+//
+//        // attach shutdown handler to catch Ctrl-c
+//        Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
+//            @Override
+//            public void run() {
+//                streams.close();
+//                latch.countDown();
+//            }
+//        });
+//
+//        // 5) Start streams and await termination
+//        try {
+//            streams.start();
+//            latch.await();
+//        } catch (InterruptedException e) {
+//            System.exit(1);
+//        }
+//        System.exit(0);
     }
 }
