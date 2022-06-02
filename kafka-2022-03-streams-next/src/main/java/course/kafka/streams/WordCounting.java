@@ -31,7 +31,7 @@ public class WordCounting {
                 .groupBy(((key, value) -> value))
                 .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("word-counts-store"))
                 .toStream()
-                .map((key, value) -> new KeyValue<>(key, String.format("%-15s -> %3d", key, value)))
+                .mapValues((key, value) -> String.format("%-15s -> %3d", key, value))
                 .to("latest-word-counts");
 
         // 3) Build stream topology
