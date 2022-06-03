@@ -26,7 +26,7 @@ import static java.lang.Thread.interrupted;
 
 @Slf4j
 public class StockPricesToDbConsumer implements Runnable {
-    public static final String TOPIC = "prices";
+    public static final String TOPIC = "prices-output";
     public static final String CONSUMER_GROUP = "StockPricesToDbConsumer";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";//,localhost:9094,localhost:9095";
     public static final String KEY_CLASS = "key.class";

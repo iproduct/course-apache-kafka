@@ -93,7 +93,7 @@ public class PricesDAO {
                         rs.getString("symbol"),
                         rs.getString("name"),
                         rs.getDouble("price"),
-                        new Date(rs.getTimestamp("timestamp").getTime())
+                        rs.getTimestamp("timestamp").getTime()
                 ));
             }
         } catch (SQLException e) {
@@ -107,7 +107,7 @@ public class PricesDAO {
         insertIntoStatement.setString(1, price.getSymbol());
         insertIntoStatement.setString(2, price.getName());
         insertIntoStatement.setDouble(3, price.getPrice());
-        insertIntoStatement.setTimestamp(4, new Timestamp(price.getTimestamp().getTime()));
+        insertIntoStatement.setTimestamp(4, new Timestamp(price.getTimestamp()));
         try {
             int result = insertIntoStatement.executeUpdate();
             log.debug("Successfully inserted StockPrice:{} - {} inserts", price, result);

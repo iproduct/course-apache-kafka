@@ -31,7 +31,7 @@ public class StockPricesGenerator {
                 .map(index -> {
                     StockPrice quote = STOCKS.get(index.intValue() % STOCKS.size());
                     quote.setPrice(quote.getPrice() * (0.9 + 0.2 * rand.nextDouble()));
-                    return new StockPrice(index, quote.getSymbol(), quote.getName(), quote.getPrice(), new Date());
+                    return new StockPrice(index, quote.getSymbol(), quote.getName(), quote.getPrice(), System.currentTimeMillis());
                 })
 //                .log()
                 .share();

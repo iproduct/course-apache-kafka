@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TemperatureReading {
+public class TemperatureReading implements Timestamped{
     public static final List<String> HF_SENSOR_IDS = List.of(
             "tHighFrequency-01", "tHighFrequency-02"
     );
@@ -24,7 +24,7 @@ public class TemperatureReading {
     private String id;
     private String sensorId;
     private double value;
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private long timestamp = System.currentTimeMillis();
 
     public TemperatureReading(String id, String sensorId, double value) {
         this.id = id;

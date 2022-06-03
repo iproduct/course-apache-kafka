@@ -9,7 +9,7 @@ import java.util.Date;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class StockPrice {
+public class StockPrice implements Timestamped{
     private Long id;
     @NonNull
     private String symbol;
@@ -18,6 +18,6 @@ public class StockPrice {
     @NonNull
     private Double price;
     @NonNull
-    private Date timestamp = new Date();
+    private long timestamp = System.currentTimeMillis();
 
 }
