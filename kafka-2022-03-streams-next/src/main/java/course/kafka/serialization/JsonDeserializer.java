@@ -44,7 +44,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
         } catch (IOException e) {
             try {
                 var message = new String(data, "utf-8");
-                log.error("Error serializing entity: " + message, e);
+                log.error("Error deserializing entity: " + message, e);
                 throw new JsonSerializationException("Error deserializing entity: " + message, e);
             } catch (UnsupportedEncodingException ex) {
                 throw new JsonSerializationException("Error decoding data using UTF-8", ex);
