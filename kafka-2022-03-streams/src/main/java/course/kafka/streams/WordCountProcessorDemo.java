@@ -1,7 +1,6 @@
 package course.kafka.streams;
 
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -9,13 +8,15 @@ import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.StoreBuilder;
+import org.apache.kafka.streams.state.Stores;
 
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
-public class WordCount {
+public class WordCountProcessorDemo {
     public static void main(String[] args) {
         // 1) Configure stream
         Properties props = new Properties();
@@ -25,19 +26,22 @@ public class WordCount {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-        // 2) Create stream builder
-        final StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, String> stream = builder.stream("streams-input");
-        stream.flatMapValues(sentence ->
-                        Arrays.asList(sentence.toLowerCase(Locale.getDefault()).split("\\W+")))
-                .groupBy((key, value) -> value)
-                .count(Materialized.as("word-counts-store"))
-                .toStream()
-                .mapValues((key, value) -> String.format("%-15s->%4d", key, value))
-                .to("latest-word-counts");
+        // Configure state store
+        StoreBuilder<KeyValueStore<String, Long>> countStoreSupplier = Stores.keyValueStoreBuilder(
+                Stores.persistentKeyValueStore("WordCounts"),
+                Serdes.String(),
+                Serdes.Long());
+//        KeyValueStore<String, Long> countStore = countStoreSupplier.build();
+
+
+        // 2) Create topology builder
+        final Topology topology = new Topology(); // build DAG
+        topology.addSource("Source", "streams-input")
+                .addProcessor("Process", () -> new WordCountProcessor(), "Source")
+                .addStateStore(countStoreSupplier, "Process")
+                .addSink("Sink","latest-word-counts", "Process");
 
         // 3) Build stream topology
-        final Topology topology = builder.build(); // build DAG
         System.out.println(topology.describe());
 
         // 4) Create streams instance
