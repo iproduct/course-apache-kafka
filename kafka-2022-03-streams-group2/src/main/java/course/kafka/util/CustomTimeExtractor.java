@@ -8,7 +8,7 @@ import org.apache.kafka.streams.processor.TimestampExtractor;
 @Slf4j
 public class CustomTimeExtractor implements TimestampExtractor {
     @Override
-    public long extract(ConsumerRecord<Object, Object> record, long partitionTime)  {
+    public long extract(ConsumerRecord<Object, Object> record, long previousTimestamp) {
         final long timestamp = record.timestamp();
 
         // `TemperatureReading` is your own custom class, which we assume has a method that returns
@@ -16,12 +16,15 @@ public class CustomTimeExtractor implements TimestampExtractor {
         var myReading = (Timestamped) record.value();
         if (myReading != null) {
             return myReading.getTimestamp();
-        }
-        else {
+        } else {
             // Kafka allows `null` as message value.  How to handle such message values
-            // depends on your use case.  In this example, we decide to fallback to
-            // wall-clock time (= processing-time).
-            return System.currentTimeMillis();
+            // depends on your use case. Attempt to estimate a new timestamp,
+            // otherwise fall back to wall-clock time (processing-time).
+            if (previousTimestamp >= 0) {
+                return previousTimestamp;
+            } else {
+                return System.currentTimeMillis();
+            }
         }
     }
 
