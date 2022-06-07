@@ -12,21 +12,23 @@ import java.time.Duration;
 
 public class WordCountProcessor implements Processor<String, String, String, String> {
     private KeyValueStore<String, Long> kvStore;
+    private ProcessorContext<String, String> context;
 
     @Override
     public void init(ProcessorContext<String, String> context) {
-        context.schedule(Duration.ofSeconds(1), PunctuationType.STREAM_TIME, timestamp -> {
-            try (final KeyValueIterator<String, Long> iter = kvStore.all()) {
-                while (iter.hasNext()) {
-                    final KeyValue<String, Long> entry = iter.next();
-                    context.forward(new Record<>(
-                            entry.key,
-                            String.format("%-15s->%4d", entry.key, entry.value),
-                            timestamp)
-                    );
-                }
-            }
-        });
+        this.context = context;
+//        context.schedule(Duration.ofSeconds(1), PunctuationType.STREAM_TIME, timestamp -> {
+//            try (final KeyValueIterator<String, Long> iter = kvStore.all()) {
+//                while (iter.hasNext()) {
+//                    final KeyValue<String, Long> entry = iter.next();
+//                    context.forward(new Record<>(
+//                            entry.key,
+//                            String.format("%-15s->%4d", entry.key, entry.value),
+//                            timestamp)
+//                    );
+//                }
+//            }
+//        });
         kvStore = context.getStateStore("WordCounts");
     }
 
@@ -36,11 +38,13 @@ public class WordCountProcessor implements Processor<String, String, String, Str
 
         for (final String word : words) {
             final Long oldCount = kvStore.get(word);
-            if (oldCount == null) {
-                kvStore.put(word, 1L);
-            } else {
-                kvStore.put(word, oldCount + 1);
-            }
+            long newCount = oldCount != null ? oldCount + 1 : 1L;
+            kvStore.put(word, newCount);
+            context.forward(new Record<>(
+                    word,
+                    String.format("%-15s->%4d", word, newCount),
+                    record.timestamp()
+            ));
         }
     }
 

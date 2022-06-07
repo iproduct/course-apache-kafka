@@ -1,5 +1,6 @@
 package course.kafka.streams;
 
+import org.apache.kafka.common.config.TopicConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -9,10 +10,10 @@ import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.StoreBuilder;
+import org.apache.kafka.streams.state.Stores;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 public class WordCountProcessorDemo {
@@ -22,30 +23,33 @@ public class WordCountProcessorDemo {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-pipe");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093");
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly_once_v2");
-        props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4);
+        props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-        // 2) Create stream builder
-        final StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, String> stream = builder.stream("streams-input");
-//        stream.flatMap((k, sentence) ->
-//                        Arrays.stream(sentence.toLowerCase(Locale.getDefault()).split("\\W+"))
-//                                .map(w -> new KeyValue<String, String>(k, w))
-//                                .collect(Collectors.toList())
-        stream.flatMapValues(sentence ->
-                        Arrays.asList(sentence.toLowerCase(Locale.getDefault()).split("\\W+")))
-                .groupBy((key, value) -> value)
-                .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("word-counts-store"))
-                .toStream()
-                .mapValues((key, value) -> String.format("%-15s->%4d", key, value))
-                .to("latest-word-counts");
+        // 2) Provide supplier for local state stores
+        Map<String, String> changelogConfig = new HashMap();
+        changelogConfig.put(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, "1");
 
-        // 3) Build stream topology
-        final Topology topology = builder.build(); // build DAG
+        StoreBuilder<KeyValueStore<String, Long>> countStoreSupplier =
+                Stores.keyValueStoreBuilder(
+                        Stores.inMemoryKeyValueStore("inmemory-word-counts"),
+                        Serdes.String(),
+                        Serdes.Long())
+                        .withLoggingEnabled(changelogConfig);
+
+
+        // 3) Create stream builder
+        final Topology topology = new Topology(); // Configure processors DAG
+        topology.addSource("Source", "streams-input")
+                .addProcessor("Process", WordCountProcessor::new, "Source")
+                .addStateStore(countStoreSupplier, "Process")
+                .addSink("Sink", "latest-word-counts", "Process");
+
+        // 4) Describe stream topology - optional
         System.out.println(topology.describe());
 
-        // 4) Create streams instance
+        // 5) Create streams instance
         final KafkaStreams streams = new KafkaStreams(topology, props);
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -58,7 +62,7 @@ public class WordCountProcessorDemo {
             }
         });
 
-        // 5) Start streams and await termination
+        // 6) Start streams and await termination
         try {
             streams.start();
             latch.await();

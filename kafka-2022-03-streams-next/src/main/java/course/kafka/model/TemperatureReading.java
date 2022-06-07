@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TemperatureReading implements Timestamped {
+public class TemperatureReading implements Timestamped{
     public static final List<String> HF_SENSOR_IDS = List.of(
             "tHighFrequency-01", "tHighFrequency-02"
     );

@@ -28,7 +28,8 @@ public class WordCountProcessorDemo {
 
         // Configure state store
         StoreBuilder<KeyValueStore<String, Long>> countStoreSupplier = Stores.keyValueStoreBuilder(
-                Stores.persistentKeyValueStore("WordCounts"),
+//                Stores.persistentKeyValueStore("WordCounts"),
+                Stores.inMemoryKeyValueStore("WordCounts"),
                 Serdes.String(),
                 Serdes.Long());
 //        KeyValueStore<String, Long> countStore = countStoreSupplier.build();
