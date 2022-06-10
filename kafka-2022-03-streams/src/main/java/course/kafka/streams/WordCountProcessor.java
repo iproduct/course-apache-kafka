@@ -1,14 +1,9 @@
 package course.kafka.streams;
 
-import org.apache.kafka.streams.KeyValue;
-import org.apache.kafka.streams.processor.PunctuationType;
 import org.apache.kafka.streams.processor.api.Processor;
 import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.processor.api.Record;
-import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.KeyValueStore;
-
-import java.time.Duration;
 
 public class WordCountProcessor implements Processor<String, String, String, String> {
     private KeyValueStore<String, Long> kvStore;
@@ -23,13 +18,13 @@ public class WordCountProcessor implements Processor<String, String, String, Str
 //                    final KeyValue<String, Long> entry = iter.next();
 //                    context.forward(new Record<>(
 //                            entry.key,
-//                            String.format("%-15s->%4d", entry.key, entry.value),
-//                            timestamp)
-//                    );
+//                            String.format("%-15s -> %4d", entry.key, entry.value),
+//                            timestamp
+//                    ));
 //                }
 //            }
 //        });
-        kvStore = context.getStateStore("WordCounts");
+        kvStore = context.getStateStore("inmemory-word-counts");
     }
 
     @Override
@@ -37,12 +32,14 @@ public class WordCountProcessor implements Processor<String, String, String, Str
         final String[] words = record.value().toLowerCase().split("\\W+");
 
         for (final String word : words) {
-            final Long oldCount = kvStore.get(word);
-            long newCount = oldCount != null ? oldCount + 1 : 1L;
-            kvStore.put(word, newCount);
+            Long oldVal = kvStore.get(word);
+            if (oldVal == null) {
+                oldVal = 0L;
+            }
+            kvStore.put(word, oldVal + 1);
             context.forward(new Record<>(
                     word,
-                    String.format("%-15s->%4d", word, newCount),
+                    String.format("%-15s -> %4d", word, oldVal + 1),
                     record.timestamp()
             ));
         }
@@ -50,6 +47,5 @@ public class WordCountProcessor implements Processor<String, String, String, Str
 
     @Override
     public void close() {
-
     }
 }
