@@ -33,7 +33,7 @@ public class WordCountDslDemoBranching {
 //                                .collect(Collectors.toList())
         var wordsStream = stream.flatMapValues(sentence ->
                         Arrays.asList(sentence.toLowerCase(Locale.getDefault()).split("\\W+")))
-                .repartition(Repartitioned.as("word-counts-store").numberOfPartitions(4))
+//                .repartition(Repartitioned.as("word-counts-store").numberOfPartitions(4))
                 .selectKey((key, value) -> value);
 
         var branches =
@@ -44,7 +44,13 @@ public class WordCountDslDemoBranching {
                                 Branched.as("B"))
                         .defaultBranch(Branched.as("C"));              /* default branch */
 
-        branches.get("Branch-A").to("latest-latest-word-counts-a");
+        branches.get("Branch-A")
+                .mapValues((word, value) -> word.length())
+                .groupBy((word, len) -> word.charAt(0) + "", Grouped.valueSerde(Serdes.Integer()))
+                .reduce((aggValue, newValue) -> aggValue + newValue)
+                .toStream()
+                .mapValues((key, value) -> String.format("%-5s->%4d", key, value))
+                .to("latest-latest-word-counts-a");
         branches.get("Branch-B").to("latest-latest-word-counts-b");
         branches.get("Branch-C").to("latest-latest-word-counts-c");
 
