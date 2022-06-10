@@ -1,19 +1,19 @@
 package course.kafka.streams;
 
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
-import org.apache.kafka.streams.*;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.kstream.Repartitioned;
-import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.kstream.*;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
-public class WordCountDslDemo {
+public class WordCountDslDemoBranching {
     public static void main(String[] args) {
         // 1) Configure stream
         Properties props = new Properties();
@@ -31,14 +31,28 @@ public class WordCountDslDemo {
 //                        Arrays.stream(sentence.toLowerCase(Locale.getDefault()).split("\\W+"))
 //                                .map(w -> new KeyValue<String, String>(k, w))
 //                                .collect(Collectors.toList())
-        stream.flatMapValues(sentence ->
+        var wordsStream = stream.flatMapValues(sentence ->
                         Arrays.asList(sentence.toLowerCase(Locale.getDefault()).split("\\W+")))
                 .repartition(Repartitioned.as("word-counts-store").numberOfPartitions(4))
-                .groupBy((key, value) -> value)
-                .count(Materialized.as("word-counts-store"))
-                .toStream()
-                .mapValues((key, value) -> String.format("%-15s->%4d", key, value))
-                .to("latest-word-counts");
+                .selectKey((key, value) -> value);
+
+        var branches =
+                wordsStream.split(Named.as("Branch-"))
+                        .branch((key, value) -> key.startsWith("a"),  /* first predicate  */
+                                Branched.as("A"))
+                        .branch((key, value) -> key.startsWith("b"),  /* second predicate */
+                                Branched.as("B"))
+                        .defaultBranch(Branched.as("C"));              /* default branch */
+
+        branches.get("Branch-A").to("latest-latest-word-counts-a");
+        branches.get("Branch-B").to("latest-latest-word-counts-b");
+        branches.get("Branch-C").to("latest-latest-word-counts-c");
+
+//                .groupBy((key, value) -> value)
+//                .count(Materialized.as("word-counts-store"))
+//                .toStream()
+//                .mapValues((key, value) -> String.format("%-15s->%4d", key, value))
+//                .to("latest-word-counts");
 
         // 3) Build stream topology
         final Topology topology = builder.build(); // build DAG
