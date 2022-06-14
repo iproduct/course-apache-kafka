@@ -7,6 +7,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.*;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;

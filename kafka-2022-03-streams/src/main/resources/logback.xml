@@ -10,7 +10,7 @@
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
-    <logger name="course.kafka" level="debug" additivity="false">
+    <logger name="course.kafka" level="info" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 </configuration>

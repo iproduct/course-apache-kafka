@@ -1,6 +1,7 @@
 package course.kafka.consumer;
 
 import course.kafka.model.TemperatureReading;
+import course.kafka.model.TimestampedTemperatureReading;
 import course.kafka.serialization.JsonDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -18,26 +19,34 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public class TemperatureReadingConsumer implements Runnable {
-    public static final String TOPIC = "events";
-    public static final String CONSUMER_GROUP = "TemperatureEventsConsumer";
+    public static final String INTERNAL_TEMP_TOPIC = "temperature";
+    public static final String EXTERNAL_TEMP_TOPIC = "external-temperature";
+    public static final String CONSUMER_GROUP_INTERNAL = "InternalTemperatureEventsConsumer";
+    public static final String CONSUMER_GROUP_EXTERNAL = "ExternalTemperatureEventsConsumer";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";//,localhost:9094,localhost:9095";
     public static final String KEY_CLASS = "key.class";
     public static final String VALUE_CLASS = "values.class";
     public static final long POLLING_DURATION_MS = 100;
 
     private volatile boolean canceled;
+    private final String consumerGroup;
+    private final String topic;
 
-    private static Consumer<String, TemperatureReading> createConsumer() {
+    public TemperatureReadingConsumer(String consumerGroup, String topic) {
+        this.consumerGroup = consumerGroup;
+        this.topic = topic;
+    }
+
+    private static Consumer<String, TemperatureReading> createConsumer(String consumerGroup) {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-//        props.put(ConsumerConfig.DEFAULT_ISOLATION_LEVEL, IsolationLevel.READ_COMMITTED);
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.toString().toLowerCase());
         props.put(KEY_CLASS, String.class.getName());
-        props.put(VALUE_CLASS, TemperatureReading.class.getName());
+        props.put(VALUE_CLASS, TimestampedTemperatureReading.class.getName());
 
         return new KafkaConsumer<>(props);
     }
@@ -48,9 +57,9 @@ public class TemperatureReadingConsumer implements Runnable {
 
     @Override
     public void run() {
-        try (var consumer = createConsumer()) {
+        try (var consumer = createConsumer(consumerGroup)) {
             try {
-                consumer.subscribe(List.of(TOPIC));
+                consumer.subscribe(List.of(topic));
                 while (!canceled) {
                     var records = consumer.poll(
                             Duration.ofMillis(POLLING_DURATION_MS));
@@ -64,7 +73,7 @@ public class TemperatureReadingConsumer implements Runnable {
                             log.error("Consumer [" + consumer.groupMetadata().groupId() + "] FAILED to commit offsets: " + offsets, exception);
                         } else {
                             offsets.forEach((tp, offs) -> {
-                                log.info("Consumer [{}] SUCCESSFULLY commited offsets: {} : {}", consumer.groupMetadata().groupId(), tp.toString(), offs.offset());
+                                log.debug("Consumer [{}] SUCCESSFULLY commited offsets: {} : {}", consumer.groupMetadata().groupId(), tp.toString(), offs.offset());
                             });
                         }
                     });
@@ -78,14 +87,18 @@ public class TemperatureReadingConsumer implements Runnable {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        TemperatureReadingConsumer consumer = new TemperatureReadingConsumer();
+        TemperatureReadingConsumer consumer1 = new TemperatureReadingConsumer(CONSUMER_GROUP_INTERNAL, INTERNAL_TEMP_TOPIC);
+        TemperatureReadingConsumer consumer2 = new TemperatureReadingConsumer(CONSUMER_GROUP_EXTERNAL, EXTERNAL_TEMP_TOPIC);
         var executor = Executors.newCachedThreadPool();
-        var producerFuture = executor.submit(consumer);
+        var producerFuture1 = executor.submit(consumer1);
+        var producerFuture2 = executor.submit(consumer2);
         System.out.println("Hit <Enter> to close.");
         new Scanner(System.in).nextLine();
         System.out.println("Closing the consumer ...");
-        consumer.cancel();
-        producerFuture.cancel(true);
+        consumer1.cancel();
+        producerFuture1.cancel(true);
+        consumer2.cancel();
+        producerFuture2.cancel(true);
         executor.shutdown();
     }
 }
