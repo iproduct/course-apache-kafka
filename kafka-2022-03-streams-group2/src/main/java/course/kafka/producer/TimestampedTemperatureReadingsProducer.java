@@ -133,13 +133,13 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "INTERNAL-" + i, SENSOR_IDS.get(i), 10, 3, INTERNAL_TOPIC);
+                    BASE_TRANSACTION_ID + "INTERNAL-" + i, SENSOR_IDS.get(i), 500, 3, INTERNAL_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "EXTERNAL-" + i, SENSOR_IDS.get(i), 10, 3, INTERNAL_TOPIC);
+                    BASE_TRANSACTION_ID + "EXTERNAL-" + i, SENSOR_IDS.get(i), 500, 3, EXTERNAL_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
