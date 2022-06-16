@@ -22,7 +22,7 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 import static course.kafka.interceptor.CountingProducerInterceptor.REPORTING_WINDOW_SIZE_MS;
-import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
+import static course.kafka.model.TimestampedTemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
 public class TimestampedTemperatureReadingsProducer implements Callable<String> {
@@ -40,8 +40,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
     private final String topic;
 
 
-    public TimestampedTemperatureReadingsProducer(String transactionId, String sensorId, long delayMs,
-                                                  int numReadings, ExecutorService executor, String topic) {
+    public TimestampedTemperatureReadingsProducer(String transactionId, String sensorId, long delayMs,int numReadings, String topic) {
         this.sensorId = sensorId;
         this.delayMs = delayMs;
         this.numReadings = numReadings;
@@ -65,7 +64,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
         props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitionerBySensorId.class.getName());
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
         props.put(REPORTING_WINDOW_SIZE_MS, 3000);
-        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
+//        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
 
         return new KafkaProducer<>(props);
     }
@@ -76,21 +75,21 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
         Future<String> reporterFuture = null;
         try (var producer = createProducer(transactionId)) {
 //            reporterFuture = executor.submit(new ProducerMetricReporter(producer));
-            producer.initTransactions();
+//            producer.initTransactions();
             try {
-                producer.beginTransaction();
+//                producer.beginTransaction();
                 var recordFutures = Flux.interval(Duration.ofMillis(delayMs))
                         .take(numReadings)
                         .map(n -> {
-                            var t = topic.equals(INTERNAL_TEMP_TOPIC)? 15 + Math.random() * 15 : 25 + Math.random() * 15;
+                            var t = topic.equals(INTERNAL_TEMP_TOPIC)? 25 + Math.random() * 20 : 5 + Math.random() * 25;
                             var reading = new TimestampedTemperatureReading(sensorId, t);
                             var record = new ProducerRecord(topic, reading.getSensorId(), reading);
                             return producer.send(record, (metadata, exception) -> {
                                 if (exception != null) {
                                     log.error("Error sending temperature readings", exception);
                                 }
-                                log.info("SENSOR_ID: {}, MESSAGE: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
-                                        sensorId, n,
+                                log.info("SENSOR_ID: {}, MESSAGE: {}, TEMP: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+                                        sensorId, n, reading.getValue(),
                                         metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                                 latch.countDown();
                             });
@@ -98,7 +97,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 
                 latch.await(PRODUCER_TIMEOUT_SEC, TimeUnit.SECONDS);
                 log.info("Transaction [{}] commited successfully", transactionId);
-                producer.commitTransaction();
+//                producer.commitTransaction();
             } catch (KafkaException kex) {
                 log.error("Transaction [" + transactionId + "] was unsuccessful: ", kex);
                 producer.abortTransaction();
@@ -124,13 +123,13 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "INTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 10, 3, executor, INTERNAL_TEMP_TOPIC);
+                    BASE_TRANSACTION_ID + "INTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 500, 3, INTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "EXTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 10, 3, executor, EXTERNAL_TEMP_TOPIC);
+                    BASE_TRANSACTION_ID + "EXTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 500, 3, EXTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
