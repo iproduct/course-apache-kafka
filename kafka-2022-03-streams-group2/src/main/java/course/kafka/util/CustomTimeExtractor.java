@@ -13,19 +13,20 @@ public class CustomTimeExtractor implements TimestampExtractor {
 
         // `TemperatureReading` is your own custom class, which we assume has a method that returns
         // the embedded timestamp (in milliseconds).
-        var myReading = (Timestamped) record.value();
-        if (myReading != null) {
-            return myReading.getTimestamp();
-        } else {
-            // Kafka allows `null` as message value.  How to handle such message values
-            // depends on your use case. Attempt to estimate a new timestamp,
-            // otherwise fall back to wall-clock time (processing-time).
-            if (previousTimestamp >= 0) {
-                return previousTimestamp;
-            } else {
-                return System.currentTimeMillis();
+        if (record.value() instanceof Timestamped) {
+            var myReading = (Timestamped) record.value();
+            if (myReading != null) {
+                return myReading.getTimestamp();
             }
         }
+        // Kafka allows `null` as message value.  How to handle such message values
+        // depends on your use case. Attempt to estimate a new timestamp,
+        // otherwise fall back to wall-clock time (processing-time).
+        if (previousTimestamp >= 0) {
+            return previousTimestamp;
+        } else {
+            return System.currentTimeMillis();
+        }
     }
-
 }
+

@@ -79,7 +79,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
         props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TimestampedTemperatureReadingsPartitioner.class.getName());
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
         props.put(REPORTING_WINDOW_SIZE_MS, 3000);
-        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
+//        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
 
         return new KafkaProducer<>(props);
     }
@@ -89,10 +89,10 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
         var latch = new CountDownLatch(numReadings);
         Future<String> reporterFuture = null;
         try (var producer = createProducer(transactionId)) {
-            producer.initTransactions();
+//            producer.initTransactions();
             var i = new AtomicInteger();
             try {
-                producer.beginTransaction();
+//                producer.beginTransaction();
                 var recordFutures = Flux.interval(Duration.ofMillis(delayMs))
                         .take(numReadings)
                         .map( n -> {
@@ -112,7 +112,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 
                 latch.await(PRODUCER_TIMEOUT_SEC, TimeUnit.SECONDS);
                 log.info("Transaction [{}] commited successfully", transactionId);
-                producer.commitTransaction();
+//                producer.commitTransaction();
             } catch (KafkaException kex) {
                 log.error("Transaction [" + transactionId + "] was unsuccessful: ", kex);
                 producer.abortTransaction();
@@ -133,7 +133,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "INTERNAL-" + i, SENSOR_IDS.get(i), 500, 3, INTERNAL_TOPIC);
+                    BASE_TRANSACTION_ID + "INTERNAL-" + i, SENSOR_IDS.get(i), 500, 100, INTERNAL_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }

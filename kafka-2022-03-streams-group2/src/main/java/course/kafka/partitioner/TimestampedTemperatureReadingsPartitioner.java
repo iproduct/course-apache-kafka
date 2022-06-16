@@ -26,7 +26,9 @@ public class TimestampedTemperatureReadingsPartitioner implements Partitioner {
         final List<PartitionInfo> partitionInfos = cluster.availablePartitionsForTopic(topic);
         final int partitionCount = partitionInfos.size();
         final var keyStr = key.toString();
-        return symbolToOrdinalMap.get(keyStr) % partitionCount;
+        var sensorId = symbolToOrdinalMap.get(keyStr);
+        if(sensorId == null) return 0;
+        return sensorId % partitionCount;
     }
 
     @Override

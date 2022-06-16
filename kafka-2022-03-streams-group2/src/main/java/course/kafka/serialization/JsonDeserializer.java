@@ -23,16 +23,25 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 
     private Class<T> cls;
 
+    public JsonDeserializer() {
+    }
+
+    public JsonDeserializer(Class<T> cls) {
+        this.cls = cls;
+    }
+
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
-        String configKey = isKey ? KEY_CLASS : VALUE_CLASS;
-        String clsName = String.valueOf(configs.get(configKey));
-        try {
-            cls = (Class<T>) Class.forName(clsName);
-        } catch (ClassNotFoundException e) {
-            log.error("Failed to configure JsonDeserializer. " +
-                    "Did you forget to specify the '{}' property?", configKey);
-            throw new JsonSerializationException("Entity class not found: " + clsName, e);
+        if(cls == null) {
+            String configKey = isKey ? KEY_CLASS : VALUE_CLASS;
+            String clsName = String.valueOf(configs.get(configKey));
+            try {
+                cls = (Class<T>) Class.forName(clsName);
+            } catch (ClassNotFoundException e) {
+                log.error("Failed to configure JsonDeserializer. " +
+                        "Did you forget to specify the '{}' property?", configKey);
+                throw new JsonSerializationException("Entity class not found: " + clsName, e);
+            }
         }
         Deserializer.super.configure(configs, isKey);
     }

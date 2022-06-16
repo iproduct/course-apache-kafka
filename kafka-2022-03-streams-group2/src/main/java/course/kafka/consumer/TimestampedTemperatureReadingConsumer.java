@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public class TimestampedTemperatureReadingConsumer implements Runnable {
-    public static final String INTERNAL_TOPIC = "temperature";
+    public static final String INTERNAL_TOPIC = "events";
     public static final String EXTERNAL_TOPIC = "external-temperature";
     public static final String CONSUMER_GROUP = "TimestampedTemperatureEventsConsumer";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";//,localhost:9094,localhost:9095";
@@ -88,18 +88,18 @@ public class TimestampedTemperatureReadingConsumer implements Runnable {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         TimestampedTemperatureReadingConsumer consumer1 =
                 new TimestampedTemperatureReadingConsumer(CONSUMER_GROUP + "-INTERNAL", INTERNAL_TOPIC);
-        TimestampedTemperatureReadingConsumer consumer2 =
-                new TimestampedTemperatureReadingConsumer(CONSUMER_GROUP + "-EXTERNAL", EXTERNAL_TOPIC);
+//        TimestampedTemperatureReadingConsumer consumer2 =
+//                new TimestampedTemperatureReadingConsumer(CONSUMER_GROUP + "-EXTERNAL", EXTERNAL_TOPIC);
         var executor = Executors.newCachedThreadPool();
         var producerFuture1 = executor.submit(consumer1);
-        var producerFuture2 = executor.submit(consumer2);
+//        var producerFuture2 = executor.submit(consumer2);
         System.out.println("Hit <Enter> to close.");
         new Scanner(System.in).nextLine();
         System.out.println("Closing the consumer ...");
         consumer1.cancel();
-        consumer2.cancel();
+//        consumer2.cancel();
         producerFuture1.cancel(true);
-        producerFuture2.cancel(true);
+//        producerFuture2.cancel(true);
 
         executor.shutdown();
     }
