@@ -9,20 +9,21 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Predicate;
+import org.apache.kafka.streams.kstream.*;
 
+import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
 import static org.apache.kafka.streams.kstream.Consumed.with;
 
 
-public class FilteredTemperatureReadingsDemo {
+public class WindowedStatisticsTemperatureReadings02 {
     public static final String INTERNAL_TEMP_TOPIC = "temperature";
     public static final String EXTERNAL_TEMP_TOPIC = "external-temperature";
     public static final String OUTPUT_TOPIC = "events";
+    public static final long WINDOW_SIZE_MS = 5000;
+
 
     public static void main(String[] args) {
         // 1) Configure stream
@@ -50,10 +51,18 @@ public class FilteredTemperatureReadingsDemo {
 
         internalTemperature
                 .filter(validTemperatureFilter)
+                .mapValues(reading -> reading.getValue())
+                .groupByKey(Grouped.valueSerde(Serdes.Double()))
+                .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofMillis(WINDOW_SIZE_MS)))
+                .count(Materialized.with(Serdes.String(), Serdes.Long()))
+                .toStream()
+                .mapValues(t -> String.format("Temp: %5d", t))
+//                .mapValues(t -> String.format("Temp: %9.5f", t))
                 .to(OUTPUT_TOPIC);
-        externalTemperature
-                .filter(validTemperatureFilter)
-                .to(OUTPUT_TOPIC);
+
+//        externalTemperature
+//                .filter(validTemperatureFilter)
+//                .to(OUTPUT_TOPIC);
 
         // 3) Build stream topology
         final Topology topology = builder.build(); // build DAG

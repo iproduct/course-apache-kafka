@@ -15,6 +15,8 @@ import org.apache.kafka.common.errors.OutOfOrderSequenceException;
 import org.apache.kafka.common.errors.ProducerFencedException;
 import org.apache.kafka.common.serialization.StringSerializer;
 import reactor.core.publisher.Flux;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.time.Duration;
 import java.util.*;
@@ -80,8 +82,9 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 //                producer.beginTransaction();
                 var recordFutures = Flux.interval(Duration.ofMillis(delayMs))
                         .take(numReadings)
-                        .map(n -> {
-                            var t = topic.equals(INTERNAL_TEMP_TOPIC)? 25 + Math.random() * 20 : 5 + Math.random() * 25;
+                        .map(n -> topic.equals(INTERNAL_TEMP_TOPIC)? 25 + Math.random() * 20 : 5 + Math.random() * 25)
+                        .startWith(-20.0)
+                        .map(t -> {
                             var reading = new TimestampedTemperatureReading(sensorId, t);
                             var record = new ProducerRecord(topic, reading.getSensorId(), reading);
                             return producer.send(record, (metadata, exception) -> {
@@ -89,7 +92,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
                                     log.error("Error sending temperature readings", exception);
                                 }
                                 log.info("SENSOR_ID: {}, MESSAGE: {}, TEMP: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
-                                        sensorId, n, reading.getValue(),
+                                        sensorId, reading.getValue(),
                                         metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                                 latch.countDown();
                             });
@@ -123,11 +126,11 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "INTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 500, 3, INTERNAL_TEMP_TOPIC);
+                    BASE_TRANSACTION_ID + "INTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 500, 200, INTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 0; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
                     BASE_TRANSACTION_ID + "EXTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 500, 3, EXTERNAL_TEMP_TOPIC);
             producers.add(producer);
