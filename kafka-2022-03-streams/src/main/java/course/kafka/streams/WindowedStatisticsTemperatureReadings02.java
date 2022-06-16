@@ -1,20 +1,25 @@
 package course.kafka.streams;
 
+import course.kafka.model.DoubleStatistics;
 import course.kafka.model.TimestampedTemperatureReading;
 import course.kafka.serialization.JsonDeserializer;
 import course.kafka.serialization.JsonSerializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.state.WindowStore;
 
 import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
+import static java.lang.Double.max;
+import static java.lang.Double.min;
 import static org.apache.kafka.streams.kstream.Consumed.with;
 
 
@@ -35,29 +40,39 @@ public class WindowedStatisticsTemperatureReadings02 {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-        // create custom JSON Serde
-        Serde<TimestampedTemperatureReading> jsonSerde = Serdes.serdeFrom(
+        // create custom JSON Serdes
+        Serde<TimestampedTemperatureReading> readingsJsonSerde = Serdes.serdeFrom(
                 new JsonSerializer<>(), new JsonDeserializer<>(TimestampedTemperatureReading.class));
+        Serde<DoubleStatistics> doubleStatisticsSerde = Serdes.serdeFrom(
+                new JsonSerializer<>(), new JsonDeserializer<>(DoubleStatistics.class));
 
         // 2) Create stream builder
         final StreamsBuilder builder = new StreamsBuilder();
         KStream<String, TimestampedTemperatureReading> internalTemperature = builder
-                .stream(INTERNAL_TEMP_TOPIC, with(Serdes.String(), jsonSerde));
+                .stream(INTERNAL_TEMP_TOPIC, with(Serdes.String(), readingsJsonSerde));
         KStream<String, TimestampedTemperatureReading> externalTemperature = builder
-                .stream(EXTERNAL_TEMP_TOPIC, with(Serdes.String(), jsonSerde));
+                .stream(EXTERNAL_TEMP_TOPIC, with(Serdes.String(), readingsJsonSerde));
 
         Predicate<String, TimestampedTemperatureReading> validTemperatureFilter =
                 (sensorId, reading) -> reading.getValue() > -15 && reading.getValue() < 60;
 
         internalTemperature
                 .filter(validTemperatureFilter)
-                .mapValues(reading -> reading.getValue())
-                .groupByKey(Grouped.valueSerde(Serdes.Double()))
+                .groupByKey(Grouped.valueSerde(readingsJsonSerde))
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofMillis(WINDOW_SIZE_MS)))
-                .count(Materialized.with(Serdes.String(), Serdes.Long()))
+                .aggregate(() -> new DoubleStatistics(),
+                        (sensorId, reading, aggStats) -> {
+                            aggStats.setCount(aggStats.getCount() + 1);
+                            aggStats.setSum(aggStats.getSum() + reading.getValue());
+                            aggStats.setAverage(aggStats.getSum() / aggStats.getCount());
+                            aggStats.setMin(min(aggStats.getMin(), reading.getValue()));
+                            aggStats.setMax(max(aggStats.getMin(), reading.getValue()));
+                            aggStats.setTimestamp(reading.getTimestamp());
+                            return aggStats;
+                        }, Materialized.with(Serdes.String(), doubleStatisticsSerde))
                 .toStream()
-                .mapValues(t -> String.format("Temp: %5d", t))
-//                .mapValues(t -> String.format("Temp: %9.5f", t))
+                .mapValues(t -> String.format("Count:%3d, Sum:%10.5f, Avg:%9.5f,  Min:%9.5f,  Max:%9.5f, Time: %d",
+                        t.getCount(), t.getSum(), t.getAverage(), t.getMin(), t.getMax(), t.getTimestamp()))
                 .to(OUTPUT_TOPIC);
 
 //        externalTemperature
