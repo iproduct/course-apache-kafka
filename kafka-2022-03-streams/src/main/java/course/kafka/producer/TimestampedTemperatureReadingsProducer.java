@@ -1,9 +1,7 @@
 package course.kafka.producer;
 
 import course.kafka.interceptor.CountingProducerInterceptor;
-import course.kafka.model.TemperatureReading;
 import course.kafka.model.TimestampedTemperatureReading;
-import course.kafka.partitioner.TemperatureReadingsPartitioner;
 import course.kafka.partitioner.TemperatureReadingsPartitionerBySensorId;
 import course.kafka.serialization.JsonSerializer;
 import lombok.extern.slf4j.Slf4j;
@@ -12,32 +10,22 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaException;
-import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.OutOfOrderSequenceException;
 import org.apache.kafka.common.errors.ProducerFencedException;
-import org.apache.kafka.common.internals.Topic;
-import org.apache.kafka.common.metrics.MetricConfig;
-import org.apache.kafka.common.metrics.Metrics;
-import org.apache.kafka.common.metrics.Sensor;
-import org.apache.kafka.common.metrics.stats.Avg;
-import org.apache.kafka.common.metrics.stats.Max;
-import org.apache.kafka.common.metrics.stats.Min;
 import org.apache.kafka.common.serialization.StringSerializer;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static course.kafka.interceptor.CountingProducerInterceptor.REPORTING_WINDOW_SIZE_MS;
-import static course.kafka.model.TemperatureReading.HF_SENSOR_IDS;
 import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 
 @Slf4j
-public class TemperatureReadingsProducerBySensorId implements Callable<String> {
+public class TimestampedTemperatureReadingsProducer implements Callable<String> {
     private static final String BASE_TRANSACTION_ID = "temperature-sensor-transaction-";
     public static final String INTERNAL_TEMP_TOPIC = "temperature";
     public static final String EXTERNAL_TEMP_TOPIC = "external-temperature";
@@ -52,8 +40,8 @@ public class TemperatureReadingsProducerBySensorId implements Callable<String> {
     private final String topic;
 
 
-    public TemperatureReadingsProducerBySensorId(String transactionId, String sensorId, long delayMs,
-                     int numReadings, ExecutorService executor, String topic) {
+    public TimestampedTemperatureReadingsProducer(String transactionId, String sensorId, long delayMs,
+                                                  int numReadings, ExecutorService executor, String topic) {
         this.sensorId = sensorId;
         this.delayMs = delayMs;
         this.numReadings = numReadings;
@@ -130,18 +118,18 @@ public class TemperatureReadingsProducerBySensorId implements Callable<String> {
         metricTags.put("topic", INTERNAL_TEMP_TOPIC);
 
         // start temperature producers
-        final List<TemperatureReadingsProducerBySensorId> producers = new ArrayList<>();
+        final List<TimestampedTemperatureReadingsProducer> producers = new ArrayList<>();
         var executor = Executors.newCachedThreadPool();
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
 
         for (int i = 0; i < 1; i++) {
-            var producer = new TemperatureReadingsProducerBySensorId(
+            var producer = new TimestampedTemperatureReadingsProducer(
                     BASE_TRANSACTION_ID + "INTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 10, 3, executor, INTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
         for (int i = 0; i < 1; i++) {
-            var producer = new TemperatureReadingsProducerBySensorId(
+            var producer = new TimestampedTemperatureReadingsProducer(
                     BASE_TRANSACTION_ID + "EXTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 10, 3, executor, EXTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
