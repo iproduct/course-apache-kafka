@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public class TimestampedTemperatureReadingConsumer implements Runnable {
-    public static final String INTERNAL_TOPIC = "events";
+    public static final String INTERNAL_TOPIC = "internal-temperature";
     public static final String EXTERNAL_TOPIC = "external-temperature";
     public static final String CONSUMER_GROUP = "TimestampedTemperatureEventsConsumer";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";//,localhost:9094,localhost:9095";

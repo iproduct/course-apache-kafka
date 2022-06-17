@@ -1,9 +1,7 @@
 package course.kafka.producer;
 
 import course.kafka.interceptor.CountingProducerInterceptor;
-import course.kafka.model.TemperatureReading;
 import course.kafka.model.TimestampedTemperatureReading;
-import course.kafka.partitioner.TemperatureReadingsPartitioner;
 import course.kafka.partitioner.TimestampedTemperatureReadingsPartitioner;
 import course.kafka.serialization.JsonSerializer;
 import lombok.extern.slf4j.Slf4j;
@@ -12,58 +10,45 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaException;
-import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.OutOfOrderSequenceException;
 import org.apache.kafka.common.errors.ProducerFencedException;
-import org.apache.kafka.common.metrics.MetricConfig;
-import org.apache.kafka.common.metrics.Metrics;
-import org.apache.kafka.common.metrics.Sensor;
-import org.apache.kafka.common.metrics.stats.Avg;
-import org.apache.kafka.common.metrics.stats.Max;
-import org.apache.kafka.common.metrics.stats.Min;
 import org.apache.kafka.common.serialization.StringSerializer;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static course.kafka.interceptor.CountingProducerInterceptor.REPORTING_WINDOW_SIZE_MS;
-import static course.kafka.model.TemperatureReading.HF_SENSOR_IDS;
-import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 import static course.kafka.model.TimestampedTemperatureReading.SENSOR_IDS;
 
 @Slf4j
 public class TimestampedTemperatureReadingsProducer implements Callable<String> {
     private static final String BASE_TRANSACTION_ID = "temperature-sensor-transaction-";
-    public static final String INTERNAL_TOPIC = "temperature";
-    public static final String EXTERNAL_TOPIC = "external-temperature";
-    public static final String CLIENT_ID = "TemperatureReadingsProducer";
+    public static final String INTERNAL_TEMP_TOPIC = "temperature";
+    public static final String EXTERNAL_TEMP_TOPIC = "external-temperature";
+    public static final String CLIENT_ID = "TemperatureReadingsProducerBySensorId";
     public static final String BOOTSTRAP_SERVERS = "localhost:9093";
-
-    public static final int PRODUCER_TIMEOUT_SEC = 300;
-    public static String MY_MESSAGE_SIZE_SENSOR = "my-message-size";
-    private String sensorId;
-    private long delayMs = 10000;
+    public static final int PRODUCER_TIMEOUT_SEC = 120;
+    private final String sensorId;
+    private long delayMs = 1000;
     private int numReadings = 10;
     private ExecutorService executor;
-    private String transactionId;
-
-    private String topic;
+    private final String transactionId;
+    private final String topic;
 
 
     public TimestampedTemperatureReadingsProducer(String transactionId, String sensorId, long delayMs, int numReadings, String topic) {
         this.sensorId = sensorId;
         this.delayMs = delayMs;
         this.numReadings = numReadings;
-        this.topic = topic;
         this.transactionId = transactionId;
+        this.topic = topic;
     }
 
-    private static Producer<String, TemperatureReading> createProducer(String transactionId) {
+    private static Producer<String, TimestampedTemperatureReading> createProducer(String transactionId) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, CLIENT_ID);
@@ -89,14 +74,15 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
         var latch = new CountDownLatch(numReadings);
         Future<String> reporterFuture = null;
         try (var producer = createProducer(transactionId)) {
+//            reporterFuture = executor.submit(new ProducerMetricReporter(producer));
 //            producer.initTransactions();
-            var i = new AtomicInteger();
             try {
 //                producer.beginTransaction();
                 var recordFutures = Flux.interval(Duration.ofMillis(delayMs))
                         .take(numReadings)
-                        .map( n -> {
-                            var t = topic.equals(INTERNAL_TOPIC) ? 25 + Math.random() * 15 : 5 + Math.random() * 25;
+                        .map(n -> topic.equals(INTERNAL_TEMP_TOPIC)? 25 + Math.random() * 20 : 5 + Math.random() * 25)
+                        .startWith(-20.0)
+                        .map(t -> {
                             var reading = new TimestampedTemperatureReading(sensorId, t);
                             var record = new ProducerRecord(topic, reading.getSensorId(), reading);
                             return producer.send(record, (metadata, exception) -> {
@@ -104,7 +90,7 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
                                     log.error("Error sending temperature readings", exception);
                                 }
                                 log.info("SENSOR_ID: {}, MESSAGE: {}, TEMP: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
-                                        sensorId, n, reading.getValue(),
+                                        sensorId, reading.getValue(),
                                         metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                                 latch.countDown();
                             });
@@ -126,6 +112,11 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        // add new metrics:
+        Map<String, String> metricTags = new LinkedHashMap<String, String>();
+        metricTags.put("client-id", CLIENT_ID);
+        metricTags.put("topic", INTERNAL_TEMP_TOPIC);
+
         // start temperature producers
         final List<TimestampedTemperatureReadingsProducer> producers = new ArrayList<>();
         var executor = Executors.newCachedThreadPool();
@@ -133,13 +124,13 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
 
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "INTERNAL-" + i, SENSOR_IDS.get(i), 500, 100, INTERNAL_TOPIC);
+                    BASE_TRANSACTION_ID + "INTERNAL-" + i, SENSOR_IDS.get(i), 500, 3, INTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
         for (int i = 0; i < 1; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "EXTERNAL-" + i, SENSOR_IDS.get(i), 500, 3, EXTERNAL_TOPIC);
+                    BASE_TRANSACTION_ID + "EXTERNAL-" + i, SENSOR_IDS.get(i), 500, 3, EXTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }

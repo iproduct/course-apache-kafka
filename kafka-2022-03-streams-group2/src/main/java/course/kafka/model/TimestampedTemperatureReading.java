@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimestampedTemperatureReading implements Timestamped{
+public class TimestampedTemperatureReading {
     public static final List<String> SENSOR_IDS = List.of(
             "tSensor-01", "tSensor-02", "tSensor-03", "tSensor-04", "tSensor-04", "tSensor-05",
             "tSensor-06", "tSensor-07", "tSensor-08", "tSensor-09", "tSensor-10", "tSensor-11",

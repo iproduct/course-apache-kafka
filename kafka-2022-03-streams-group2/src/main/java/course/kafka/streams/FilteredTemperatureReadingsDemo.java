@@ -1,71 +1,58 @@
 package course.kafka.streams;
 
-import course.kafka.model.CountSumAvg;
 import course.kafka.model.TimestampedTemperatureReading;
 import course.kafka.serialization.JsonDeserializer;
 import course.kafka.serialization.JsonSerializer;
-import course.kafka.util.CustomTimeExtractor;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
-import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Predicate;
 
-import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
 import static org.apache.kafka.streams.kstream.Consumed.with;
 
-public class WindowedCountingDemo {
-    public static final String KEY_CLASS = "key.class";
-    public static final String VALUE_CLASS = "values.class";
 
-    public static final int WINDOW_SIZE_MS = 5000;
-
+public class FilteredTemperatureReadingsDemo {
+    public static final String INTERNAL_TEMP_TOPIC = "temperature";
+    public static final String EXTERNAL_TEMP_TOPIC = "external-temperature";
+    public static final String OUTPUT_TOPIC = "internal-temperature";
 
     public static void main(String[] args) {
         // 1) Configure stream
         Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "heating-biils");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "heating-bills");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093");
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly_once_v2");
         props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4);
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        props.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, CustomTimeExtractor.class.getName());
 
-        props.put(KEY_CLASS, String.class.getName());
-        props.put(VALUE_CLASS, TimestampedTemperatureReading.class.getName());
-
-        // create JSON Serde
-        Serde<TimestampedTemperatureReading> jsonSerde = Serdes.serdeFrom(new JsonSerializer(),
-                new JsonDeserializer(TimestampedTemperatureReading.class));
-
-        Serde<CountSumAvg> countSumJsonSerde = Serdes.serdeFrom(new JsonSerializer(),
-                new JsonDeserializer(CountSumAvg.class));
+        // create custom JSON Serde
+        Serde<TimestampedTemperatureReading> jsonSerde = Serdes.serdeFrom(
+                new JsonSerializer<>(), new JsonDeserializer<>(TimestampedTemperatureReading.class));
 
         // 2) Create stream builder
         final StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, TimestampedTemperatureReading> internalTempStream =
-                builder.stream("temperature", with(Serdes.String(), jsonSerde));
-        KStream<String, TimestampedTemperatureReading> externalTempStream = builder.stream("external-temperature");
-        Predicate<String, TimestampedTemperatureReading> validTemperature =
+        KStream<String, TimestampedTemperatureReading> internalTemperature = builder
+                .stream(INTERNAL_TEMP_TOPIC, with(Serdes.String(), jsonSerde));
+        KStream<String, TimestampedTemperatureReading> externalTemperature = builder
+                .stream(EXTERNAL_TEMP_TOPIC, with(Serdes.String(), jsonSerde));
+
+        Predicate<String, TimestampedTemperatureReading> validTemperatureFilter =
                 (sensorId, reading) -> reading.getValue() > -15 && reading.getValue() < 60;
 
-        var readings = internalTempStream
-                .filter(validTemperature)
-                .mapValues((sensorId, reading) -> reading.getValue())
-                .groupByKey(Grouped.valueSerde(Serdes.Double()))
-                .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofMillis(WINDOW_SIZE_MS)))
-                .count(Materialized.with(Serdes.String(), Serdes.Long()));
-
-        readings
-                .toStream()
-                .mapValues((sensorId, avgTemp) -> avgTemp.toString())
-                .to("events");
+        internalTemperature
+                .filter(validTemperatureFilter)
+                .to(OUTPUT_TOPIC);
+        externalTemperature
+                .filter(validTemperatureFilter)
+                .to(OUTPUT_TOPIC);
 
         // 3) Build stream topology
         final Topology topology = builder.build(); // build DAG
