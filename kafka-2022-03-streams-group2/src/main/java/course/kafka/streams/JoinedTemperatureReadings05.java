@@ -1,15 +1,13 @@
 package course.kafka.streams;
 
 import course.kafka.model.DoubleStatistics;
+import course.kafka.model.TempDifference;
 import course.kafka.model.TimestampedTemperatureReading;
 import course.kafka.serialization.JsonDeserializer;
 import course.kafka.serialization.JsonSerializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.kstream.*;
 
 import java.time.Duration;
@@ -32,9 +30,12 @@ public class JoinedTemperatureReadings05 {
     private static Serde<DoubleStatistics> doubleStatisticsSerde = Serdes.serdeFrom(
             new JsonSerializer<>(), new JsonDeserializer<>(DoubleStatistics.class));
 
+    private static Serde<TempDifference> tempDifferenceSerde = Serdes.serdeFrom(
+            new JsonSerializer<>(), new JsonDeserializer<>(TempDifference.class));
 
-    public static KStream<Windowed<String>, DoubleStatistics>
-        createTemperatureStatisticsStream(StreamsBuilder builder, String inputTopic) {
+
+    public static KStream<String, DoubleStatistics>
+    createTemperatureStatisticsStream(StreamsBuilder builder, String inputTopic) {
 
         KStream<String, TimestampedTemperatureReading> internalTemperature = builder
                 .stream(inputTopic, with(Serdes.String(), readingsJsonSerde));
@@ -57,7 +58,8 @@ public class JoinedTemperatureReadings05 {
                             return aggStats;
                         }, Materialized.with(Serdes.String(), doubleStatisticsSerde))
                 .suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()))
-                .toStream();
+                .toStream()
+                .map((k, v) -> new KeyValue<>(k.key(), v));
     }
 
 
@@ -80,18 +82,26 @@ public class JoinedTemperatureReadings05 {
         var externalTemperature =
                 createTemperatureStatisticsStream(builder, EXTERNAL_TEMP_TOPIC);
 
-        Predicate<String, TimestampedTemperatureReading> validTemperatureFilter =
-                (sensorId, reading) -> reading.getValue() > -15 && reading.getValue() < 60;
-
         internalTemperature
-                .mapValues(t -> String.format("INTERNAL-> Count:%3d, Sum:%10.5f, Avg:%9.5f,  Min:%9.5f,  Max:%9.5f, Time: %d",
-                        t.getCount(), t.getSum(), t.getAverage(), t.getMin(), t.getMax(), t.getTimestamp()))
+                .join(externalTemperature, (key, statInt, statExt) ->
+                                new TempDifference(statInt.getAverage() - statExt.getAverage(), Long.max(statInt.getTimestamp(), statExt.getTimestamp())),
+                        JoinWindows.ofTimeDifferenceWithNoGrace(Duration.ofMillis(1000)),
+                        StreamJoined.with(Serdes.String(), doubleStatisticsSerde, doubleStatisticsSerde))
+
+                .groupByKey()
+                .aggregate(() -> new TempDifference(), (sensorId, difference, diffAggregate) -> new TempDifference(
+                        diffAggregate.getValue() + difference.getValue() * (difference.getTimestamp() - diffAggregate.getTimestamp()),
+                        difference.getTimestamp()),
+                        Materialized.as("heating-bill").with(Serdes.String(), tempDifferenceSerde))
+                .toStream()
+                .mapValues((k, val) -> String.format("INTERNAL[%20.20s]-> TempDifference:%9.5f, Time: %d",
+                        k, val.getValue(), val.getTimestamp()))
                 .to(OUTPUT_TOPIC);
 
-        externalTemperature
-                .mapValues(t -> String.format("EXTERNAL-> Count:%3d, Sum:%10.5f, Avg:%9.5f,  Min:%9.5f,  Max:%9.5f, Time: %d",
-                        t.getCount(), t.getSum(), t.getAverage(), t.getMin(), t.getMax(), t.getTimestamp()))
-                .to(OUTPUT_TOPIC);
+//        externalTemperature
+//                .mapValues((k, t) -> String.format("EXTERNAL[%20.20s]-> Count:%3d, Sum:%10.5f, Avg:%9.5f,  Min:%9.5f,  Max:%9.5f, Time: %d",
+//                        k, t.getCount(), t.getSum(), t.getAverage(), t.getMin(), t.getMax(), t.getTimestamp()))
+//                .to(OUTPUT_TOPIC);
 
         // 3) Build stream topology
         final Topology topology = builder.build(); // build DAG
