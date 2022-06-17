@@ -89,10 +89,16 @@ public class JoinedTemperatureReadings05 {
                         StreamJoined.with(Serdes.String(), doubleStatisticsSerde, doubleStatisticsSerde))
 
                 .groupByKey()
-                .aggregate(() -> new TempDifference(), (sensorId, difference, diffAggregate) -> new TempDifference(
-                        diffAggregate.getValue() + difference.getValue() * (difference.getTimestamp() - diffAggregate.getTimestamp()),
-                        difference.getTimestamp()),
-                        Materialized.as("heating-bill").with(Serdes.String(), tempDifferenceSerde))
+                .aggregate(() -> new TempDifference(), (sensorId, difference, diffAggregate) -> {
+                        if (diffAggregate.getTimestamp() == 0) {
+                            diffAggregate.setTimestamp(difference.getTimestamp());
+                        } else {
+                            diffAggregate.setValue(diffAggregate.getValue()
+                                    + difference.getValue() * (difference.getTimestamp() - diffAggregate.getTimestamp()));
+                            diffAggregate.setTimestamp(difference.getTimestamp());
+                        }
+                        return diffAggregate;
+                    }, Materialized.as("heating-bill2").with(Serdes.String(), tempDifferenceSerde))
                 .toStream()
                 .mapValues((k, val) -> String.format("INTERNAL[%20.20s]-> TempDifference:%9.5f, Time: %d",
                         k, val.getValue(), val.getTimestamp()))
@@ -109,6 +115,7 @@ public class JoinedTemperatureReadings05 {
 
         // 4) Create streams instance
         final KafkaStreams streams = new KafkaStreams(topology, props);
+//        streams.cleanUp(); // clean up previous runs persistent state
         final CountDownLatch latch = new CountDownLatch(1);
 
         // attach shutdown handler to catch Ctrl-c
