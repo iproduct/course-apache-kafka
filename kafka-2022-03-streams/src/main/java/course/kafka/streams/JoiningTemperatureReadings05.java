@@ -1,6 +1,7 @@
 package course.kafka.streams;
 
 import course.kafka.model.DoubleStatistics;
+import course.kafka.model.TempDifference;
 import course.kafka.model.TimestampedTemperatureReading;
 import course.kafka.serialization.JsonDeserializer;
 import course.kafka.serialization.JsonSerializer;
@@ -29,6 +30,8 @@ public class JoiningTemperatureReadings05 {
             new JsonSerializer<>(), new JsonDeserializer<>(TimestampedTemperatureReading.class));
     private static Serde<DoubleStatistics> doubleStatisticsSerde = Serdes.serdeFrom(
             new JsonSerializer<>(), new JsonDeserializer<>(DoubleStatistics.class));
+    private static Serde<TempDifference> tempDifferenceSerde = Serdes.serdeFrom(
+            new JsonSerializer<>(), new JsonDeserializer<>(TempDifference.class));
     private static Predicate<String, TimestampedTemperatureReading> validTemperatureFilter =
             (sensorId, reading) -> reading.getValue() > -15 && reading.getValue() < 60;
 
@@ -67,13 +70,28 @@ public class JoiningTemperatureReadings05 {
         var internalTemperature = createTemperatureStatisticsStream(builder, INTERNAL_TEMP_TOPIC);
         var externalTemperature = createTemperatureStatisticsStream(builder, EXTERNAL_TEMP_TOPIC);
 
-       internalTemperature
-                .mapValues(t -> String.format("INTERNAL -> Count:%3d, Sum:%10.5f, Avg:%9.5f,  Min:%9.5f,  Max:%9.5f, Time: %d",
-                        t.getCount(), t.getSum(), t.getAverage(), t.getMin(), t.getMax(), t.getTimestamp()))
-                .to(OUTPUT_TOPIC);
-       externalTemperature
-                .mapValues(t -> String.format("EXTERNAL -> Count:%3d, Sum:%10.5f, Avg:%9.5f,  Min:%9.5f,  Max:%9.5f, Time: %d",
-                        t.getCount(), t.getSum(), t.getAverage(), t.getMin(), t.getMax(), t.getTimestamp()))
+        internalTemperature
+                .join(externalTemperature, (s1, s2) ->
+                        new TempDifference(max(s1.getAverage() - s2.getAverage(), 0), Long.max(s1.getTimestamp(), s2.getTimestamp())),
+                        JoinWindows.ofTimeDifferenceWithNoGrace(Duration.ofMillis(1000)),
+//                        StreamJoined.<String, DoubleStatistics, DoubleStatistics>as("join-internal-external-temperatures")
+//                                .withValueSerde(doubleStatisticsSerde).withOtherValueSerde(doubleStatisticsSerde))
+                        StreamJoined.with(Serdes.String(), doubleStatisticsSerde, doubleStatisticsSerde)
+                                .withName("join-internal-external-temperatures"))
+                .groupByKey(Grouped.valueSerde(tempDifferenceSerde))
+                .aggregate(() -> new TempDifference(),
+                        (sensorId, tempDiff, aggPower) -> {
+                            if(tempDiff.getTimestamp() == 0) {
+                                aggPower.setTimestamp(tempDiff.getTimestamp());
+                            } else {
+                                aggPower.setValue(aggPower.getValue() +
+                                        tempDiff.getValue() * (tempDiff.getTimestamp() - aggPower.getTimestamp()));
+                                aggPower.setTimestamp(tempDiff.getTimestamp());
+                            }
+                            return aggPower;
+                        }, Materialized.with(Serdes.String(), tempDifferenceSerde))
+                .toStream()
+                .mapValues(t -> String.format("CONSUMED HEATING POWER:%9.5f, Time: %d", t.getValue(), t.getTimestamp()))
                 .to(OUTPUT_TOPIC);
 
         // 3) Build stream topology

@@ -25,6 +25,7 @@ public class TemperatureReadingsPartitionerBySensorId implements Partitioner {
         final List<PartitionInfo> partitionInfos = cluster.availablePartitionsForTopic(topic);
         final int partitionCount = partitionInfos.size();
         final var keyStr = key.toString();
+        if(sensorIdToOrdinalMap.get(keyStr) == null) return 0;
         return sensorIdToOrdinalMap.get(keyStr) % partitionCount;
     }
 
