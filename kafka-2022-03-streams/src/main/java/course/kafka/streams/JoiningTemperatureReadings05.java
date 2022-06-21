@@ -62,6 +62,7 @@ public class JoiningTemperatureReadings05 {
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093");
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly_once_v2");
         props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4);
+//        props.put(StreamsConfig.STATE_DIR_CONFIG, "/tmp/kafka-streams");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
@@ -81,7 +82,7 @@ public class JoiningTemperatureReadings05 {
                 .groupByKey(Grouped.valueSerde(tempDifferenceSerde))
                 .aggregate(() -> new TempDifference(),
                         (sensorId, tempDiff, aggPower) -> {
-                            if(tempDiff.getTimestamp() == 0) {
+                            if(aggPower.getTimestamp() == 0L) {
                                 aggPower.setTimestamp(tempDiff.getTimestamp());
                             } else {
                                 aggPower.setValue(aggPower.getValue() +
@@ -100,6 +101,7 @@ public class JoiningTemperatureReadings05 {
 
         // 4) Create streams instance
         final KafkaStreams streams = new KafkaStreams(topology, props);
+        streams.cleanUp();
         final CountDownLatch latch = new CountDownLatch(1);
 
         // attach shutdown handler to catch Ctrl-c
