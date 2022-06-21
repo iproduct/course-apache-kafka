@@ -124,13 +124,13 @@ public class TimestampedTemperatureReadingsProducer implements Callable<String> 
         var executor = Executors.newCachedThreadPool();
         ExecutorCompletionService<String> ecs = new ExecutorCompletionService(executor);
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 12; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
                     BASE_TRANSACTION_ID + "INTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 500, 150, INTERNAL_TEMP_TOPIC);
             producers.add(producer);
             ecs.submit(producer);
         }
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 12; i++) {
             var producer = new TimestampedTemperatureReadingsProducer(
                     BASE_TRANSACTION_ID + "EXTERNAL-" + i, NORMAL_SENSOR_IDS.get(i), 500, 150, EXTERNAL_TEMP_TOPIC);
             producers.add(producer);
