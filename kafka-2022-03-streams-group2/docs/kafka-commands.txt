@@ -75,3 +75,49 @@ bin\windows\connect-standalone config\connect-standalone.properties config\conne
 
 bin\windows\connect-standalone config\connect-standalone.properties D:\CourseKafka\kafka_2.12-3.1.0\connect\debezium-connector-mysql\mysql-connector.properties
 
+############################################################################################################################
+## Security - SSL
+[https://docs.oracle.com/en/java/javase/11/tools/keytool.html]
+keytool -genkeypair -alias localhost -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore server.keystore.p12 -validity 365 -storepass changeit -ext SAN=DNS:{FQDN},IP:{IPADDRESS1}
+keytool -genkeypair -alias localhost -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore server.keystore.p12 -validity 365 -storepass changeit -ext SAN=DNS:localhost,IP:127.0.0.1
+keytool -list -v -keystore server.keystore.p12
+openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM -days 365
+keytool -keystore client.truststore.jks -alias CARoot -import -file cacert.pem
+keytool -keystore server.truststore.jks -alias CARoot -import -file cacert.pem
+
+keytool -keystore server.keystore.p12 -alias localhost -certreq -file cert-file.crt
+openssl x509 -req -CA cacert.pem -CAkey cakey.pem -in cert-file.crt -out cert-signed.crt -days 365 -CAcreateserial -passin pass:changeit
+keytool -keystore server.keystore.p12 -alias CARoot -import -file cacert.pem
+keytool -keystore server.keystore.p12 -alias localhost -import -file cert-signed.crt
+
+# Kafka SSL Security - Brokers:
+############################ SSL Config ####################################
+listeners=PLAINTEXT://:9092,SSL://:8092
+
+ssl.endpoint.identification.algorithm=
+ssl.keystore.location=server.keystore.p12
+ssl.keystore.password=changeit
+ssl.key.password=changeit
+ssl.truststore.location=server.truststore.jks
+ssl.truststore.password=changeit
+ssl.client.auth=none
+ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
+ssl.keystore.type=PKCS12
+ssl.truststore.type=JKS
+
+# Kafka SSL Security - Clients:
+################################ SSL Config ###############################
+bootstrap.servers=localhost:8092
+
+ssl.endpoint.identification.algorithm=
+security.protocol=SSL
+ssl.truststore.location=client.truststore.jks
+ssl.truststore.password=changeit
+ssl.truststore.type=JKS
+ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
+
+openssl s_client -debug -connect localhost:8092 -tls1
+kafka-console-producer --broker-list localhost:8092 --topic test --producer.config config/producer-ssl.properties
+kafka-console-consumer.bat --bootstrap-server localhost:8092 --topic test --from-beginning --consumer.config config/consumer-ssl.properties
+
+
