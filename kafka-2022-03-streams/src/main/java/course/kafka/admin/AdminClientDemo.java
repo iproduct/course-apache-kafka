@@ -46,79 +46,83 @@ public class AdminClientDemo {
             int numPartitions = 1;
             short replicationFactor = 1;
             // Delete compacted topic if exists
-            try {
-                admin.deleteTopics(Collections.singleton(topicName)).all().get();
-                log.info("Successfully deleted topic: {}", topicName);
-            } catch (ExecutionException e) {
-                log.error("Unable to delete topic: " + topicName, e);
-            }
-            // Check topic is deleted
-            while (true) {
-                log.info("Checking topic '{}' was successfully deleted.\nCURRENT TOPICS:", topicName);
-                var topicsResult = admin.listTopics();
-                var allTopics = topicsResult.listings().get();
-                allTopics.forEach(System.out::println);
-                System.out.println();
-                if (!topicsResult.names().get().contains(topicName))
-                    break;
-                Thread.sleep(1000);
-            }
-            // Create compacted topic
-            var result = admin.createTopics(
-                    Collections.singleton(new NewTopic(topicName, numPartitions, replicationFactor)
-                            .configs(Map.of(
-//                                    TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT,
-//                                    TopicConfig.DELETE_RETENTION_MS_CONFIG, "100",
-//                                    TopicConfig.SEGMENT_MS_CONFIG, "100",
-//                                    TopicConfig.MIN_CLEANABLE_DIRTY_RATIO_CONFIG, "0.01",
-//                                    TopicConfig.MIN_COMPACTION_LAG_MS_CONFIG, "100"
-                    )))
-            );
-            var future = result.topicId(topicName);
-            var topicUuid = future.get();
-            log.info("Successfully created topic: {} [{}]", topicName, topicUuid);
-            // Check topic is created
-            while (true) {
-                log.info("Checking topic '{}' was successfully created.\nCURRENT TOPICS:", topicName);
-                var topicsResult = admin.listTopics();
-                var allTopics = topicsResult.listings().get();
-                allTopics.forEach(System.out::println);
-                System.out.println();
-                if (topicsResult.names().get().contains(topicName))
-                    break;
-                Thread.sleep(1000);
-            }
-            var cluster = admin.describeCluster();
-            log.info("CLUSTER DESCRIPTION:\nID: {}\nController: {}\nNodes: {}\n",
-                    cluster.clusterId().get(),
-                    cluster.controller().get(),
-                    cluster.nodes().get()
-            );
-            // Describe all topics
-            var topicNames = admin.listTopics().names().get();
-            admin.describeTopics(topicNames).topicNameValues()
-                    .forEach((topic, topicDescriptionKafkaFuture) -> {
-                        try {
-                            log.info("Topic [{}] -> {}", topic, topicDescriptionKafkaFuture.get());
-                        } catch (InterruptedException | ExecutionException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+//            try {
+//                admin.deleteTopics(Collections.singleton(topicName)).all().get();
+//                log.info("Successfully deleted topic: {}", topicName);
+//            } catch (ExecutionException e) {
+//                log.error("Unable to delete topic: " + topicName, e);
+//            }
+//            // Check topic is deleted
+//            while (true) {
+//                log.info("Checking topic '{}' was successfully deleted.\nCURRENT TOPICS:", topicName);
+//                var topicsResult = admin.listTopics();
+//                var allTopics = topicsResult.listings().get();
+//                allTopics.forEach(System.out::println);
+//                System.out.println();
+//                if (!topicsResult.names().get().contains(topicName))
+//                    break;
+//                Thread.sleep(1000);
+//            }
+//            // Create compacted topic
+//            var result = admin.createTopics(
+//                    Collections.singleton(new NewTopic(topicName, numPartitions, replicationFactor)
+//                            .configs(Map.of(
+////                                    TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT,
+////                                    TopicConfig.DELETE_RETENTION_MS_CONFIG, "100",
+////                                    TopicConfig.SEGMENT_MS_CONFIG, "100",
+////                                    TopicConfig.MIN_CLEANABLE_DIRTY_RATIO_CONFIG, "0.01",
+////                                    TopicConfig.MIN_COMPACTION_LAG_MS_CONFIG, "100"
+//                    )))
+//            );
+//            var future = result.topicId(topicName);
+//            var topicUuid = future.get();
+//            log.info("Successfully created topic: {} [{}]", topicName, topicUuid);
+//            // Check topic is created
+//            while (true) {
+//                log.info("Checking topic '{}' was successfully created.\nCURRENT TOPICS:", topicName);
+//                var topicsResult = admin.listTopics();
+//                var allTopics = topicsResult.listings().get();
+//                allTopics.forEach(System.out::println);
+//                System.out.println();
+//                if (topicsResult.names().get().contains(topicName))
+//                    break;
+//                Thread.sleep(1000);
+//            }
+//            var cluster = admin.describeCluster();
+//            log.info("CLUSTER DESCRIPTION:\nID: {}\nController: {}\nNodes: {}\n",
+//                    cluster.clusterId().get(),
+//                    cluster.controller().get(),
+//                    cluster.nodes().get()
+//            );
+//            // Describe all topics
+//            var topicNames = admin.listTopics().names().get();
+//            admin.describeTopics(topicNames).topicNameValues()
+//                    .forEach((topic, topicDescriptionKafkaFuture) -> {
+//                        try {
+//                            log.info("Topic [{}] -> {}", topic, topicDescriptionKafkaFuture.get());
+//                        } catch (InterruptedException | ExecutionException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    });
             // List InternalTemperatureEventsConsumer group offsets
             admin.listConsumerGroupOffsets("InternalTemperatureEventsConsumer").partitionsToOffsetAndMetadata().get()
                     .forEach((topicPartition, offsetAndMetadata) -> log.info("!!! InternalTemperatureEventsConsumer: Topic [{}] -> {}", topicPartition, offsetAndMetadata));
             // Set ACL for topic 'temperature2'
+//            admin.createAcls(Collections.singleton(
+//                            new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
+//                                    new AccessControlEntry("User:trayan", "*", AclOperation.ALL, AclPermissionType.DENY))))
+//                    .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
             admin.createAcls(Collections.singleton(
                             new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
-                                    new AccessControlEntry("User:trayan", "*", AclOperation.ALL, AclPermissionType.DENY))))
+                                    new AccessControlEntry("User:trayan", "*", AclOperation.ALL, AclPermissionType.ALLOW))))
                     .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
-            admin.createAcls(Collections.singleton(
-                            new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
-                                    new AccessControlEntry("User:admin", "*", AclOperation.ALL, AclPermissionType.ALLOW))))
-                    .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
+//            admin.createAcls(Collections.singleton(
+//                            new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
+//                                    new AccessControlEntry("User:admin", "*", AclOperation.ALL, AclPermissionType.ALLOW))))
+//                    .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
 //            admin.deleteAcls(Collections.singleton(new AclBindingFilter(
 //                    new ResourcePatternFilter(TOPIC,"temperature2", ANY),
-//                    new AccessControlEntryFilter("trayan", null,  AclOperation.WRITE, AclPermissionType.ANY))))
+//                    new AccessControlEntryFilter("trayan", null,  AclOperation.ANY, AclPermissionType.ANY))))
 //                    .values().forEach((aclBindingFilter, filterResultsKafkaFuture) -> {
 //                        try {
 //                            log.info(">>>>> DELETED ACL Entry: {}", filterResultsKafkaFuture.get());
@@ -126,10 +130,11 @@ public class AdminClientDemo {
 //                            throw new RuntimeException(e);
 //                        }
 //                    });
+            System.out.println("-------------------------------------------------------------------------------------------------");
             admin.describeAcls(
                     new AclBindingFilter(new ResourcePatternFilter(TOPIC,"temperature2", ANY),
                     new AccessControlEntryFilter(null, null,  AclOperation.ANY, AclPermissionType.ANY)))
-                    .values().get().forEach((aclBinding) -> log.info(">>>>>ACL Entry: {}", aclBinding));;
+                    .values().get().forEach((aclBinding) -> log.info("|||  CL Entry: {}", aclBinding));;
         }
         log.info("Demo complete.");
     }

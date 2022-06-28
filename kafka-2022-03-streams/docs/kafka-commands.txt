@@ -120,6 +120,8 @@ ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
 
 openssl s_client -debug -connect localhost:8092 -tls1_2
 openssl s_client -debug -connect localhost:8093
+-Djavax.net.debug=ssl:handshake
+
 
 kafka-console-producer --broker-list localhost:8092 --topic temperature --producer.config config/producer-ssl.properties
 kafka-console-consumer.bat --bootstrap-server localhost:8092 --topic temperature --from-beginning --consumer.config config/consumer-ssl.properties
@@ -136,5 +138,5 @@ bin\windows\kafka-acls --bootstrap-server localhost:9093 --list --topic temperat
            (principal=User:admin, host=*, operation=WRITE, permissionType=ALLOW)
            (principal=User:trayan, host=*, operation=ALL, permissionType=DENY)
            (principal=User:admin, host=*, operation=CREATE, permissionType=ALLOW)
-bin\windows\kafka-acls --bootstrap-server localhost:9093 --add --allow-principal User:admin --producer --topic temperature2
+bin\windows\kafka-acls --bootstrap-server localhost:9093 --add --allow-principal User:trayan --producer --topic temperature2
 bin\windows\kafka-acls --bootstrap-server localhost:9093 --add --allow-principal User:trayan --allow-host * --operation Read --topic temperature2

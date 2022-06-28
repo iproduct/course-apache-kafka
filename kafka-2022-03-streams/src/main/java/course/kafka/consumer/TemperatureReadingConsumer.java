@@ -60,8 +60,8 @@ public class TemperatureReadingConsumer implements Runnable {
         props.put("ssl.protocol", "TLSv1.2");
 
         // SASL PLAIN Authentication
-//        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin123';");
-        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='trayan' password='trayan123';");
+        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin123';");
+//        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='trayan' password='trayan123';");
         props.put("security.protocol", "SASL_SSL");
         props.put("sasl.mechanism", "PLAIN");
 
