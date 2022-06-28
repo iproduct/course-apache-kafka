@@ -37,11 +37,11 @@ import static course.kafka.model.TemperatureReading.NORMAL_SENSOR_IDS;
 @Slf4j
 public class SimpleTemperatureReadingsProducer implements Callable<String> {
     private static final String BASE_TRANSACTION_ID = "temperature-sensor-transaction-";
-    public static final String TOPIC = "temperature";
+    public static final String TOPIC = "temperature2";
     public static final String CLIENT_ID = "TemperatureReadingsProducer";
-    public static final String BOOTSTRAP_SERVERS = "localhost:9093";
+    public static final String BOOTSTRAP_SERVERS = "localhost:8093";
     public static final String HIGH_FREQUENCY_SENSORS = "sensors.highfrequency";
-    public static final int PRODUCER_TIMEOUT_SEC = 20;
+//    public static final int PRODUCER_TIMEOUT_SEC = 10;
     public static String MY_MESSAGE_SIZE_SENSOR = "my-message-size";
     private String sensorId;
     private long maxDelayMs = 10000;
@@ -50,11 +50,10 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     private String transactionId;
 
 
-    public SimpleTemperatureReadingsProducer(String transactionId, String sensorId, long maxDelayMs, int numReadings, ExecutorService executor) {
+    public SimpleTemperatureReadingsProducer(String transactionId, String sensorId, long maxDelayMs, int numReadings) {
         this.sensorId = sensorId;
         this.maxDelayMs = maxDelayMs;
         this.numReadings = numReadings;
-        this.executor = executor;
         this.transactionId = transactionId;
     }
 
@@ -65,17 +64,33 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
         props.put(ProducerConfig.ACKS_CONFIG, "all");
-        props.put(ProducerConfig.LINGER_MS_CONFIG, 5);
+        props.put(ProducerConfig.LINGER_MS_CONFIG, 100);
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
-        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
+//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, TemperatureReadingsPartitioner.class.getName());
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CountingProducerInterceptor.class.getName());
         props.put(REPORTING_WINDOW_SIZE_MS, 3000);
         props.put(HIGH_FREQUENCY_SENSORS, HF_SENSOR_IDS.stream().collect(Collectors.joining(",")));
-        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
+//        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionId);
+
+        // security config
+//        props.put("security.protocol", "SSL");
+        props.put("ssl.endpoint.identification.algorithm", "");
+        props.put("ssl.truststore.location", "D:\\CourseKafka\\kafka_2.13-3.2.0\\client.truststore.jks");
+        props.put("ssl.truststore.password", "changeit");
+        props.put("ssl.truststore.type", "JKS");
+//        props.put("ssl.truststore.certificates", "CARoot");
+        props.put("ssl.enabled.protocols", "TLSv1.2,TLSv1.1,TLSv1");
+        props.put("ssl.protocol", "TLSv1.2");
+
+        // SASL PLAIN Authentication
+//        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin123';");
+        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='trayan' password='trayan123';");
+        props.put("security.protocol", "SASL_SSL");
+        props.put("sasl.mechanism", "PLAIN");
 
         return new KafkaProducer<>(props);
     }
@@ -94,10 +109,10 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
         Future<String> reporterFuture = null;
         try (var producer = createProducer(transactionId)) {
 //            reporterFuture = executor.submit(new ProducerMetricReporter(producer));
-            producer.initTransactions();
+//            producer.initTransactions();
             var i = new AtomicInteger();
             try {
-                producer.beginTransaction();
+//                producer.beginTransaction();
                 var recordFutures = new Random().doubles(numReadings).map(t -> t * 40)
                         .peek(t -> {
                             try {
@@ -115,23 +130,23 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
                         .map(record -> {
                             return producer.send(record, (metadata, exception) -> {
                                 if (exception != null) {
-                                    log.error("Error sending temperature readings", exception);
+                                    log.error("Error sending temperature readings: ", exception);
                                 }
                                 // as messages are sent we record the sizes
 //                                sensor.record(metadata.serializedValueSize());
                                 log.info("SENSOR_ID: {}, MESSAGE: {}, Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
-                                        sensorId, i.get(),
+                                        sensorId, record.value(),
                                         metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
                                 latch.countDown();
                             });
                         }).collect(Collectors.toList());
 
-                latch.await(15, TimeUnit.SECONDS);
+                latch.await(300, TimeUnit.SECONDS);
                 log.info("Transaction [{}] commited successfully", transactionId);
-                producer.commitTransaction();
+//                producer.commitTransaction();
             } catch (KafkaException kex) {
                 log.error("Transaction [" + transactionId + "] was unsuccessful: ", kex);
-                producer.abortTransaction();
+//                producer.abortTransaction();
             }
             log.info("!!! Closing producer for '{}'", sensorId);
         } catch (InterruptedException | ProducerFencedException | OutOfOrderSequenceException |
@@ -147,25 +162,6 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        // add new metrics:
-        Map<String, String> metricTags = new LinkedHashMap<String, String>();
-        metricTags.put("client-id", CLIENT_ID);
-        metricTags.put("topic", TOPIC);
-
-        MetricConfig metricConfig = new MetricConfig().tags(metricTags);
-        Metrics metrics = new Metrics(metricConfig); // this is the global repository of metrics and sensors
-
-        Sensor sensor = metrics.sensor(MY_MESSAGE_SIZE_SENSOR);
-
-        MetricName metricName = metrics.metricName(MY_MESSAGE_SIZE_SENSOR + "-avg", "producer-metrics", "my message average size");
-        sensor.add(metricName, new Avg());
-
-        metricName = metrics.metricName(MY_MESSAGE_SIZE_SENSOR + "-max", "producer-metrics", "my message max size");
-        sensor.add(metricName, new Max());
-
-        metricName = metrics.metricName(MY_MESSAGE_SIZE_SENSOR + "-min", "producer-metrics", "my message max size", "client-id", CLIENT_ID, "topic", TOPIC);
-        sensor.add(metricName, new Min());
-
         // start temperature producers
         final List<SimpleTemperatureReadingsProducer> producers = new ArrayList<>();
         var executor = Executors.newCachedThreadPool();
@@ -179,7 +175,7 @@ public class SimpleTemperatureReadingsProducer implements Callable<String> {
 //        for (int i = 0; i < NORMAL_SENSOR_IDS.size(); i++) {
         for (int i = 0; i < 1; i++) {
             var producer = new SimpleTemperatureReadingsProducer(
-                    BASE_TRANSACTION_ID + "LF-" + i, NORMAL_SENSOR_IDS.get(i), 10, 3, executor);
+                    BASE_TRANSACTION_ID + "LF-" + i, NORMAL_SENSOR_IDS.get(i), 100, 3);
             producers.add(producer);
             ecs.submit(producer);
         }

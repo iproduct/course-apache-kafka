@@ -19,12 +19,12 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public class TemperatureReadingConsumer implements Runnable {
-    public static final String INTERNAL_TEMP_TOPIC = "temperature";
+    public static final String INTERNAL_TEMP_TOPIC = "temperature2";
     public static final String EXTERNAL_TEMP_TOPIC = "external-temperature";
-    public static final String OUTPUT_TOPIC = "events";
+    public static final String OUTPUT_TOPIC = "temperature2";
     public static final String CONSUMER_GROUP_INTERNAL = "InternalTemperatureEventsConsumer";
     public static final String CONSUMER_GROUP_EXTERNAL = "ExternalTemperatureEventsConsumer";
-    public static final String BOOTSTRAP_SERVERS = "localhost:9093";//,localhost:9094,localhost:9095";
+    public static final String BOOTSTRAP_SERVERS = "localhost:8093";//,localhost:9094,localhost:9095";
     public static final String KEY_CLASS = "key.class";
     public static final String VALUE_CLASS = "values.class";
     public static final long POLLING_DURATION_MS = 100;
@@ -45,9 +45,25 @@ public class TemperatureReadingConsumer implements Runnable {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.toString().toLowerCase());
+//        props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.toString().toLowerCase());
         props.put(KEY_CLASS, String.class.getName());
-        props.put(VALUE_CLASS, TimestampedTemperatureReading.class.getName());
+        props.put(VALUE_CLASS, TemperatureReading.class.getName());
+
+        // security config
+//        props.put("security.protocol", "SSL");
+        props.put("ssl.endpoint.identification.algorithm", "");
+        props.put("ssl.truststore.location", "D:\\CourseKafka\\kafka_2.13-3.2.0\\client.truststore.jks");
+        props.put("ssl.truststore.password", "changeit");
+        props.put("ssl.truststore.type", "JKS");
+//        props.put("ssl.truststore.certificates", "CARoot");
+        props.put("ssl.enabled.protocols", "TLSv1.2,TLSv1.1,TLSv1");
+        props.put("ssl.protocol", "TLSv1.2");
+
+        // SASL PLAIN Authentication
+//        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin123';");
+        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='trayan' password='trayan123';");
+        props.put("security.protocol", "SASL_SSL");
+        props.put("sasl.mechanism", "PLAIN");
 
         return new KafkaConsumer<>(props);
     }
@@ -88,7 +104,7 @@ public class TemperatureReadingConsumer implements Runnable {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        TemperatureReadingConsumer consumer1 = new TemperatureReadingConsumer(CONSUMER_GROUP_INTERNAL, OUTPUT_TOPIC);
+        TemperatureReadingConsumer consumer1 = new TemperatureReadingConsumer(CONSUMER_GROUP_INTERNAL, INTERNAL_TEMP_TOPIC);
 //        TemperatureReadingConsumer consumer2 = new TemperatureReadingConsumer(CONSUMER_GROUP_EXTERNAL, EXTERNAL_TEMP_TOPIC);
         var executor = Executors.newCachedThreadPool();
         var producerFuture1 = executor.submit(consumer1);

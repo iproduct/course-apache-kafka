@@ -97,14 +97,14 @@ keytool -keystore server.keystore.p12 -alias localhost -import -file cert-signed
 listeners=PLAINTEXT://:9092,SSL://:8092
 
 ssl.endpoint.identification.algorithm=
-ssl.keystore.location=server.keystore.p12
+ssl.keystore.location=server.keystore.jks
 ssl.keystore.password=changeit
 ssl.key.password=changeit
 ssl.truststore.location=server.truststore.jks
 ssl.truststore.password=changeit
 ssl.client.auth=none
 ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
-ssl.keystore.type=PKCS12
+ssl.keystore.type=JKS
 ssl.truststore.type=JKS
 
 # Kafka SSL Security - Clients:
@@ -118,8 +118,23 @@ ssl.truststore.password=changeit
 ssl.truststore.type=JKS
 ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
 
-openssl s_client -debug -connect localhost:8092 -tls1
-kafka-console-producer --broker-list localhost:8092 --topic test --producer.config config/producer-ssl.properties
-kafka-console-consumer.bat --bootstrap-server localhost:8092 --topic test --from-beginning --consumer.config config/consumer-ssl.properties
+openssl s_client -debug -connect localhost:8092 -tls1_2
+openssl s_client -debug -connect localhost:8093
 
+kafka-console-producer --broker-list localhost:8092 --topic temperature --producer.config config/producer-ssl.properties
+kafka-console-consumer.bat --bootstrap-server localhost:8092 --topic temperature --from-beginning --consumer.config config/consumer-ssl.properties
+kafka-console-consumer.bat --bootstrap-server localhost:8093 --topic temperature2 --from-beginning --consumer.config config/consumer-ssl.properties
+kafka-console-consumer.bat --bootstrap-server localhost:8093 --topic temperature2 --consumer.config config/consumer-ssl.properties
 
+# Kafka ACLs:
+bin\windows\kafka-acls --bootstrap-server localhost:9093 --list --topic temperature2
+-> Current ACLs for resource `ResourcePattern(resourceType=TOPIC, name=temperature2, patternType=LITERAL)`:
+        (principal=admin, host=localhost, operation=ALL, permissionType=ALLOW)
+bin\windows\kafka-acls --bootstrap-server localhost:9093 --list --topic temperature2 --resource-pattern-type match
+-> Current ACLs for resource `ResourcePattern(resourceType=TOPIC, name=temperature2, patternType=LITERAL)`:
+           (principal=User:admin, host=*, operation=DESCRIBE, permissionType=ALLOW)
+           (principal=User:admin, host=*, operation=WRITE, permissionType=ALLOW)
+           (principal=User:trayan, host=*, operation=ALL, permissionType=DENY)
+           (principal=User:admin, host=*, operation=CREATE, permissionType=ALLOW)
+bin\windows\kafka-acls --bootstrap-server localhost:9093 --add --allow-principal User:admin --producer --topic temperature2
+bin\windows\kafka-acls --bootstrap-server localhost:9093 --add --allow-principal User:trayan --allow-host * --operation Read --topic temperature2
