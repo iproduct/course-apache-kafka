@@ -60,7 +60,7 @@ public class AdminClientDemo {
 //                    log.error("Error creating topic: " + topicName, ex);
 //                }
             log.info("Topic UUID: '{}'", uuid.toString());
-            // wait until topic is deleted
+            // wait until topic is created
             while (true) {
                 log.info("Making sure the topic creation completed.");
                 Set<String> listedTopics = admin.listTopics().names().get();

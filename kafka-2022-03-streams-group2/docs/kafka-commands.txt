@@ -78,17 +78,20 @@ bin\windows\connect-standalone config\connect-standalone.properties D:\CourseKaf
 ############################################################################################################################
 ## Security - SSL
 [https://docs.oracle.com/en/java/javase/11/tools/keytool.html]
-keytool -genkeypair -alias localhost -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore server.keystore.p12 -validity 365 -storepass changeit -ext SAN=DNS:{FQDN},IP:{IPADDRESS1}
+keytool -genkeypair -alias localhost -keyalg RSA -keysize 4096 -storetype JKS -keystore server.keystore.jks -validity 365 -storepass changeit -ext SAN=DNS:{FQDN},IP:{IPADDRESS1}
 keytool -genkeypair -alias localhost -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore server.keystore.p12 -validity 365 -storepass changeit -ext SAN=DNS:localhost,IP:127.0.0.1
-keytool -list -v -keystore server.keystore.p12
-openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM -days 365
+keytool -list -v -keystore server.keystore.jks
+openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM -days 365 -passin pass:changeit
 keytool -keystore client.truststore.jks -alias CARoot -import -file cacert.pem
 keytool -keystore server.truststore.jks -alias CARoot -import -file cacert.pem
 
-keytool -keystore server.keystore.p12 -alias localhost -certreq -file cert-file.crt
+keytool -keystore server.keystore.jks -alias localhost -certreq -file cert-file.crt
+openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -in cert-file.crt -out cert-signed.crt -days 365 -passin pass:changeit
 openssl x509 -req -CA cacert.pem -CAkey cakey.pem -in cert-file.crt -out cert-signed.crt -days 365 -CAcreateserial -passin pass:changeit
-keytool -keystore server.keystore.p12 -alias CARoot -import -file cacert.pem
-keytool -keystore server.keystore.p12 -alias localhost -import -file cert-signed.crt
+keytool -keystore server.keystore.jks -alias CARoot -import -file cacert.pem
+keytool -keystore server.keystore.jks -alias localhost -import -file cert-signed.crt
+
+# keytool -delete -alias CARoot -keystore server.keystore.jks -storepass changeit
 
 # Kafka SSL Security - Brokers:
 ############################ SSL Config ####################################

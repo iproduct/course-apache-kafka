@@ -13,39 +13,48 @@ import org.apache.kafka.common.errors.OutOfOrderSequenceException;
 import org.apache.kafka.common.errors.ProducerFencedException;
 
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
 @Slf4j
 public class SecureDemoProducer {
     private Properties props = new Properties();
-    private Producer producer;
+    private Producer<String, Customer> producer;
 
-    public SecureDemoProducer() {
+    private int numReadings;
+
+    public SecureDemoProducer(int numReadings) {
+        this.numReadings = numReadings;
         props.put("bootstrap.servers", "localhost:8092");
         // security config
         props.put("security.protocol", "SSL");
         props.put("ssl.endpoint.identification.algorithm", "");
-        props.put("ssl.truststore.location", "D:\\CourseKafka\\kafka_2.12-2.2.1\\client.truststore.jks");
+        props.put("ssl.truststore.location", "D:\\CourseKafka\\kafka_2.13-3.2.0\\client.truststore.jks");
         props.put("ssl.truststore.password", "changeit");
         props.put("ssl.truststore.type", "JKS");
+//        props.put("ssl.truststore.certificates", "CARoot");
+        props.put("ssl.enabled.protocols", "TLSv1.2,TLSv1.1,TLSv1");
+        props.put("ssl.protocol", "TLSv1.2");
 
         //other config
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "course.kafka.serialization.JsonSerializer");
-//        props.put("acks", "all");
+        props.put("acks", "all");
 //        props.put("enable.idempotence", "true");
 //        props.put("max.request.size", "160");
 //        props.put("transactional.id", "event-producer-1");
-        props.put("partitioner.class", "course.kafka.partitioner.SimplePartitioner");
+//        props.put("partitioner.class", "course.kafka.partitioner.SimplePartitioner");
 
         producer = new KafkaProducer<String, Customer>(props);
     }
 
     public void run() {
+        try {
 //        producer.initTransactions();
 //        try {
 //            producer.beginTransaction();
-            for (int i = 0; i < 10; i++) {
+            var latch = new CountDownLatch(numReadings);
+            for (int i = 0; i < numReadings; i++) {
 
 //                Map<String,String> customerData = new HashMap<>();
 //                customerData.put("customerId", "" + i);
@@ -60,7 +69,7 @@ public class SecureDemoProducer {
 ////                    cust = new Customer(i, "ABC " + i + " Ltd. ", "12345678" + i, "Sofiafsdfsfsdfsdfsdfdsfsdfdsfdsfdsfdsfdsdsfdsfsdfdsfdsfdsfdsfdsfdsfdsdsdsds 100" + i);
 ////                }
                 ProducerRecord<String, Customer> record =
-                        new ProducerRecord<>("test2", "" + i, cust);
+                        new ProducerRecord<>("customers", "" + i, cust);
                 Future<RecordMetadata> futureResult = producer.send(record,
                         (metadata, exception) -> {
                             if (exception != null) {
@@ -68,8 +77,9 @@ public class SecureDemoProducer {
 //                                producer.abortTransaction();
                                 return;
                             }
-                            log.info("topic: {}, partition {}, offset {}, timestamp: {}",
+                            log.info("!!! topic: {}, partition {}, offset {}, timestamp: {}",
                                     metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+                            latch.countDown();
                         });
             }
 //            producer.commitTransaction();
@@ -80,12 +90,18 @@ public class SecureDemoProducer {
 //            log.error("Transaction unsuccessfull: ", ex1);
 //            producer.abortTransaction();
 //        }
-        producer.close();
+
+            latch.await();
+        } catch (InterruptedException e) {
+            log.warn("Producer interrupted", e);
+        } finally {
+            producer.close();
+        }
+
     }
 
     public static void main(String[] args) throws InterruptedException {
-        SecureDemoProducer producer = new SecureDemoProducer();
+        SecureDemoProducer producer = new SecureDemoProducer(10);
         producer.run();
-        Thread.sleep(5000);
     }
 }

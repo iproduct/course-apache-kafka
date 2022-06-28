@@ -3,6 +3,7 @@ package course.kafka;
 import course.kafka.model.Customer;
 import course.kafka.serialization.JsonDeserializer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -26,9 +27,13 @@ public class SecureDemoConsumer {
         // security config
         props.put("security.protocol", "SSL");
         props.put("ssl.endpoint.identification.algorithm", "");
-        props.put("ssl.truststore.location", "D:\\CourseKafka\\kafka_2.12-2.2.1\\client.truststore.jks");
+        props.put("ssl.truststore.location", "D:\\CourseKafka\\kafka_2.13-3.2.0\\client.truststore.jks");
         props.put("ssl.truststore.password", "changeit");
         props.put("ssl.truststore.type", "JKS");
+//        props.put("ssl.truststore.certificates", "CARoot");
+        props.put("ssl.enabled.protocols", "TLSv1.2,TLSv1.1,TLSv1");
+        props.put("ssl.protocol", "TLSv1.2");
+
         // other config
         props.put("group.id", "event-consumer");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -38,7 +43,7 @@ public class SecureDemoConsumer {
     }
 
     public void run() {
-        consumer.subscribe(Collections.singletonList("test2"));
+        consumer.subscribe(Collections.singletonList("customers"));
         while(true) {
             ConsumerRecords<String, Customer> records = consumer.poll(Duration.ofMillis(100));
             if(records.count() > 0) {
