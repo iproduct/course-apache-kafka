@@ -105,17 +105,21 @@ public class AdminClientDemo {
 //                        }
 //                    });
             // List InternalTemperatureEventsConsumer group offsets
-            admin.listConsumerGroupOffsets("InternalTemperatureEventsConsumer").partitionsToOffsetAndMetadata().get()
-                    .forEach((topicPartition, offsetAndMetadata) -> log.info("!!! InternalTemperatureEventsConsumer: Topic [{}] -> {}", topicPartition, offsetAndMetadata));
+//            admin.listConsumerGroupOffsets("InternalTemperatureEventsConsumer").partitionsToOffsetAndMetadata().get()
+//                    .forEach((topicPartition, offsetAndMetadata) -> log.info("!!! InternalTemperatureEventsConsumer: Topic [{}] -> {}", topicPartition, offsetAndMetadata));
             // Set ACL for topic 'temperature2'
-//            admin.createAcls(Collections.singleton(
-//                            new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
-//                                    new AccessControlEntry("User:trayan", "*", AclOperation.ALL, AclPermissionType.DENY))))
-//                    .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
             admin.createAcls(Collections.singleton(
                             new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
-                                    new AccessControlEntry("User:trayan", "*", AclOperation.ALL, AclPermissionType.ALLOW))))
+                                    new AccessControlEntry("User:trayan", "*", AclOperation.WRITE, AclPermissionType.DENY))))
                     .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
+//            admin.createAcls(Collections.singleton(
+//                            new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
+//                                    new AccessControlEntry("User:trayan", "*", AclOperation.DESCRIBE, AclPermissionType.ALLOW))))
+//                    .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
+//            admin.createAcls(Collections.singleton(
+//                            new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
+//                                    new AccessControlEntry("User:trayan", "*", AclOperation.ALL, AclPermissionType.ALLOW))))
+//                    .values().forEach((aclBinding, voidKafkaFuture) -> log.info(">>>ACL Entry: {}", aclBinding));
 //            admin.createAcls(Collections.singleton(
 //                            new AclBinding(new ResourcePattern(TOPIC, "temperature2", LITERAL),
 //                                    new AccessControlEntry("User:admin", "*", AclOperation.ALL, AclPermissionType.ALLOW))))
@@ -130,11 +134,11 @@ public class AdminClientDemo {
 //                            throw new RuntimeException(e);
 //                        }
 //                    });
-            System.out.println("-------------------------------------------------------------------------------------------------");
+//            System.out.println("-------------------------------------------------------------------------------------------------");
             admin.describeAcls(
                     new AclBindingFilter(new ResourcePatternFilter(TOPIC,"temperature2", ANY),
                     new AccessControlEntryFilter(null, null,  AclOperation.ANY, AclPermissionType.ANY)))
-                    .values().get().forEach((aclBinding) -> log.info("|||  CL Entry: {}", aclBinding));;
+                    .values().get().forEach((aclBinding) -> log.info("|||  ACL Entry: {}", aclBinding));
         }
         log.info("Demo complete.");
     }

@@ -110,7 +110,6 @@ ssl.truststore.type=JKS
 # Kafka SSL Security - Clients:
 ################################ SSL Config ###############################
 bootstrap.servers=localhost:8092
-
 ssl.endpoint.identification.algorithm=
 security.protocol=SSL
 ssl.truststore.location=client.truststore.jks
