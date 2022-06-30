@@ -113,7 +113,7 @@ public class TemperatureConsumerGroup {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         TemperatureConsumerGroup consumerGroup = new TemperatureConsumerGroup(CONSUMER_GROUP_NAME, TEMPERATURE_TOPIC,
-                ex -> log.error("Consumer polling error: ", ex),
+                ex -> log.error("!!! Consumer polling error: ", ex),
                 temperatureReading -> log.info(">>> {}", temperatureReading));
         consumerGroup.startGroup();
 
